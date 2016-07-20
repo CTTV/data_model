@@ -1,0 +1,2 @@
+recursive-include opentargets *.py
+include README.rst LICENSE tox.ini setup.py *requirements.txt
