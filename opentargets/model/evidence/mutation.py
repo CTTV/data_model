@@ -146,8 +146,8 @@ class Mutation(object):
     if self.number_mutated_samples is not None and (self.number_mutated_samples < 0):
         logger.error("Mutation - {0}.number_mutated_samples: {1} should be greater than or equal to 0".format(path, self.number_mutated_samples))
         error = error+1
-    if not self.inheritance_pattern is None and not self.inheritance_pattern in ['dominant','semi-dominant','co-dominant','recessive','dominant/recessive','X-linked recessive']:
-        logger.error("Mutation - {0}.inheritance_pattern value is restricted to the fixed set of values 'dominant','semi-dominant','co-dominant','recessive','dominant/recessive','X-linked recessive' ('{1}' given)".format(path, self.inheritance_pattern))
+    if not self.inheritance_pattern is None and not self.inheritance_pattern in ['unknown','dominant','semi-dominant','co-dominant','recessive','dominant/recessive','X-linked recessive']:
+        logger.error("Mutation - {0}.inheritance_pattern value is restricted to the fixed set of values 'unknown','dominant','semi-dominant','co-dominant','recessive','dominant/recessive','X-linked recessive' ('{1}' given)".format(path, self.inheritance_pattern))
         error = error + 1
     if self.inheritance_pattern and not isinstance(self.inheritance_pattern, basestring):
         logger.error("Mutation - {0}.inheritance_pattern type should be a string".format(path))
