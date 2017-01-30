@@ -1,5 +1,5 @@
 '''
-Copyright 2014-2016 EMBL - European Bioinformatics Institute, Wellcome 
+Copyright 2014-2017 EMBL - European Bioinformatics Institute, Wellcome
 Trust Sanger Institute, GlaxoSmithKline and Biogen
 
 This software was developed as part of Open Targets. For more information please see:
@@ -27,10 +27,10 @@ import logging
 import opentargets.model.evidence.drug as evidence_drug
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2016, Open Targets"
+__copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.3"
+__version__ = "1.2.4"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -38,7 +38,7 @@ __status__ = "Production"
 logger = logging.getLogger(__name__)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/bioentity/base.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/bioentity/base.json
 """
 class Base(object):
   """
@@ -50,7 +50,7 @@ class Base(object):
     
     """
     Name: id
-    Type: array
+    Type: string
     """
     self.id = id
   
@@ -58,7 +58,7 @@ class Base(object):
   def cloneObject(cls, clone):
     obj = cls()
     if clone.id:
-        obj.id = []; obj.id.extend(clone.id)
+        obj.id = clone.id
     return obj
   
   @classmethod
@@ -78,14 +78,8 @@ class Base(object):
     :returns: number of errors found during validation
     """
     error = 0
-    if not self.id is None and len(self.id) > 0 and not all(isinstance(n, basestring) for n in self.id):
-        logger.error("Base - {0}.id array should have elements of type 'basestring'".format(path))
-        error = error+1
-    if self.id and len(self.id) < 1:
-        logger.error("Base - {0}.id array should have at least 1 elements".format(path))
-        error = error + 1
-    if self.id and len(set(self.id)) != len(self.id):
-        logger.error("Base - {0}.id array have duplicated elements".format(path))
+    if self.id and not isinstance(self.id, basestring):
+        logger.error("Base - {0}.id type should be a string".format(path))
         error = error + 1
     return error
   
@@ -98,7 +92,7 @@ class Base(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/bioentity/disease.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/bioentity/disease.json
 """
 class Disease(Base):
   """
@@ -134,7 +128,8 @@ class Disease(Base):
     
     """
     Name: id
-    Type: array
+    Type: string
+    Description: A valid EFO IRI
     Required: {True}
     """
     self.id = id
@@ -150,7 +145,7 @@ class Disease(Base):
     if clone.name:
         obj.name = []; obj.name.extend(clone.name)
     if clone.id:
-        obj.id = []; obj.id.extend(clone.id)
+        obj.id = clone.id
     return obj
   
   @classmethod
@@ -220,18 +215,13 @@ class Disease(Base):
     if self.id is None :
         logger.error("Disease - {0}.id is required".format(path))
         error = error + 1
-    if not self.id is None and len(self.id) > 0 and not all(isinstance(n, basestring) for n in self.id):
-        logger.error("Disease - {0}.id array should have elements of type 'basestring'".format(path))
-        error = error+1
-    if self.id and len(self.id) < 1:
-        logger.error("Disease - {0}.id array should have at least 1 elements".format(path))
+    """ Check regex: ^http://purl.bioontology.org/omim/OMIM_[0-9]{1,}|http://www.orpha.net/ORDO/Orphanet_[0-9]{1,}|http://purl.obolibrary.org/obo/DOID_[0-9]{2,}|http://www.ebi.ac.uk/efo/EFO_[0-9]{7,}|http://purl.obolibrary.org/obo/HP_[0-9]{4,}|http://purl.obolibrary.org/obo/GO_[0-9]{4,}|http://purl.obolibrary.org/obo/MP_[0-9]{3,}|http://purl.obolibrary.org/obo/MPATH_[0-9]{3,}$ for validation"""
+    if self.id and not re.match('^http://purl.bioontology.org/omim/OMIM_[0-9]{1,}|http://www.orpha.net/ORDO/Orphanet_[0-9]{1,}|http://purl.obolibrary.org/obo/DOID_[0-9]{2,}|http://www.ebi.ac.uk/efo/EFO_[0-9]{7,}|http://purl.obolibrary.org/obo/HP_[0-9]{4,}|http://purl.obolibrary.org/obo/GO_[0-9]{4,}|http://purl.obolibrary.org/obo/MP_[0-9]{3,}|http://purl.obolibrary.org/obo/MPATH_[0-9]{3,}$', self.id):
+        logger.error("Disease - {0}.id '{1}'".format(path,self.id) + " does not match pattern '^http://purl.bioontology.org/omim/OMIM_[0-9]{1,}|http://www.orpha.net/ORDO/Orphanet_[0-9]{1,}|http://purl.obolibrary.org/obo/DOID_[0-9]{2,}|http://www.ebi.ac.uk/efo/EFO_[0-9]{7,}|http://purl.obolibrary.org/obo/HP_[0-9]{4,}|http://purl.obolibrary.org/obo/GO_[0-9]{4,}|http://purl.obolibrary.org/obo/MP_[0-9]{3,}|http://purl.obolibrary.org/obo/MPATH_[0-9]{3,}$'")
+        logger.warn(json.dumps(self.id, sort_keys=True, indent=2))
+    if self.id and not isinstance(self.id, basestring):
+        logger.error("Disease - {0}.id type should be a string".format(path))
         error = error + 1
-    if self.id and len(self.id) > 1:
-        logger.error("Disease - {0}.id array should have at most 1 elements".format(path))
-        error = error + 1
-    """ Check regex: ^http://purl.bioontology.org/omim/OMIM_[0-9]{1,}|http://www.orpha.net/ORDO/Orphanet_[0-9]{1,}|http://purl.obolibrary.org/obo/DOID_[0-9]{2,}|http://www.ebi.ac.uk/efo/EFO_[0-9]{7,}|http://purl.obolibrary.org/obo/HP_[0-9]{4,}|http://purl.obolibrary.org/obo/GO_[0-9]{4,}|http://purl.obolibrary.org/obo/MP_[0-9]{3,}|http://purl.obolibrary.org/obo/MPATH_[0-9]{3,}$ for validation of array item"""
-    if self.id and len(self.id) > 0 and not all(re.match('^http://purl.bioontology.org/omim/OMIM_[0-9]{1,}|http://www.orpha.net/ORDO/Orphanet_[0-9]{1,}|http://purl.obolibrary.org/obo/DOID_[0-9]{2,}|http://www.ebi.ac.uk/efo/EFO_[0-9]{7,}|http://purl.obolibrary.org/obo/HP_[0-9]{4,}|http://purl.obolibrary.org/obo/GO_[0-9]{4,}|http://purl.obolibrary.org/obo/MP_[0-9]{3,}|http://purl.obolibrary.org/obo/MPATH_[0-9]{3,}$', n) for n in self.id):
-        logger.error("Disease - {0}.id items".format(path) + " do not match pattern '^http://purl.bioontology.org/omim/OMIM_[0-9]{1,}|http://www.orpha.net/ORDO/Orphanet_[0-9]{1,}|http://purl.obolibrary.org/obo/DOID_[0-9]{2,}|http://www.ebi.ac.uk/efo/EFO_[0-9]{7,}|http://purl.obolibrary.org/obo/HP_[0-9]{4,}|http://purl.obolibrary.org/obo/GO_[0-9]{4,}|http://purl.obolibrary.org/obo/MP_[0-9]{3,}|http://purl.obolibrary.org/obo/MPATH_[0-9]{3,}$'")
     return error
   
   def serialize(self):
@@ -246,7 +236,7 @@ class Disease(Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/bioentity/disease.json inner class:(biosample)
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/bioentity/disease.json inner class:(biosample)
 """
 class DiseaseBiosample(object):
   """
@@ -323,7 +313,7 @@ class DiseaseBiosample(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/bioentity/target.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/bioentity/target.json
 """
 class Target(Base):
   """
@@ -388,7 +378,8 @@ class Target(Base):
     
     """
     Name: id
-    Type: array
+    Type: string
+    Description: An Ensembl or UniProt identifier
     Required: {True}
     """
     self.id = id
@@ -410,7 +401,7 @@ class Target(Base):
     if clone.target_class:
         obj.target_class = []; obj.target_class.extend(clone.target_class)
     if clone.id:
-        obj.id = []; obj.id.extend(clone.id)
+        obj.id = clone.id
     return obj
   
   @classmethod
@@ -499,18 +490,13 @@ class Target(Base):
     if self.id is None :
         logger.error("Target - {0}.id is required".format(path))
         error = error + 1
-    if not self.id is None and len(self.id) > 0 and not all(isinstance(n, basestring) for n in self.id):
-        logger.error("Target - {0}.id array should have elements of type 'basestring'".format(path))
-        error = error+1
-    if self.id and len(self.id) < 1:
-        logger.error("Target - {0}.id array should have at least 1 elements".format(path))
+    """ Check regex: ^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$ for validation"""
+    if self.id and not re.match('^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$', self.id):
+        logger.error("Target - {0}.id '{1}'".format(path,self.id) + " does not match pattern '^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$'")
+        logger.warn(json.dumps(self.id, sort_keys=True, indent=2))
+    if self.id and not isinstance(self.id, basestring):
+        logger.error("Target - {0}.id type should be a string".format(path))
         error = error + 1
-    if self.id and len(self.id) > 1:
-        logger.error("Target - {0}.id array should have at most 1 elements".format(path))
-        error = error + 1
-    """ Check regex: ^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$ for validation of array item"""
-    if self.id and len(self.id) > 0 and not all(re.match('^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$', n) for n in self.id):
-        logger.error("Target - {0}.id items".format(path) + " do not match pattern '^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$'")
     return error
   
   def serialize(self):
@@ -528,7 +514,7 @@ class Target(Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/bioentity/phenotype.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/bioentity/phenotype.json
 """
 class Phenotype(Base):
   """
@@ -652,7 +638,7 @@ class Phenotype(Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/bioentity/drug.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/bioentity/drug.json
 """
 class Drug(Base):
   """
@@ -686,7 +672,8 @@ class Drug(Base):
     
     """
     Name: id
-    Type: array
+    Type: string
+    Description: A ChEMBL or internal drug identifier
     Required: {True}
     """
     self.id = id
@@ -704,7 +691,7 @@ class Drug(Base):
     if clone.molecule_name:
         obj.molecule_name = clone.molecule_name
     if clone.id:
-        obj.id = []; obj.id.extend(clone.id)
+        obj.id = clone.id
     if clone.max_phase_for_all_diseases:
         obj.max_phase_for_all_diseases = evidence_drug.Diseasephase.cloneObject(clone.max_phase_for_all_diseases)
     return obj
@@ -759,12 +746,13 @@ class Drug(Base):
     if self.id is None :
         logger.error("Drug - {0}.id is required".format(path))
         error = error + 1
-    if not self.id is None and len(self.id) > 0 and not all(isinstance(n, basestring) for n in self.id):
-        logger.error("Drug - {0}.id array should have elements of type 'basestring'".format(path))
-        error = error+1
-    """ Check regex: ^http://identifiers.org/chembl.compound/CHEMBL[0-9]+$|^http://private/.+$ for validation of array item"""
-    if self.id and len(self.id) > 0 and not all(re.match('^http://identifiers.org/chembl.compound/CHEMBL[0-9]+$|^http://private/.+$', n) for n in self.id):
-        logger.error("Drug - {0}.id items".format(path) + " do not match pattern '^http://identifiers.org/chembl.compound/CHEMBL[0-9]+$|^http://private/.+$'")
+    """ Check regex: ^http://identifiers.org/chembl.compound/CHEMBL[0-9]+$|^http://private/.+$ for validation"""
+    if self.id and not re.match('^http://identifiers.org/chembl.compound/CHEMBL[0-9]+$|^http://private/.+$', self.id):
+        logger.error("Drug - {0}.id '{1}'".format(path,self.id) + " does not match pattern '^http://identifiers.org/chembl.compound/CHEMBL[0-9]+$|^http://private/.+$'")
+        logger.warn(json.dumps(self.id, sort_keys=True, indent=2))
+    if self.id and not isinstance(self.id, basestring):
+        logger.error("Drug - {0}.id type should be a string".format(path))
+        error = error + 1
     if self.max_phase_for_all_diseases:
         if not isinstance(self.max_phase_for_all_diseases, evidence_drug.Diseasephase):
             logger.error("evidence_drug.Diseasephase class instance expected for attribute - {0}.max_phase_for_all_diseases".format(path))
@@ -786,7 +774,7 @@ class Drug(Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/bioentity/variant.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/bioentity/variant.json
 """
 class Variant(Base):
   """
@@ -811,7 +799,8 @@ class Variant(Base):
     
     """
     Name: id
-    Type: array
+    Type: string
+    Description: An array of variant identifiers
     Required: {True}
     """
     self.id = id
@@ -823,7 +812,7 @@ class Variant(Base):
     if clone.type:
         obj.type = clone.type
     if clone.id:
-        obj.id = []; obj.id.extend(clone.id)
+        obj.id = clone.id
     return obj
   
   @classmethod
@@ -868,12 +857,13 @@ class Variant(Base):
     if self.id is None :
         logger.error("Variant - {0}.id is required".format(path))
         error = error + 1
-    if not self.id is None and len(self.id) > 0 and not all(isinstance(n, basestring) for n in self.id):
-        logger.error("Variant - {0}.id array should have elements of type 'basestring'".format(path))
-        error = error+1
-    """ Check regex: (^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}$)|(^http://identifiers.org/dbsnp/rs[0-9]+$|esv[0-9]+$|nsv[0-9]+$) for validation of array item"""
-    if self.id and len(self.id) > 0 and not all(re.match('(^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}$)|(^http://identifiers.org/dbsnp/rs[0-9]+$|esv[0-9]+$|nsv[0-9]+$)', n) for n in self.id):
-        logger.error("Variant - {0}.id items".format(path) + " do not match pattern '(^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}$)|(^http://identifiers.org/dbsnp/rs[0-9]+$|esv[0-9]+$|nsv[0-9]+$)'")
+    """ Check regex: (^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}$)|(^http://identifiers.org/dbsnp/rs[0-9]+$|esv[0-9]+$|nsv[0-9]+$) for validation"""
+    if self.id and not re.match('(^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}$)|(^http://identifiers.org/dbsnp/rs[0-9]+$|esv[0-9]+$|nsv[0-9]+$)', self.id):
+        logger.error("Variant - {0}.id '{1}'".format(path,self.id) + " does not match pattern '(^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}$)|(^http://identifiers.org/dbsnp/rs[0-9]+$|esv[0-9]+$|nsv[0-9]+$)'")
+        logger.warn(json.dumps(self.id, sort_keys=True, indent=2))
+    if self.id and not isinstance(self.id, basestring):
+        logger.error("Variant - {0}.id type should be a string".format(path))
+        error = error + 1
     return error
   
   def serialize(self):

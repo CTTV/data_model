@@ -1,5 +1,5 @@
 '''
-Copyright 2014-2016 EMBL - European Bioinformatics Institute, Wellcome 
+Copyright 2014-2017 EMBL - European Bioinformatics Institute, Wellcome
 Trust Sanger Institute, GlaxoSmithKline and Biogen
 
 This software was developed as part of Open Targets. For more information please see:
@@ -26,10 +26,10 @@ import json
 import logging
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2016, Open Targets"
+__copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.3"
+__version__ = "1.2.4"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -37,7 +37,7 @@ __status__ = "Production"
 logger = logging.getLogger(__name__)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/linkout/linkout.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/linkout/linkout.json
 """
 class Linkout(object):
   """

@@ -9,12 +9,12 @@ long_description = open(os.path.join(os.path.dirname(__file__), "README.rst")).r
 
 setup(
     name="data_model",
-    version="1.2.3",
+    version="1.2.4",
     description=long_description.split("\n")[0],
     long_description=long_description,
     author="Gautier Koscielny",
     author_email="gautierk@targetvalidation.org",
-    url="https://github.com/CTTV/data_model",
+    url="https://github.com/opentargets/data_model",
     #packages=find_packages('.'),
     #package_dir = {'': '.'},
     #namespace_packages = ["opentargets", "opentargets.model"],

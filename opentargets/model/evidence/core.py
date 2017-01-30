@@ -1,5 +1,5 @@
 '''
-Copyright 2014-2016 EMBL - European Bioinformatics Institute, Wellcome 
+Copyright 2014-2017 EMBL - European Bioinformatics Institute, Wellcome
 Trust Sanger Institute, GlaxoSmithKline and Biogen
 
 This software was developed as part of Open Targets. For more information please see:
@@ -29,10 +29,10 @@ import opentargets.model.evidence.linkout as evidence_linkout
 import opentargets.model.evidence.mutation as evidence_mutation
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2016, Open Targets"
+__copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.3"
+__version__ = "1.2.4"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -40,7 +40,7 @@ __status__ = "Production"
 logger = logging.getLogger(__name__)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/base.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/base.json
 """
 class Base(object):
   """
@@ -57,7 +57,7 @@ class Base(object):
     """
     Name: unique_experiment_reference
     Type: string
-    Description: A unique experiment identifer or literature reference that uniquely identifies the study in your database
+    Description: A unique experiment identifier or literature reference that uniquely identifies the study in your database
     """
     self.unique_experiment_reference = unique_experiment_reference
     """
@@ -181,7 +181,7 @@ class Base(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/base.jsonbase_evidence/definitions/single_lit_reference
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/base.json/definitions/single_lit_reference
 """
 class Single_Lit_Reference(object):
   """
@@ -282,7 +282,7 @@ class Single_Lit_Reference(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/base.jsonbase_evidence/definitions/single_lit_reference inner class:(_mined_sentences_item)
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/base.json/definitions/single_lit_reference inner class:(_mined_sentences_item)
 """
 class Base_Mined_Sentences_Item(object):
   """
@@ -429,7 +429,7 @@ class Base_Mined_Sentences_Item(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/base.json inner class:(provenance_type)
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/base.json inner class:(provenance_type)
 """
 class BaseProvenance_Type(object):
   """
@@ -519,7 +519,7 @@ class BaseProvenance_Type(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/base.json inner class:(literature)
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/base.json inner class:(literature)
 """
 class BaseLiterature(object):
   """
@@ -586,7 +586,7 @@ class BaseLiterature(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/base.json inner class:(expert)
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/base.json inner class:(expert)
 """
 class BaseExpert(object):
   """
@@ -677,7 +677,7 @@ class BaseExpert(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/base.json inner class:(author)
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/base.json inner class:(author)
 """
 class BaseAuthor(object):
   """
@@ -766,7 +766,7 @@ class BaseAuthor(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/base.json inner class:(database)
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/base.json inner class:(database)
 """
 class BaseDatabase(object):
   """
@@ -862,7 +862,7 @@ class BaseDatabase(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/base.json inner class:(dbxref)
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/base.json inner class:(dbxref)
 """
 class BaseDbxref(object):
   """
@@ -959,7 +959,7 @@ class BaseDbxref(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/expression.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/expression.json
 """
 class Expression(Base):
   """
@@ -1243,7 +1243,7 @@ class Expression(Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/expression.json inner class:(log2_fold_change)
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/expression.json inner class:(log2_fold_change)
 """
 class ExpressionLog2_Fold_Change(object):
   """
@@ -1316,7 +1316,7 @@ class ExpressionLog2_Fold_Change(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/literature_curated.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/literature_curated.json
 """
 class Literature_Curated(Base):
   """
@@ -1452,7 +1452,7 @@ class Literature_Curated(Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/literature_mining.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/literature_mining.json
 """
 class Literature_Mining(Base):
   """

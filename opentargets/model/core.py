@@ -1,5 +1,5 @@
 '''
-Copyright 2014-2016 EMBL - European Bioinformatics Institute, Wellcome 
+Copyright 2014-2017 EMBL - European Bioinformatics Institute, Wellcome
 Trust Sanger Institute, GlaxoSmithKline and Biogen
 
 This software was developed as part of Open Targets. For more information please see:
@@ -31,10 +31,10 @@ import opentargets.model.evidence.drug as evidence_drug
 import opentargets.model.evidence.genetics as evidence_genetics
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2016, Open Targets"
+__copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.3"
+__version__ = "1.2.4"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -46,7 +46,7 @@ class JSONException(Exception):
 
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/base.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/base.json
 """
 class Base(object):
   """
@@ -184,8 +184,8 @@ class Base(object):
     if self.unique_association_fields and not isinstance(self.unique_association_fields, dict):
         logger.error("Basedictionary expected for attribute - {0}.unique_association_fields".format(path))
         error = error + 1
-    if not self.validated_against_schema_version is None and not self.validated_against_schema_version in ['1.2.3']:
-        logger.error("Base - {0}.validated_against_schema_version value is restricted to the fixed set of values '1.2.3' ('{1}' given)".format(path, self.validated_against_schema_version))
+    if not self.validated_against_schema_version is None and not self.validated_against_schema_version in ['1.2.4']:
+        logger.error("Base - {0}.validated_against_schema_version value is restricted to the fixed set of values '1.2.4' ('{1}' given)".format(path, self.validated_against_schema_version))
         error = error + 1
     if self.validated_against_schema_version and not isinstance(self.validated_against_schema_version, basestring):
         logger.error("Base - {0}.validated_against_schema_version type should be a string".format(path))
@@ -207,7 +207,7 @@ class Base(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/base.json inner class:(literature)
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/base.json inner class:(literature)
 """
 class BaseLiterature(object):
   """
@@ -269,7 +269,7 @@ class BaseLiterature(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/animal_models.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/animal_models.json
 """
 class Animal_Models(Base):
   """
@@ -386,7 +386,7 @@ class Animal_Models(Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/animal_models.json inner class:(evidence)
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/animal_models.json inner class:(evidence)
 """
 class Animal_ModelsEvidence(object):
   """
@@ -479,7 +479,7 @@ class Animal_ModelsEvidence(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/drug.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/drug.json
 """
 class Drug(Base):
   """
@@ -614,7 +614,7 @@ class Drug(Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/drug.json inner class:(evidence)
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/drug.json inner class:(evidence)
 """
 class DrugEvidence(object):
   """
@@ -689,7 +689,7 @@ class DrugEvidence(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/expression.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/expression.json
 """
 class Expression(Base):
   """
@@ -806,7 +806,7 @@ class Expression(Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/genetics.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/genetics.json
 """
 class Genetics(Base):
   """
@@ -941,7 +941,7 @@ class Genetics(Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/genetics.json inner class:(evidence)
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/genetics.json inner class:(evidence)
 """
 class GeneticsEvidence(object):
   """
@@ -1016,7 +1016,7 @@ class GeneticsEvidence(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/literature_curated.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/literature_curated.json
 """
 class Literature_Curated(Base):
   """
@@ -1133,7 +1133,7 @@ class Literature_Curated(Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/literature_mining.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/literature_mining.json
 """
 class Literature_Mining(Base):
   """

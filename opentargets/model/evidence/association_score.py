@@ -1,5 +1,5 @@
 '''
-Copyright 2014-2016 EMBL - European Bioinformatics Institute, Wellcome 
+Copyright 2014-2017 EMBL - European Bioinformatics Institute, Wellcome
 Trust Sanger Institute, GlaxoSmithKline and Biogen
 
 This software was developed as part of Open Targets. For more information please see:
@@ -26,10 +26,10 @@ import json
 import logging
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2016, Open Targets"
+__copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.3"
+__version__ = "1.2.4"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -37,7 +37,7 @@ __status__ = "Production"
 logger = logging.getLogger(__name__)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/association_score/base.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/association_score/base.json
 """
 class Base(object):
   
@@ -71,7 +71,7 @@ class Base(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/association_score/method.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/association_score/method.json
 """
 class Method(object):
   """
@@ -161,7 +161,7 @@ class Method(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/association_score/probability.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/association_score/probability.json
 """
 class Probability(Base):
   """
@@ -267,7 +267,7 @@ class Probability(Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/association_score/pvalue.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/association_score/pvalue.json
 """
 class Pvalue(Base):
   """
@@ -373,7 +373,7 @@ class Pvalue(Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/association_score/rank.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/association_score/rank.json
 """
 class Rank(object):
   """
@@ -492,7 +492,7 @@ class Rank(object):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/association_score/summed_total.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/association_score/summed_total.json
 """
 class Summed_Total(Base):
   """

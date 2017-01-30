@@ -1,5 +1,5 @@
 '''
-Copyright 2014-2016 EMBL - European Bioinformatics Institute, Wellcome 
+Copyright 2014-2017 EMBL - European Bioinformatics Institute, Wellcome
 Trust Sanger Institute, GlaxoSmithKline and Biogen
 
 This software was developed as part of Open Targets. For more information please see:
@@ -28,10 +28,10 @@ import opentargets.model.evidence.core
 import opentargets.model.evidence.linkout as evidence_linkout
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2016, Open Targets"
+__copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.3"
+__version__ = "1.2.4"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -39,7 +39,7 @@ __status__ = "Production"
 logger = logging.getLogger(__name__)
 import opentargets.model.evidence.core as evidence_core
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/drug/target2drug.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/drug/target2drug.json
 """
 class Target2Drug(evidence_core.Base):
   """
@@ -194,7 +194,7 @@ class Target2Drug(evidence_core.Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 import opentargets.model.evidence.core as evidence_core
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/drug/drug2clinic.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/drug/drug2clinic.json
 """
 class Drug2Clinic(evidence_core.Base):
   """
@@ -342,7 +342,7 @@ class Drug2Clinic(evidence_core.Base):
     return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
-https://raw.githubusercontent.com/CTTV/json_schema/master/src/evidence/drug/diseasephase.json
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/drug/diseasephase.json
 """
 class Diseasephase(object):
   """
