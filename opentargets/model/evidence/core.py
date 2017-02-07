@@ -1425,10 +1425,10 @@ class Literature_Curated(Base):
         logger.error("Literature_Curated - {0}.evidence_codes is required".format(path))
         error = error + 1
     if not self.evidence_codes is None:
-        validValues = ['http://purl.obolibrary.org/obo/ECO_0000213','http://purl.obolibrary.org/obo/ECO_0000205','http://purl.obolibrary.org/obo/ECO_0000053','http://www.targetvalidation.org/evidence/literature_mining','http://purl.obolibrary.org/obo/ECO_0000204']
+        validValues = ['http://purl.obolibrary.org/obo/ECO_0000213','http://purl.obolibrary.org/obo/ECO_0000305','http://www.targetvalidation.org/evidence/literature_mining','http://purl.obolibrary.org/obo/ECO_0000204','http://purl.obolibrary.org/obo/ECO_0000205','http://purl.obolibrary.org/obo/ECO_0000053']
         for item in self.evidence_codes:
             if item not in validValues:
-                logger.error("Literature_Curated - {0}.evidence_codes value is restricted to the fixed set of values 'http://purl.obolibrary.org/obo/ECO_0000213','http://purl.obolibrary.org/obo/ECO_0000205','http://purl.obolibrary.org/obo/ECO_0000053','http://www.targetvalidation.org/evidence/literature_mining','http://purl.obolibrary.org/obo/ECO_0000204' ('{1}' given)".format(path, item))
+                logger.error("Literature_Curated - {0}.evidence_codes value is restricted to the fixed set of values 'http://purl.obolibrary.org/obo/ECO_0000213','http://purl.obolibrary.org/obo/ECO_0000305','http://www.targetvalidation.org/evidence/literature_mining','http://purl.obolibrary.org/obo/ECO_0000204','http://purl.obolibrary.org/obo/ECO_0000205','http://purl.obolibrary.org/obo/ECO_0000053' ('{1}' given)".format(path, item))
                 error = error + 1
     if not self.evidence_codes is None and len(self.evidence_codes) > 0 and not all(isinstance(n, basestring) for n in self.evidence_codes):
         logger.error("Literature_Curated - {0}.evidence_codes array should have elements of type 'basestring'".format(path))
