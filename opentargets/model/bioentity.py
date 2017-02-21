@@ -857,9 +857,9 @@ class Variant(Base):
     if self.id is None :
         logger.error("Variant - {0}.id is required".format(path))
         error = error + 1
-    """ Check regex: ^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}|http://identifiers.org/dbsnp/rs[0-9]{1,})|http://identifiers.org/dbsnp/esv[0-9]{1,})|http://identifiers.org/dbsnp/nsv[0-9]{1,}$) for validation"""
-    if self.id and not re.match('^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}|http://identifiers.org/dbsnp/rs[0-9]{1,})|http://identifiers.org/dbsnp/esv[0-9]{1,})|http://identifiers.org/dbsnp/nsv[0-9]{1,}$)', self.id):
-        logger.error("Variant - {0}.id '{1}'".format(path,self.id) + " does not match pattern '^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}|http://identifiers.org/dbsnp/rs[0-9]{1,})|http://identifiers.org/dbsnp/esv[0-9]{1,})|http://identifiers.org/dbsnp/nsv[0-9]{1,}$)'")
+    """ Check regex: ^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}|http://identifiers.org/dbsnp/rs[0-9]{1,}|http://identifiers.org/dbsnp/esv[0-9]{1,}|http://identifiers.org/dbsnp/nsv[0-9]{1,}$ for validation"""
+    if self.id and not re.match('^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}|http://identifiers.org/dbsnp/rs[0-9]{1,}|http://identifiers.org/dbsnp/esv[0-9]{1,}|http://identifiers.org/dbsnp/nsv[0-9]{1,}$', self.id):
+        logger.error("Variant - {0}.id '{1}'".format(path,self.id) + " does not match pattern '^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}|http://identifiers.org/dbsnp/rs[0-9]{1,}|http://identifiers.org/dbsnp/esv[0-9]{1,}|http://identifiers.org/dbsnp/nsv[0-9]{1,}$'")
         logger.warn(json.dumps(self.id, sort_keys=True, indent=2))
     if self.id and not isinstance(self.id, basestring):
         logger.error("Variant - {0}.id type should be a string".format(path))
