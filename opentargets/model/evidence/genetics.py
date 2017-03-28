@@ -31,7 +31,7 @@ __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.4"
+__version__ = "1.2.5"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -137,10 +137,10 @@ class Gene2Variant(evidence_core.Base):
         logger.error("Gene2Variant - {0}.evidence_codes is required".format(path))
         error = error + 1
     if not self.evidence_codes is None:
-        validValues = ['http://identifiers.org/eco/cttv_mapping_pipeline','http://purl.obolibrary.org/obo/ECO_0000205']
+        validValues = ['http://identifiers.org/eco/cttv_mapping_pipeline','http://purl.obolibrary.org/obo/ECO_0000205','http://purl.obolibrary.org/obo/ECO_0000305']
         for item in self.evidence_codes:
             if item not in validValues:
-                logger.error("Gene2Variant - {0}.evidence_codes value is restricted to the fixed set of values 'http://identifiers.org/eco/cttv_mapping_pipeline','http://purl.obolibrary.org/obo/ECO_0000205' ('{1}' given)".format(path, item))
+                logger.error("Gene2Variant - {0}.evidence_codes value is restricted to the fixed set of values 'http://identifiers.org/eco/cttv_mapping_pipeline','http://purl.obolibrary.org/obo/ECO_0000205','http://purl.obolibrary.org/obo/ECO_0000305' ('{1}' given)".format(path, item))
                 error = error + 1
     if not self.evidence_codes is None and len(self.evidence_codes) > 0 and not all(isinstance(n, basestring) for n in self.evidence_codes):
         logger.error("Gene2Variant - {0}.evidence_codes array should have elements of type 'basestring'".format(path))
