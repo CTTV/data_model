@@ -30,7 +30,7 @@ __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.4"
+__version__ = "1.2.5"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -112,7 +112,8 @@ class Disease(Base):
     
     """
     Name: source_name
-    Type: array
+    Type: string
+    Description: Optional - EFO disease name corresponding to the EFO ID
     """
     self.source_name = source_name
     """
@@ -122,7 +123,8 @@ class Disease(Base):
     
     """
     Name: name
-    Type: array
+    Type: string
+    Description: Optional - EFO disease name corresponding to the EFO ID
     """
     self.name = name
     
@@ -139,11 +141,11 @@ class Disease(Base):
     # super will return an instance of the subtype
     obj = super(Disease, cls).cloneObject(clone)
     if clone.source_name:
-        obj.source_name = []; obj.source_name.extend(clone.source_name)
+        obj.source_name = clone.source_name
     if clone.biosample:
         obj.biosample = DiseaseBiosample.cloneObject(clone.biosample)
     if clone.name:
-        obj.name = []; obj.name.extend(clone.name)
+        obj.name = clone.name
     if clone.id:
         obj.id = clone.id
     return obj
@@ -180,17 +182,8 @@ class Disease(Base):
     if self.id is None:
       logger.error("Disease - {0}.id is required".format(path))
       error = error + 1
-    if not self.source_name is None and len(self.source_name) > 0 and not all(isinstance(n, basestring) for n in self.source_name):
-        logger.error("Disease - {0}.source_name array should have elements of type 'basestring'".format(path))
-        error = error+1
-    if self.source_name and len(self.source_name) < 1:
-        logger.error("Disease - {0}.source_name array should have at least 1 elements".format(path))
-        error = error + 1
-    if self.source_name and len(self.source_name) > 1:
-        logger.error("Disease - {0}.source_name array should have at most 1 elements".format(path))
-        error = error + 1
-    if self.source_name and len(set(self.source_name)) != len(self.source_name):
-        logger.error("Disease - {0}.source_name array have duplicated elements".format(path))
+    if self.source_name and not isinstance(self.source_name, basestring):
+        logger.error("Disease - {0}.source_name type should be a string".format(path))
         error = error + 1
     if self.biosample:
         if not isinstance(self.biosample, DiseaseBiosample):
@@ -199,17 +192,8 @@ class Disease(Base):
         else:
             biosample_error = self.biosample.validate(logger, path = '.'.join([path, 'biosample']))
             error = error + biosample_error
-    if not self.name is None and len(self.name) > 0 and not all(isinstance(n, basestring) for n in self.name):
-        logger.error("Disease - {0}.name array should have elements of type 'basestring'".format(path))
-        error = error+1
-    if self.name and len(self.name) < 1:
-        logger.error("Disease - {0}.name array should have at least 1 elements".format(path))
-        error = error + 1
-    if self.name and len(self.name) > 1:
-        logger.error("Disease - {0}.name array should have at most 1 elements".format(path))
-        error = error + 1
-    if self.name and len(set(self.name)) != len(self.name):
-        logger.error("Disease - {0}.name array have duplicated elements".format(path))
+    if self.name and not isinstance(self.name, basestring):
+        logger.error("Disease - {0}.name type should be a string".format(path))
         error = error + 1
     # id is mandatory
     if self.id is None :
