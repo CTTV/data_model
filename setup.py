@@ -22,7 +22,7 @@ setup(
     #namespace_packages = ["opentargets", "opentargets.model"],
     packages=[ "opentargets","opentargets.model","opentargets.model.evidence" ],
     license="Apache 2.0",
-    keywords= ['opentargets', 'bioinformatics', 'data_model']
+    keywords= ['opentargets', 'bioinformatics', 'data_model'],
     classifiers=[
         "License :: Apache 2.0",
         "Programming Language :: Python :: 2",
