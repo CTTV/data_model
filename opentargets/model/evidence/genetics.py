@@ -31,7 +31,7 @@ __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.6"
+__version__ = "1.2.4"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -180,6 +180,7 @@ class Variant2Disease(evidence_core.Base):
   """
   Constructor using all fields with default values
   Arguments:
+  :param clinical_significance = None
   :param evidence_codes = None
   :param gwas_panel_resolution = None
   :param gwas_sample_size = None
@@ -190,12 +191,18 @@ class Variant2Disease(evidence_core.Base):
   :param resource_score = None
   :param date_asserted = None
   """
-  def __init__(self, evidence_codes = None, gwas_panel_resolution = None, gwas_sample_size = None, urls = None, unique_experiment_reference = None,     provenance_type = None, is_associated = False, resource_score = None, date_asserted = None):
+  def __init__(self, clinical_significance = None, evidence_codes = None, gwas_panel_resolution = None, gwas_sample_size = None, urls = None, unique_experiment_reference = None,     provenance_type = None, is_associated = False, resource_score = None, date_asserted = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
     """
     super(Variant2Disease, self).__init__(unique_experiment_reference = unique_experiment_reference,provenance_type = provenance_type,is_associated = is_associated,resource_score = resource_score,date_asserted = date_asserted)
+    
+    """
+    Name: clinical_significance
+    Type: string
+    """
+    self.clinical_significance = clinical_significance
     
     """
     Name: evidence_codes
@@ -229,6 +236,8 @@ class Variant2Disease(evidence_core.Base):
   def cloneObject(cls, clone):
     # super will return an instance of the subtype
     obj = super(Variant2Disease, cls).cloneObject(clone)
+    if clone.clinical_significance:
+        obj.clinical_significance = clone.clinical_significance
     if clone.evidence_codes:
         obj.evidence_codes = []; obj.evidence_codes.extend(clone.evidence_codes)
     if clone.gwas_panel_resolution:
@@ -241,11 +250,13 @@ class Variant2Disease(evidence_core.Base):
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['evidence_codes','gwas_panel_resolution','gwas_sample_size','urls','unique_experiment_reference','provenance_type','is_associated','resource_score','date_asserted']
+    cls_keys = ['clinical_significance','evidence_codes','gwas_panel_resolution','gwas_sample_size','urls','unique_experiment_reference','provenance_type','is_associated','resource_score','date_asserted']
     obj = super(Variant2Disease, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Variant2Disease - DictType expected - {0} found\n".format(type(map)))
       return
+    if  'clinical_significance' in map:
+        obj.clinical_significance = map['clinical_significance']
     if  'evidence_codes' in map:
         obj.evidence_codes = map['evidence_codes']
     if  'gwas_panel_resolution' in map:
@@ -285,6 +296,12 @@ class Variant2Disease(evidence_core.Base):
     if self.date_asserted is None:
       logger.error("Variant2Disease - {0}.date_asserted is required".format(path))
       error = error + 1
+    if not self.clinical_significance is None and not self.clinical_significance in ['Pathogenic','Likely pathogenic','protective','association','risk_factor','Affects','drug response']:
+        logger.error("Variant2Disease - {0}.clinical_significance value is restricted to the fixed set of values 'Pathogenic','Likely pathogenic','protective','association','risk_factor','Affects','drug response' ('{1}' given)".format(path, self.clinical_significance))
+        error = error + 1
+    if self.clinical_significance and not isinstance(self.clinical_significance, basestring):
+        logger.error("Variant2Disease - {0}.clinical_significance type should be a string".format(path))
+        error = error + 1
     # evidence_codes is mandatory
     if self.evidence_codes is None :
         logger.error("Variant2Disease - {0}.evidence_codes is required".format(path))
@@ -314,6 +331,7 @@ class Variant2Disease(evidence_core.Base):
   
   def serialize(self):
     classDict = super(Variant2Disease, self).serialize()
+    if not self.clinical_significance is None: classDict['clinical_significance'] = self.clinical_significance
     if not self.evidence_codes is None: classDict['evidence_codes'] = self.evidence_codes
     if not self.gwas_panel_resolution is None: classDict['gwas_panel_resolution'] = self.gwas_panel_resolution
     if not self.gwas_sample_size is None: classDict['gwas_sample_size'] = self.gwas_sample_size

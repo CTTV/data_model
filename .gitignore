@@ -2,6 +2,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+opentargets/__init__.py
 
 # C extensions
 *.so

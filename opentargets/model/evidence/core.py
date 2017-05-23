@@ -32,7 +32,7 @@ __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.6"
+__version__ = "1.2.4"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -1322,6 +1322,7 @@ class Literature_Curated(Base):
   """
   Constructor using all fields with default values
   Arguments:
+  :param clinical_significance = None
   :param known_mutations = None
   :param evidence_codes = None
   :param urls = None
@@ -1331,12 +1332,18 @@ class Literature_Curated(Base):
   :param resource_score = None
   :param date_asserted = None
   """
-  def __init__(self, known_mutations = None, evidence_codes = None, urls = None, unique_experiment_reference = None,     provenance_type = None, is_associated = False, resource_score = None, date_asserted = None):
+  def __init__(self, clinical_significance = None, known_mutations = None, evidence_codes = None, urls = None, unique_experiment_reference = None,     provenance_type = None, is_associated = False, resource_score = None, date_asserted = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
     """
     super(Literature_Curated, self).__init__(unique_experiment_reference = unique_experiment_reference,provenance_type = provenance_type,is_associated = is_associated,resource_score = resource_score,date_asserted = date_asserted)
+    
+    """
+    Name: clinical_significance
+    Type: string
+    """
+    self.clinical_significance = clinical_significance
     
     """
     Name: known_mutations
@@ -1363,6 +1370,8 @@ class Literature_Curated(Base):
   def cloneObject(cls, clone):
     # super will return an instance of the subtype
     obj = super(Literature_Curated, cls).cloneObject(clone)
+    if clone.clinical_significance:
+        obj.clinical_significance = clone.clinical_significance
     if clone.known_mutations:
         obj.known_mutations = []; obj.known_mutations.extend(clone.known_mutations)
     if clone.evidence_codes:
@@ -1373,11 +1382,13 @@ class Literature_Curated(Base):
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['known_mutations','evidence_codes','urls','unique_experiment_reference','provenance_type','is_associated','resource_score','date_asserted']
+    cls_keys = ['clinical_significance','known_mutations','evidence_codes','urls','unique_experiment_reference','provenance_type','is_associated','resource_score','date_asserted']
     obj = super(Literature_Curated, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Literature_Curated - DictType expected - {0} found\n".format(type(map)))
       return
+    if  'clinical_significance' in map:
+        obj.clinical_significance = map['clinical_significance']
     if 'known_mutations' in map and isinstance(map['known_mutations'], list):
         obj.known_mutations = []
         for item in map['known_mutations']:
@@ -1414,11 +1425,17 @@ class Literature_Curated(Base):
     if self.date_asserted is None:
       logger.error("Literature_Curated - {0}.date_asserted is required".format(path))
       error = error + 1
+    if not self.clinical_significance is None and not self.clinical_significance in ['Pathogenic','Likely pathogenic','protective','association','risk_factor','Affects','drug response']:
+        logger.error("Literature_Curated - {0}.clinical_significance value is restricted to the fixed set of values 'Pathogenic','Likely pathogenic','protective','association','risk_factor','Affects','drug response' ('{1}' given)".format(path, self.clinical_significance))
+        error = error + 1
+    if self.clinical_significance and not isinstance(self.clinical_significance, basestring):
+        logger.error("Literature_Curated - {0}.clinical_significance type should be a string".format(path))
+        error = error + 1
     if not self.known_mutations is None and len(self.known_mutations) > 0 and not all(isinstance(n, evidence_mutation.Mutation) for n in self.known_mutations):
         logger.error("Literature_Curated - {0}.known_mutations array should have elements of type 'evidence_mutation.Mutation'".format(path))
         error = error+1
-    if self.known_mutations and len(self.known_mutations) < 1:
-        logger.error("Literature_Curated - {0}.known_mutations array should have at least 1 elements".format(path))
+    if self.known_mutations and len(self.known_mutations) < 0:
+        logger.error("Literature_Curated - {0}.known_mutations array should have at least 0 elements".format(path))
         error = error + 1
     # evidence_codes is mandatory
     if self.evidence_codes is None :
@@ -1443,6 +1460,7 @@ class Literature_Curated(Base):
   
   def serialize(self):
     classDict = super(Literature_Curated, self).serialize()
+    if not self.clinical_significance is None: classDict['clinical_significance'] = self.clinical_significance
     if not self.known_mutations is None: classDict['known_mutations'] = map(lambda x: x.serialize(), self.known_mutations)
     if not self.evidence_codes is None: classDict['evidence_codes'] = self.evidence_codes
     if not self.urls is None: classDict['urls'] = map(lambda x: x.serialize(), self.urls)
