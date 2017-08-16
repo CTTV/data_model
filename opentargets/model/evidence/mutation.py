@@ -29,7 +29,7 @@ __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.4"
+__version__ = "1.2.7"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -48,9 +48,11 @@ class Mutation(object):
   :param inheritance_pattern = None
   :param functional_consequence = None
   :param preferred_name = None
+  :param number_samples_tested = None
   :param alternative_names = None
+  :param role_in_cancer = None
   """
-  def __init__(self, number_samples_with_mutation_type = None, number_mutated_samples = None, inheritance_pattern = None, functional_consequence = None, preferred_name = None, alternative_names = None):
+  def __init__(self, number_samples_with_mutation_type = None, number_mutated_samples = None, inheritance_pattern = None, functional_consequence = None, preferred_name = None, number_samples_tested = None, alternative_names = None, role_in_cancer = None):
     
     """
     Name: number_samples_with_mutation_type
@@ -90,11 +92,25 @@ class Mutation(object):
     self.preferred_name = preferred_name
     
     """
+    Name: number_samples_tested
+    Type: number
+    Description: The number of samples tested
+    """
+    self.number_samples_tested = number_samples_tested
+    
+    """
     Name: alternative_names
     Type: array
     Description: A list of alternative names for this mutation, if known e.g. NC_000007.14:g.55191749G>T
     """
     self.alternative_names = alternative_names
+    
+    """
+    Name: role_in_cancer
+    Type: string
+    Description: The role in cancer can be TSG, oncogene or gene_fusion
+    """
+    self.role_in_cancer = role_in_cancer
   
   @classmethod
   def cloneObject(cls, clone):
@@ -109,13 +125,17 @@ class Mutation(object):
         obj.functional_consequence = clone.functional_consequence
     if clone.preferred_name:
         obj.preferred_name = clone.preferred_name
+    if clone.number_samples_tested:
+        obj.number_samples_tested = clone.number_samples_tested
     if clone.alternative_names:
         obj.alternative_names = []; obj.alternative_names.extend(clone.alternative_names)
+    if clone.role_in_cancer:
+        obj.role_in_cancer = clone.role_in_cancer
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['number_samples_with_mutation_type','number_mutated_samples','inheritance_pattern','functional_consequence','preferred_name','alternative_names']
+    cls_keys = ['number_samples_with_mutation_type','number_mutated_samples','inheritance_pattern','functional_consequence','preferred_name','number_samples_tested','alternative_names','role_in_cancer']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("Mutation - DictType expected - {0} found\n".format(type(map)))
@@ -130,8 +150,12 @@ class Mutation(object):
         obj.functional_consequence = map['functional_consequence']
     if  'preferred_name' in map:
         obj.preferred_name = map['preferred_name']
+    if  'number_samples_tested' in map:
+        obj.number_samples_tested = map['number_samples_tested']
     if  'alternative_names' in map:
         obj.alternative_names = map['alternative_names']
+    if  'role_in_cancer' in map:
+        obj.role_in_cancer = map['role_in_cancer']
     return obj
   
   def validate(self, logger, path = "root"):
@@ -169,11 +193,17 @@ class Mutation(object):
     if self.preferred_name and not isinstance(self.preferred_name, basestring):
         logger.error("Mutation - {0}.preferred_name type should be a string".format(path))
         error = error + 1
+    if self.number_samples_tested is not None and (self.number_samples_tested < 0):
+        logger.error("Mutation - {0}.number_samples_tested: {1} should be greater than or equal to 0".format(path, self.number_samples_tested))
+        error = error+1
     if not self.alternative_names is None and len(self.alternative_names) > 0 and not all(isinstance(n, basestring) for n in self.alternative_names):
         logger.error("Mutation - {0}.alternative_names array should have elements of type 'basestring'".format(path))
         error = error+1
     if self.alternative_names and len(self.alternative_names) < 1:
         logger.error("Mutation - {0}.alternative_names array should have at least 1 elements".format(path))
+        error = error + 1
+    if self.role_in_cancer and not isinstance(self.role_in_cancer, basestring):
+        logger.error("Mutation - {0}.role_in_cancer type should be a string".format(path))
         error = error + 1
     return error
   
@@ -184,7 +214,9 @@ class Mutation(object):
     if not self.inheritance_pattern is None: classDict['inheritance_pattern'] = self.inheritance_pattern
     if not self.functional_consequence is None: classDict['functional_consequence'] = self.functional_consequence
     if not self.preferred_name is None: classDict['preferred_name'] = self.preferred_name
+    if not self.number_samples_tested is None: classDict['number_samples_tested'] = self.number_samples_tested
     if not self.alternative_names is None: classDict['alternative_names'] = self.alternative_names
+    if not self.role_in_cancer is None: classDict['role_in_cancer'] = self.role_in_cancer
     return classDict
   
   def to_JSON(self, indentation=4):

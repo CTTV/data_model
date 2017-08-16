@@ -30,7 +30,7 @@ __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.4"
+__version__ = "1.2.7"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -308,10 +308,11 @@ class Target(Base):
   :param complex_members = None
   :param target_type = None
   :param activity = None
+  :param tier = None
   :param target_class = None
   :param id = None
   """
-  def __init__(self, complex_type = None, target_name = None, complex_members = None, target_type = None, activity = None, target_class = None, id = None):
+  def __init__(self, complex_type = None, target_name = None, complex_members = None, target_type = None, activity = None, tier = None, target_class = None, id = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
@@ -355,6 +356,13 @@ class Target(Base):
     self.activity = activity
     
     """
+    Name: tier
+    Type: string
+    Description: Cancer Gene Census genes has been split into two tiers
+    """
+    self.tier = tier
+    
+    """
     Name: target_class
     Type: array
     """
@@ -382,6 +390,8 @@ class Target(Base):
         obj.target_type = clone.target_type
     if clone.activity:
         obj.activity = clone.activity
+    if clone.tier:
+        obj.tier = clone.tier
     if clone.target_class:
         obj.target_class = []; obj.target_class.extend(clone.target_class)
     if clone.id:
@@ -390,7 +400,7 @@ class Target(Base):
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['complex_type','target_name','complex_members','target_type','activity','target_class','id','id']
+    cls_keys = ['complex_type','target_name','complex_members','target_type','activity','tier','target_class','id','id']
     obj = super(Target, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Target - DictType expected - {0} found\n".format(type(map)))
@@ -405,6 +415,8 @@ class Target(Base):
         obj.target_type = map['target_type']
     if  'activity' in map:
         obj.activity = map['activity']
+    if  'tier' in map:
+        obj.tier = map['tier']
     if  'target_class' in map:
         obj.target_class = map['target_class']
     if  'id' in map:
@@ -467,6 +479,12 @@ class Target(Base):
     if self.activity and not isinstance(self.activity, basestring):
         logger.error("Target - {0}.activity type should be a string".format(path))
         error = error + 1
+    if not self.tier is None and not self.tier in ['tier 1','tier 2']:
+        logger.error("Target - {0}.tier value is restricted to the fixed set of values 'tier 1','tier 2' ('{1}' given)".format(path, self.tier))
+        error = error + 1
+    if self.tier and not isinstance(self.tier, basestring):
+        logger.error("Target - {0}.tier type should be a string".format(path))
+        error = error + 1
     if not self.target_class is None and len(self.target_class) > 0 and not all(isinstance(n, basestring) for n in self.target_class):
         logger.error("Target - {0}.target_class array should have elements of type 'basestring'".format(path))
         error = error+1
@@ -490,6 +508,7 @@ class Target(Base):
     if not self.complex_members is None: classDict['complex_members'] = self.complex_members
     if not self.target_type is None: classDict['target_type'] = self.target_type
     if not self.activity is None: classDict['activity'] = self.activity
+    if not self.tier is None: classDict['tier'] = self.tier
     if not self.target_class is None: classDict['target_class'] = self.target_class
     if not self.id is None: classDict['id'] = self.id
     return classDict
