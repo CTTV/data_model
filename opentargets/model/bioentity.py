@@ -30,7 +30,7 @@ __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.5"
+__version__ = "1.2.7"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -84,7 +84,7 @@ class Base(object):
     return error
   
   def serialize(self):
-    classDict = {}
+    classDict = dict()
     if not self.id is None: classDict['id'] = self.id
     return classDict
   
@@ -98,17 +98,32 @@ class Disease(Base):
   """
   Constructor using all fields with default values
   Arguments:
+  :param name = None
   :param source_name = None
   :param     biosample = None
-  :param name = None
   :param id = None
   """
-  def __init__(self, source_name = None,     biosample = None, name = None, id = None):
+  def __init__(self, name = None, source_name = None,     biosample = None, id = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
     """
     super(Disease, self).__init__(id = id)
+    
+    """
+    Name: id
+    Type: string
+    Description: A valid EFO IRI
+    Required: {True}
+    """
+    self.id = id
+    
+    """
+    Name: name
+    Type: string
+    Description: Optional - EFO disease name corresponding to the EFO ID
+    """
+    self.name = name
     
     """
     Name: source_name
@@ -120,51 +135,36 @@ class Disease(Base):
     Name: biosample
     """
     self.biosample = biosample
-    
-    """
-    Name: name
-    Type: string
-    Description: Optional - EFO disease name corresponding to the EFO ID
-    """
-    self.name = name
-    
-    """
-    Name: id
-    Type: string
-    Description: A valid EFO IRI
-    Required: {True}
-    """
-    self.id = id
   
   @classmethod
   def cloneObject(cls, clone):
     # super will return an instance of the subtype
     obj = super(Disease, cls).cloneObject(clone)
+    if clone.id:
+        obj.id = clone.id
+    if clone.name:
+        obj.name = clone.name
     if clone.source_name:
         obj.source_name = clone.source_name
     if clone.biosample:
         obj.biosample = DiseaseBiosample.cloneObject(clone.biosample)
-    if clone.name:
-        obj.name = clone.name
-    if clone.id:
-        obj.id = clone.id
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['source_name','biosample','name','id','id']
+    cls_keys = ['id','name','source_name','biosample','id']
     obj = super(Disease, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Disease - DictType expected - {0} found\n".format(type(map)))
       return
+    if  'id' in map:
+        obj.id = map['id']
+    if  'name' in map:
+        obj.name = map['name']
     if  'source_name' in map:
         obj.source_name = map['source_name']
     if  'biosample' in map:
         obj.biosample = DiseaseBiosample.fromMap(map['biosample'])
-    if  'name' in map:
-        obj.name = map['name']
-    if  'id' in map:
-        obj.id = map['id']
     for key in map:
       if not key in cls_keys:
         logger.warn("Disease - invalid field - {0} found".format(key))
@@ -182,19 +182,6 @@ class Disease(Base):
     if self.id is None:
       logger.error("Disease - {0}.id is required".format(path))
       error = error + 1
-    if self.source_name and not isinstance(self.source_name, basestring):
-        logger.error("Disease - {0}.source_name type should be a string".format(path))
-        error = error + 1
-    if self.biosample:
-        if not isinstance(self.biosample, DiseaseBiosample):
-            logger.error("DiseaseBiosample class instance expected for attribute - {0}.biosample".format(path))
-            error = error + 1
-        else:
-            biosample_error = self.biosample.validate(logger, path = '.'.join([path, 'biosample']))
-            error = error + biosample_error
-    if self.name and not isinstance(self.name, basestring):
-        logger.error("Disease - {0}.name type should be a string".format(path))
-        error = error + 1
     # id is mandatory
     if self.id is None :
         logger.error("Disease - {0}.id is required".format(path))
@@ -206,14 +193,27 @@ class Disease(Base):
     if self.id and not isinstance(self.id, basestring):
         logger.error("Disease - {0}.id type should be a string".format(path))
         error = error + 1
+    if self.name and not isinstance(self.name, basestring):
+        logger.error("Disease - {0}.name type should be a string".format(path))
+        error = error + 1
+    if self.source_name and not isinstance(self.source_name, basestring):
+        logger.error("Disease - {0}.source_name type should be a string".format(path))
+        error = error + 1
+    if self.biosample:
+        if not isinstance(self.biosample, DiseaseBiosample):
+            logger.error("DiseaseBiosample class instance expected for attribute - {0}.biosample".format(path))
+            error = error + 1
+        else:
+            biosample_error = self.biosample.validate(logger, path = '.'.join([path, 'biosample']))
+            error = error + biosample_error
     return error
   
   def serialize(self):
     classDict = super(Disease, self).serialize()
+    if not self.id is None: classDict['id'] = self.id
+    if not self.name is None: classDict['name'] = self.name
     if not self.source_name is None: classDict['source_name'] = self.source_name
     if not self.biosample is None: classDict['biosample'] = self.biosample.serialize()
-    if not self.name is None: classDict['name'] = self.name
-    if not self.id is None: classDict['id'] = self.id
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -288,7 +288,7 @@ class DiseaseBiosample(object):
     return error
   
   def serialize(self):
-    classDict = {}
+    classDict = dict()
     if not self.name is None: classDict['name'] = self.name
     if not self.id is None: classDict['id'] = self.id
     return classDict
@@ -303,15 +303,17 @@ class Target(Base):
   """
   Constructor using all fields with default values
   Arguments:
-  :param complex_type = None
-  :param target_name = None
+  :param tier = None
+  :param complex_id = None
   :param complex_members = None
+  :param complex_type = None
   :param target_type = None
   :param activity = None
+  :param target_name = None
   :param target_class = None
   :param id = None
   """
-  def __init__(self, complex_type = None, target_name = None, complex_members = None, target_type = None, activity = None, target_class = None, id = None):
+  def __init__(self, tier = None, complex_id = None, complex_members = None, complex_type = None, target_type = None, activity = None, target_name = None, target_class = None, id = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
@@ -319,24 +321,39 @@ class Target(Base):
     super(Target, self).__init__(id = id)
     
     """
-    Name: complex_type
+    Name: id
     Type: string
-    Description: Type of target
+    Description: An Ensembl or UniProt identifier
+    Required: {True}
     """
-    self.complex_type = complex_type
+    self.id = id
     
     """
-    Name: target_name
+    Name: tier
     Type: string
-    Description: used by ChEMBL initially if they have a more canonical target name, optional
+    Description: Cancer Gene Census genes has been split into two tiers
     """
-    self.target_name = target_name
+    self.tier = tier
+    
+    """
+    Name: complex_id
+    Type: string
+    Description: A ChEMBL protein complex identifier
+    """
+    self.complex_id = complex_id
     
     """
     Name: complex_members
     Type: array
     """
     self.complex_members = complex_members
+    
+    """
+    Name: complex_type
+    Type: string
+    Description: Type of target
+    """
+    self.complex_type = complex_type
     
     """
     Name: target_type
@@ -355,60 +372,67 @@ class Target(Base):
     self.activity = activity
     
     """
+    Name: target_name
+    Type: string
+    Description: used by ChEMBL initially if they have a more canonical target name, optional
+    """
+    self.target_name = target_name
+    
+    """
     Name: target_class
     Type: array
     """
     self.target_class = target_class
-    
-    """
-    Name: id
-    Type: string
-    Description: An Ensembl or UniProt identifier
-    Required: {True}
-    """
-    self.id = id
   
   @classmethod
   def cloneObject(cls, clone):
     # super will return an instance of the subtype
     obj = super(Target, cls).cloneObject(clone)
-    if clone.complex_type:
-        obj.complex_type = clone.complex_type
-    if clone.target_name:
-        obj.target_name = clone.target_name
+    if clone.id:
+        obj.id = clone.id
+    if clone.tier:
+        obj.tier = clone.tier
+    if clone.complex_id:
+        obj.complex_id = clone.complex_id
     if clone.complex_members:
         obj.complex_members = []; obj.complex_members.extend(clone.complex_members)
+    if clone.complex_type:
+        obj.complex_type = clone.complex_type
     if clone.target_type:
         obj.target_type = clone.target_type
     if clone.activity:
         obj.activity = clone.activity
+    if clone.target_name:
+        obj.target_name = clone.target_name
     if clone.target_class:
         obj.target_class = []; obj.target_class.extend(clone.target_class)
-    if clone.id:
-        obj.id = clone.id
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['complex_type','target_name','complex_members','target_type','activity','target_class','id','id']
+    cls_keys = ['id','tier','complex_id','complex_members','complex_type','target_type','activity','target_name','target_class','id']
     obj = super(Target, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Target - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'complex_type' in map:
-        obj.complex_type = map['complex_type']
-    if  'target_name' in map:
-        obj.target_name = map['target_name']
+    if  'id' in map:
+        obj.id = map['id']
+    if  'tier' in map:
+        obj.tier = map['tier']
+    if  'complex_id' in map:
+        obj.complex_id = map['complex_id']
     if  'complex_members' in map:
         obj.complex_members = map['complex_members']
+    if  'complex_type' in map:
+        obj.complex_type = map['complex_type']
     if  'target_type' in map:
         obj.target_type = map['target_type']
     if  'activity' in map:
         obj.activity = map['activity']
+    if  'target_name' in map:
+        obj.target_name = map['target_name']
     if  'target_class' in map:
         obj.target_class = map['target_class']
-    if  'id' in map:
-        obj.id = map['id']
     for key in map:
       if not key in cls_keys:
         logger.warn("Target - invalid field - {0} found".format(key))
@@ -426,14 +450,29 @@ class Target(Base):
     if self.id is None:
       logger.error("Target - {0}.id is required".format(path))
       error = error + 1
-    if not self.complex_type is None and not self.complex_type in ['http://identifiers.org/cttv.target/chimeric_protein','http://identifiers.org/cttv.target/protein_complex','http://identifiers.org/cttv.target/protein_complex_group','http://identifiers.org/cttv.target/protein_complex_heteropolymer','http://identifiers.org/cttv.target/protein_complex_homopolymer','http://identifiers.org/cttv.target/protein_family','http://identifiers.org/cttv.target/selectivity_group']:
-        logger.error("Target - {0}.complex_type value is restricted to the fixed set of values 'http://identifiers.org/cttv.target/chimeric_protein','http://identifiers.org/cttv.target/protein_complex','http://identifiers.org/cttv.target/protein_complex_group','http://identifiers.org/cttv.target/protein_complex_heteropolymer','http://identifiers.org/cttv.target/protein_complex_homopolymer','http://identifiers.org/cttv.target/protein_family','http://identifiers.org/cttv.target/selectivity_group' ('{1}' given)".format(path, self.complex_type))
+    # id is mandatory
+    if self.id is None :
+        logger.error("Target - {0}.id is required".format(path))
         error = error + 1
-    if self.complex_type and not isinstance(self.complex_type, basestring):
-        logger.error("Target - {0}.complex_type type should be a string".format(path))
+    """ Check regex: ^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$ for validation"""
+    if self.id and not re.match('^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$', self.id):
+        logger.error("Target - {0}.id '{1}'".format(path,self.id) + " does not match pattern '^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$'")
+        logger.warn(json.dumps(self.id, sort_keys=True, indent=2))
+    if self.id and not isinstance(self.id, basestring):
+        logger.error("Target - {0}.id type should be a string".format(path))
         error = error + 1
-    if self.target_name and not isinstance(self.target_name, basestring):
-        logger.error("Target - {0}.target_name type should be a string".format(path))
+    if not self.tier is None and not self.tier in ['tier 1','tier 2']:
+        logger.error("Target - {0}.tier value is restricted to the fixed set of values 'tier 1','tier 2' ('{1}' given)".format(path, self.tier))
+        error = error + 1
+    if self.tier and not isinstance(self.tier, basestring):
+        logger.error("Target - {0}.tier type should be a string".format(path))
+        error = error + 1
+    """ Check regex: ^CHEMBL[0-9]+$ for validation"""
+    if self.complex_id and not re.match('^CHEMBL[0-9]+$', self.complex_id):
+        logger.error("Target - {0}.complex_id '{1}'".format(path,self.complex_id) + " does not match pattern '^CHEMBL[0-9]+$'")
+        logger.warn(json.dumps(self.complex_id, sort_keys=True, indent=2))
+    if self.complex_id and not isinstance(self.complex_id, basestring):
+        logger.error("Target - {0}.complex_id type should be a string".format(path))
         error = error + 1
     if not self.complex_members is None and len(self.complex_members) > 0 and not all(isinstance(n, basestring) for n in self.complex_members):
         logger.error("Target - {0}.complex_members array should have elements of type 'basestring'".format(path))
@@ -447,6 +486,12 @@ class Target(Base):
     """ Check regex: ^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$ for validation of array item"""
     if self.complex_members and len(self.complex_members) > 0 and not all(re.match('^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$', n) for n in self.complex_members):
         logger.error("Target - {0}.complex_members items".format(path) + " do not match pattern '^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$'")
+    if not self.complex_type is None and not self.complex_type in ['http://identifiers.org/cttv.target/chimeric_protein','http://identifiers.org/cttv.target/protein_complex','http://identifiers.org/cttv.target/protein_complex_group','http://identifiers.org/cttv.target/protein_complex_heteropolymer','http://identifiers.org/cttv.target/protein_complex_homopolymer','http://identifiers.org/cttv.target/protein_family','http://identifiers.org/cttv.target/selectivity_group']:
+        logger.error("Target - {0}.complex_type value is restricted to the fixed set of values 'http://identifiers.org/cttv.target/chimeric_protein','http://identifiers.org/cttv.target/protein_complex','http://identifiers.org/cttv.target/protein_complex_group','http://identifiers.org/cttv.target/protein_complex_heteropolymer','http://identifiers.org/cttv.target/protein_complex_homopolymer','http://identifiers.org/cttv.target/protein_family','http://identifiers.org/cttv.target/selectivity_group' ('{1}' given)".format(path, self.complex_type))
+        error = error + 1
+    if self.complex_type and not isinstance(self.complex_type, basestring):
+        logger.error("Target - {0}.complex_type type should be a string".format(path))
+        error = error + 1
     # target_type is mandatory
     if self.target_type is None :
         logger.error("Target - {0}.target_type is required".format(path))
@@ -467,31 +512,25 @@ class Target(Base):
     if self.activity and not isinstance(self.activity, basestring):
         logger.error("Target - {0}.activity type should be a string".format(path))
         error = error + 1
+    if self.target_name and not isinstance(self.target_name, basestring):
+        logger.error("Target - {0}.target_name type should be a string".format(path))
+        error = error + 1
     if not self.target_class is None and len(self.target_class) > 0 and not all(isinstance(n, basestring) for n in self.target_class):
         logger.error("Target - {0}.target_class array should have elements of type 'basestring'".format(path))
         error = error+1
-    # id is mandatory
-    if self.id is None :
-        logger.error("Target - {0}.id is required".format(path))
-        error = error + 1
-    """ Check regex: ^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$ for validation"""
-    if self.id and not re.match('^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$', self.id):
-        logger.error("Target - {0}.id '{1}'".format(path,self.id) + " does not match pattern '^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$'")
-        logger.warn(json.dumps(self.id, sort_keys=True, indent=2))
-    if self.id and not isinstance(self.id, basestring):
-        logger.error("Target - {0}.id type should be a string".format(path))
-        error = error + 1
     return error
   
   def serialize(self):
     classDict = super(Target, self).serialize()
-    if not self.complex_type is None: classDict['complex_type'] = self.complex_type
-    if not self.target_name is None: classDict['target_name'] = self.target_name
+    if not self.id is None: classDict['id'] = self.id
+    if not self.tier is None: classDict['tier'] = self.tier
+    if not self.complex_id is None: classDict['complex_id'] = self.complex_id
     if not self.complex_members is None: classDict['complex_members'] = self.complex_members
+    if not self.complex_type is None: classDict['complex_type'] = self.complex_type
     if not self.target_type is None: classDict['target_type'] = self.target_type
     if not self.activity is None: classDict['activity'] = self.activity
+    if not self.target_name is None: classDict['target_name'] = self.target_name
     if not self.target_class is None: classDict['target_class'] = self.target_class
-    if not self.id is None: classDict['id'] = self.id
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -505,11 +544,11 @@ class Phenotype(Base):
   Constructor using all fields with default values
   Arguments:
   :param term_id = None
-  :param species = None
   :param label = None
+  :param species = None
   :param id = None
   """
-  def __init__(self, term_id = None, species = None, label = None, id = None):
+  def __init__(self, term_id = None, label = None, species = None, id = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
@@ -525,19 +564,19 @@ class Phenotype(Base):
     self.term_id = term_id
     
     """
-    Name: species
-    Type: string
-    Required: {True}
-    """
-    self.species = species
-    
-    """
     Name: label
     Type: string
     Description: Phenotype term label
     Required: {True}
     """
     self.label = label
+    
+    """
+    Name: species
+    Type: string
+    Required: {True}
+    """
+    self.species = species
   
   @classmethod
   def cloneObject(cls, clone):
@@ -545,25 +584,25 @@ class Phenotype(Base):
     obj = super(Phenotype, cls).cloneObject(clone)
     if clone.term_id:
         obj.term_id = clone.term_id
-    if clone.species:
-        obj.species = clone.species
     if clone.label:
         obj.label = clone.label
+    if clone.species:
+        obj.species = clone.species
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['term_id','species','label','id']
+    cls_keys = ['term_id','label','species','id']
     obj = super(Phenotype, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Phenotype - DictType expected - {0} found\n".format(type(map)))
       return
     if  'term_id' in map:
         obj.term_id = map['term_id']
-    if  'species' in map:
-        obj.species = map['species']
     if  'label' in map:
         obj.label = map['label']
+    if  'species' in map:
+        obj.species = map['species']
     for key in map:
       if not key in cls_keys:
         logger.warn("Phenotype - invalid field - {0} found".format(key))
@@ -592,6 +631,13 @@ class Phenotype(Base):
     if self.term_id and not isinstance(self.term_id, basestring):
         logger.error("Phenotype - {0}.term_id type should be a string".format(path))
         error = error + 1
+    # label is mandatory
+    if self.label is None :
+        logger.error("Phenotype - {0}.label is required".format(path))
+        error = error + 1
+    if self.label and not isinstance(self.label, basestring):
+        logger.error("Phenotype - {0}.label type should be a string".format(path))
+        error = error + 1
     # species is mandatory
     if self.species is None :
         logger.error("Phenotype - {0}.species is required".format(path))
@@ -602,20 +648,13 @@ class Phenotype(Base):
     if self.species and not isinstance(self.species, basestring):
         logger.error("Phenotype - {0}.species type should be a string".format(path))
         error = error + 1
-    # label is mandatory
-    if self.label is None :
-        logger.error("Phenotype - {0}.label is required".format(path))
-        error = error + 1
-    if self.label and not isinstance(self.label, basestring):
-        logger.error("Phenotype - {0}.label type should be a string".format(path))
-        error = error + 1
     return error
   
   def serialize(self):
     classDict = super(Phenotype, self).serialize()
     if not self.term_id is None: classDict['term_id'] = self.term_id
-    if not self.species is None: classDict['species'] = self.species
     if not self.label is None: classDict['label'] = self.label
+    if not self.species is None: classDict['species'] = self.species
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -628,12 +667,12 @@ class Drug(Base):
   """
   Constructor using all fields with default values
   Arguments:
-  :param molecule_type = None
   :param molecule_name = None
+  :param molecule_type = None
   :param     max_phase_for_all_diseases = None
   :param id = None
   """
-  def __init__(self, molecule_type = None, molecule_name = None,     max_phase_for_all_diseases = None, id = None):
+  def __init__(self, molecule_name = None, molecule_type = None,     max_phase_for_all_diseases = None, id = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
@@ -641,11 +680,12 @@ class Drug(Base):
     super(Drug, self).__init__(id = id)
     
     """
-    Name: molecule_type
+    Name: id
     Type: string
+    Description: A ChEMBL or internal drug identifier
     Required: {True}
     """
-    self.molecule_type = molecule_type
+    self.id = id
     
     """
     Name: molecule_name
@@ -655,12 +695,11 @@ class Drug(Base):
     self.molecule_name = molecule_name
     
     """
-    Name: id
+    Name: molecule_type
     Type: string
-    Description: A ChEMBL or internal drug identifier
     Required: {True}
     """
-    self.id = id
+    self.molecule_type = molecule_type
     """
     Name: max_phase_for_all_diseases
     """
@@ -670,29 +709,29 @@ class Drug(Base):
   def cloneObject(cls, clone):
     # super will return an instance of the subtype
     obj = super(Drug, cls).cloneObject(clone)
-    if clone.molecule_type:
-        obj.molecule_type = clone.molecule_type
-    if clone.molecule_name:
-        obj.molecule_name = clone.molecule_name
     if clone.id:
         obj.id = clone.id
+    if clone.molecule_name:
+        obj.molecule_name = clone.molecule_name
+    if clone.molecule_type:
+        obj.molecule_type = clone.molecule_type
     if clone.max_phase_for_all_diseases:
         obj.max_phase_for_all_diseases = evidence_drug.Diseasephase.cloneObject(clone.max_phase_for_all_diseases)
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['molecule_type','molecule_name','id','max_phase_for_all_diseases','id']
+    cls_keys = ['id','molecule_name','molecule_type','max_phase_for_all_diseases','id']
     obj = super(Drug, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Drug - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'molecule_type' in map:
-        obj.molecule_type = map['molecule_type']
-    if  'molecule_name' in map:
-        obj.molecule_name = map['molecule_name']
     if  'id' in map:
         obj.id = map['id']
+    if  'molecule_name' in map:
+        obj.molecule_name = map['molecule_name']
+    if  'molecule_type' in map:
+        obj.molecule_type = map['molecule_type']
     if  'max_phase_for_all_diseases' in map:
         obj.max_phase_for_all_diseases = evidence_drug.Diseasephase.fromMap(map['max_phase_for_all_diseases'])
     for key in map:
@@ -712,20 +751,6 @@ class Drug(Base):
     if self.id is None:
       logger.error("Drug - {0}.id is required".format(path))
       error = error + 1
-    # molecule_type is mandatory
-    if self.molecule_type is None :
-        logger.error("Drug - {0}.molecule_type is required".format(path))
-        error = error + 1
-    if self.molecule_type and not isinstance(self.molecule_type, basestring):
-        logger.error("Drug - {0}.molecule_type type should be a string".format(path))
-        error = error + 1
-    # molecule_name is mandatory
-    if self.molecule_name is None :
-        logger.error("Drug - {0}.molecule_name is required".format(path))
-        error = error + 1
-    if self.molecule_name and not isinstance(self.molecule_name, basestring):
-        logger.error("Drug - {0}.molecule_name type should be a string".format(path))
-        error = error + 1
     # id is mandatory
     if self.id is None :
         logger.error("Drug - {0}.id is required".format(path))
@@ -736,6 +761,20 @@ class Drug(Base):
         logger.warn(json.dumps(self.id, sort_keys=True, indent=2))
     if self.id and not isinstance(self.id, basestring):
         logger.error("Drug - {0}.id type should be a string".format(path))
+        error = error + 1
+    # molecule_name is mandatory
+    if self.molecule_name is None :
+        logger.error("Drug - {0}.molecule_name is required".format(path))
+        error = error + 1
+    if self.molecule_name and not isinstance(self.molecule_name, basestring):
+        logger.error("Drug - {0}.molecule_name type should be a string".format(path))
+        error = error + 1
+    # molecule_type is mandatory
+    if self.molecule_type is None :
+        logger.error("Drug - {0}.molecule_type is required".format(path))
+        error = error + 1
+    if self.molecule_type and not isinstance(self.molecule_type, basestring):
+        logger.error("Drug - {0}.molecule_type type should be a string".format(path))
         error = error + 1
     if self.max_phase_for_all_diseases:
         if not isinstance(self.max_phase_for_all_diseases, evidence_drug.Diseasephase):
@@ -748,9 +787,9 @@ class Drug(Base):
   
   def serialize(self):
     classDict = super(Drug, self).serialize()
-    if not self.molecule_type is None: classDict['molecule_type'] = self.molecule_type
-    if not self.molecule_name is None: classDict['molecule_name'] = self.molecule_name
     if not self.id is None: classDict['id'] = self.id
+    if not self.molecule_name is None: classDict['molecule_name'] = self.molecule_name
+    if not self.molecule_type is None: classDict['molecule_type'] = self.molecule_type
     if not self.max_phase_for_all_diseases is None: classDict['max_phase_for_all_diseases'] = self.max_phase_for_all_diseases.serialize()
     return classDict
   
@@ -775,41 +814,41 @@ class Variant(Base):
     super(Variant, self).__init__(id = id)
     
     """
-    Name: type
-    Type: string
-    Required: {True}
-    """
-    self.type = type
-    
-    """
     Name: id
     Type: string
     Description: An array of variant identifiers
     Required: {True}
     """
     self.id = id
+    
+    """
+    Name: type
+    Type: string
+    Required: {True}
+    """
+    self.type = type
   
   @classmethod
   def cloneObject(cls, clone):
     # super will return an instance of the subtype
     obj = super(Variant, cls).cloneObject(clone)
-    if clone.type:
-        obj.type = clone.type
     if clone.id:
         obj.id = clone.id
+    if clone.type:
+        obj.type = clone.type
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['type','id','id']
+    cls_keys = ['id','type','id']
     obj = super(Variant, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Variant - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'type' in map:
-        obj.type = map['type']
     if  'id' in map:
         obj.id = map['id']
+    if  'type' in map:
+        obj.type = map['type']
     for key in map:
       if not key in cls_keys:
         logger.warn("Variant - invalid field - {0} found".format(key))
@@ -827,16 +866,6 @@ class Variant(Base):
     if self.id is None:
       logger.error("Variant - {0}.id is required".format(path))
       error = error + 1
-    # type is mandatory
-    if self.type is None :
-        logger.error("Variant - {0}.type is required".format(path))
-        error = error + 1
-    if not self.type is None and not self.type in ['snp single','snp snp interaction','structural variant']:
-        logger.error("Variant - {0}.type value is restricted to the fixed set of values 'snp single','snp snp interaction','structural variant' ('{1}' given)".format(path, self.type))
-        error = error + 1
-    if self.type and not isinstance(self.type, basestring):
-        logger.error("Variant - {0}.type type should be a string".format(path))
-        error = error + 1
     # id is mandatory
     if self.id is None :
         logger.error("Variant - {0}.id is required".format(path))
@@ -848,12 +877,22 @@ class Variant(Base):
     if self.id and not isinstance(self.id, basestring):
         logger.error("Variant - {0}.id type should be a string".format(path))
         error = error + 1
+    # type is mandatory
+    if self.type is None :
+        logger.error("Variant - {0}.type is required".format(path))
+        error = error + 1
+    if not self.type is None and not self.type in ['snp single','snp snp interaction','structural variant']:
+        logger.error("Variant - {0}.type value is restricted to the fixed set of values 'snp single','snp snp interaction','structural variant' ('{1}' given)".format(path, self.type))
+        error = error + 1
+    if self.type and not isinstance(self.type, basestring):
+        logger.error("Variant - {0}.type type should be a string".format(path))
+        error = error + 1
     return error
   
   def serialize(self):
     classDict = super(Variant, self).serialize()
-    if not self.type is None: classDict['type'] = self.type
     if not self.id is None: classDict['id'] = self.id
+    if not self.type is None: classDict['type'] = self.type
     return classDict
   
   def to_JSON(self, indentation=4):

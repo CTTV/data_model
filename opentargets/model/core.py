@@ -24,8 +24,8 @@ import iso8601
 import types
 import json
 import logging
-import opentargets.model.evidence.core as evidence_core
 import opentargets.model.bioentity as bioentity
+import opentargets.model.evidence.core as evidence_core
 import opentargets.model.evidence.phenotype as evidence_phenotype
 import opentargets.model.evidence.drug as evidence_drug
 import opentargets.model.evidence.genetics as evidence_genetics
@@ -34,7 +34,7 @@ __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.5"
+__version__ = "1.2.7"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -52,23 +52,22 @@ class Base(object):
   """
   Constructor using all fields with default values
   Arguments:
-  :param     literature = None
-  :param     target = None
-  :param access_level = None
   :param sourceID = None
-  :param     disease = None
-  :param unique_association_fields = None
+  :param access_level = None
   :param validated_against_schema_version = None
+  :param unique_association_fields = None
+  :param     target = None
+  :param     disease = None
+  :param     literature = None
   """
-  def __init__(self,     literature = None,     target = None, access_level = None, sourceID = None,     disease = None, unique_association_fields = None, validated_against_schema_version = None):
+  def __init__(self, sourceID = None, access_level = None, validated_against_schema_version = None, unique_association_fields = None,     target = None,     disease = None,     literature = None):
+    
     """
-    Name: literature
+    Name: sourceID
+    Type: string
+    Description: A source ID (database or study ID) to help identify who this data is from.
     """
-    self.literature = literature
-    """
-    Name: target
-    """
-    self.target = target
+    self.sourceID = sourceID
     
     """
     Name: access_level
@@ -78,67 +77,68 @@ class Base(object):
     self.access_level = access_level
     
     """
-    Name: sourceID
-    Type: string
-    Description: A source ID (database or study ID) to help identify who this data is from.
-    """
-    self.sourceID = sourceID
-    """
-    Name: disease
-    """
-    self.disease = disease
-    """
-    Name: unique_association_fields
-    """
-    self.unique_association_fields = unique_association_fields
-    
-    """
     Name: validated_against_schema_version
     Type: string
     Description: The OpenTargets-JSON schema version number against which your data was validated
     """
     self.validated_against_schema_version = validated_against_schema_version
+    """
+    Name: unique_association_fields
+    """
+    self.unique_association_fields = unique_association_fields
+    """
+    Name: target
+    """
+    self.target = target
+    """
+    Name: disease
+    """
+    self.disease = disease
+    """
+    Name: literature
+    """
+    self.literature = literature
   
   @classmethod
   def cloneObject(cls, clone):
     obj = cls()
-    if clone.literature:
-        obj.literature = BaseLiterature.cloneObject(clone.literature)
-    if clone.target:
-        obj.target = bioentity.Target.cloneObject(clone.target)
-    if clone.access_level:
-        obj.access_level = clone.access_level
     if clone.sourceID:
         obj.sourceID = clone.sourceID
-    if clone.disease:
-        obj.disease = bioentity.Disease.cloneObject(clone.disease)
-    if clone.unique_association_fields:
-        obj.unique_association_fields = clone.unique_association_fields
+    if clone.access_level:
+        obj.access_level = clone.access_level
     if clone.validated_against_schema_version:
         obj.validated_against_schema_version = clone.validated_against_schema_version
+    if clone.unique_association_fields:
+        obj.unique_association_fields = clone.unique_association_fields
+    if clone.target:
+        obj.target = bioentity.Target.cloneObject(clone.target)
+    if clone.disease:
+        obj.disease = bioentity.Disease.cloneObject(clone.disease)
+    if clone.literature:
+        obj.literature = BaseLiterature.cloneObject(clone.literature)
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['literature','target','access_level','sourceID','disease','unique_association_fields','validated_against_schema_version']
+    cls_keys = ['sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("Base - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'literature' in map:
-        obj.literature = BaseLiterature.fromMap(map['literature'])
-    if  'target' in map:
-        obj.target = bioentity.Target.fromMap(map['target'])
-    if  'access_level' in map:
-        obj.access_level = map['access_level']
     if  'sourceID' in map:
         obj.sourceID = map['sourceID']
-    if  'disease' in map:
-        obj.disease = bioentity.Disease.fromMap(map['disease'])
-    if  'unique_association_fields' in map:
-        obj.unique_association_fields = map['unique_association_fields']
+    if  'access_level' in map:
+        obj.access_level = map['access_level']
     if  'validated_against_schema_version' in map:
         obj.validated_against_schema_version = map['validated_against_schema_version']
+    if  'unique_association_fields' in map:
+        obj.unique_association_fields = map['unique_association_fields']
+    if  'target' in map:
+        obj.target = bioentity.Target.fromMap(map['target'])
+    if  'disease' in map:
+        obj.disease = bioentity.Disease.fromMap(map['disease'])
+    if  'literature' in map:
+        obj.literature = BaseLiterature.fromMap(map['literature'])
     return obj
   
   def validate(self, logger, path = "root"):
@@ -147,26 +147,6 @@ class Base(object):
     :returns: number of errors found during validation
     """
     error = 0
-    if self.literature:
-        if not isinstance(self.literature, BaseLiterature):
-            logger.error("BaseLiterature class instance expected for attribute - {0}.literature".format(path))
-            error = error + 1
-        else:
-            literature_error = self.literature.validate(logger, path = '.'.join([path, 'literature']))
-            error = error + literature_error
-    if self.target:
-        if not isinstance(self.target, bioentity.Target):
-            logger.error("bioentity.Target class instance expected for attribute - {0}.target".format(path))
-            error = error + 1
-        else:
-            target_error = self.target.validate(logger, path = '.'.join([path, 'target']))
-            error = error + target_error
-    if not self.access_level is None and not self.access_level in ['public','private']:
-        logger.error("Base - {0}.access_level value is restricted to the fixed set of values 'public','private' ('{1}' given)".format(path, self.access_level))
-        error = error + 1
-    if self.access_level and not isinstance(self.access_level, basestring):
-        logger.error("Base - {0}.access_level type should be a string".format(path))
-        error = error + 1
     """ Check regex: ^[a-z0-9_]+$ for validation"""
     if self.sourceID and not re.match('^[a-z0-9_]+$', self.sourceID):
         logger.error("Base - {0}.sourceID '{1}'".format(path,self.sourceID) + " does not match pattern '^[a-z0-9_]+$'")
@@ -174,6 +154,28 @@ class Base(object):
     if self.sourceID and not isinstance(self.sourceID, basestring):
         logger.error("Base - {0}.sourceID type should be a string".format(path))
         error = error + 1
+    if not self.access_level is None and not self.access_level in ['public','private']:
+        logger.error("Base - {0}.access_level value is restricted to the fixed set of values 'public','private' ('{1}' given)".format(path, self.access_level))
+        error = error + 1
+    if self.access_level and not isinstance(self.access_level, basestring):
+        logger.error("Base - {0}.access_level type should be a string".format(path))
+        error = error + 1
+    if not self.validated_against_schema_version is None and not self.validated_against_schema_version in ['1.2.7']:
+        logger.error("Base - {0}.validated_against_schema_version value is restricted to the fixed set of values '1.2.7' ('{1}' given)".format(path, self.validated_against_schema_version))
+        error = error + 1
+    if self.validated_against_schema_version and not isinstance(self.validated_against_schema_version, basestring):
+        logger.error("Base - {0}.validated_against_schema_version type should be a string".format(path))
+        error = error + 1
+    if self.unique_association_fields and not isinstance(self.unique_association_fields, dict):
+        logger.error("Basedictionary expected for attribute - {0}.unique_association_fields".format(path))
+        error = error + 1
+    if self.target:
+        if not isinstance(self.target, bioentity.Target):
+            logger.error("bioentity.Target class instance expected for attribute - {0}.target".format(path))
+            error = error + 1
+        else:
+            target_error = self.target.validate(logger, path = '.'.join([path, 'target']))
+            error = error + target_error
     if self.disease:
         if not isinstance(self.disease, bioentity.Disease):
             logger.error("bioentity.Disease class instance expected for attribute - {0}.disease".format(path))
@@ -181,26 +183,24 @@ class Base(object):
         else:
             disease_error = self.disease.validate(logger, path = '.'.join([path, 'disease']))
             error = error + disease_error
-    if self.unique_association_fields and not isinstance(self.unique_association_fields, dict):
-        logger.error("Basedictionary expected for attribute - {0}.unique_association_fields".format(path))
-        error = error + 1
-    if not self.validated_against_schema_version is None and not self.validated_against_schema_version in ['1.2.5']:
-        logger.error("Base - {0}.validated_against_schema_version value is restricted to the fixed set of values '1.2.5' ('{1}' given)".format(path, self.validated_against_schema_version))
-        error = error + 1
-    if self.validated_against_schema_version and not isinstance(self.validated_against_schema_version, basestring):
-        logger.error("Base - {0}.validated_against_schema_version type should be a string".format(path))
-        error = error + 1
+    if self.literature:
+        if not isinstance(self.literature, BaseLiterature):
+            logger.error("BaseLiterature class instance expected for attribute - {0}.literature".format(path))
+            error = error + 1
+        else:
+            literature_error = self.literature.validate(logger, path = '.'.join([path, 'literature']))
+            error = error + literature_error
     return error
   
   def serialize(self):
-    classDict = {}
-    if not self.literature is None: classDict['literature'] = self.literature.serialize()
-    if not self.target is None: classDict['target'] = self.target.serialize()
-    if not self.access_level is None: classDict['access_level'] = self.access_level
+    classDict = dict()
     if not self.sourceID is None: classDict['sourceID'] = self.sourceID
-    if not self.disease is None: classDict['disease'] = self.disease.serialize()
-    if not self.unique_association_fields is None: classDict['unique_association_fields'] = self.unique_association_fields
+    if not self.access_level is None: classDict['access_level'] = self.access_level
     if not self.validated_against_schema_version is None: classDict['validated_against_schema_version'] = self.validated_against_schema_version
+    if not self.unique_association_fields is None: classDict['unique_association_fields'] = self.unique_association_fields
+    if not self.target is None: classDict['target'] = self.target.serialize()
+    if not self.disease is None: classDict['disease'] = self.disease.serialize()
+    if not self.literature is None: classDict['literature'] = self.literature.serialize()
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -261,7 +261,7 @@ class BaseLiterature(object):
     return error
   
   def serialize(self):
-    classDict = {}
+    classDict = dict()
     if not self.references is None: classDict['references'] = map(lambda x: x.serialize(), self.references)
     return classDict
   
@@ -277,20 +277,20 @@ class Animal_Models(Base):
   Arguments:
   :param type = None
   :param evidence = None
-  :param     literature = None
-  :param     target = None
-  :param access_level = None
   :param sourceID = None
-  :param     disease = None
-  :param unique_association_fields = None
+  :param access_level = None
   :param validated_against_schema_version = None
+  :param unique_association_fields = None
+  :param     target = None
+  :param     disease = None
+  :param     literature = None
   """
-  def __init__(self, type = None, evidence = None,     literature = None,     target = None, access_level = None, sourceID = None,     disease = None, unique_association_fields = None, validated_against_schema_version = None):
+  def __init__(self, type = None, evidence = None, sourceID = None, access_level = None, validated_against_schema_version = None, unique_association_fields = None,     target = None,     disease = None,     literature = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
     """
-    super(Animal_Models, self).__init__(literature = literature,target = target,access_level = access_level,sourceID = sourceID,disease = disease,unique_association_fields = unique_association_fields,validated_against_schema_version = validated_against_schema_version)
+    super(Animal_Models, self).__init__(sourceID = sourceID,access_level = access_level,validated_against_schema_version = validated_against_schema_version,unique_association_fields = unique_association_fields,target = target,disease = disease,literature = literature)
     
     """
     Name: type
@@ -314,7 +314,7 @@ class Animal_Models(Base):
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['type','evidence','literature','target','access_level','sourceID','disease','unique_association_fields','validated_against_schema_version']
+    cls_keys = ['type','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = super(Animal_Models, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Animal_Models - DictType expected - {0} found\n".format(type(map)))
@@ -337,23 +337,23 @@ class Animal_Models(Base):
     error = 0
     # cumulate errors from super class
     error = error + super(Animal_Models, self).validate(logger, path = path)
-    if self.target is None:
-      logger.error("Animal_Models - {0}.target is required".format(path))
+    if self.sourceID is None:
+      logger.error("Animal_Models - {0}.sourceID is required".format(path))
       error = error + 1
     if self.access_level is None:
       logger.error("Animal_Models - {0}.access_level is required".format(path))
       error = error + 1
-    if self.sourceID is None:
-      logger.error("Animal_Models - {0}.sourceID is required".format(path))
-      error = error + 1
-    if self.disease is None:
-      logger.error("Animal_Models - {0}.disease is required".format(path))
+    if self.validated_against_schema_version is None:
+      logger.error("Animal_Models - {0}.validated_against_schema_version is required".format(path))
       error = error + 1
     if self.unique_association_fields is None:
       logger.error("Animal_Models - {0}.unique_association_fields is required".format(path))
       error = error + 1
-    if self.validated_against_schema_version is None:
-      logger.error("Animal_Models - {0}.validated_against_schema_version is required".format(path))
+    if self.target is None:
+      logger.error("Animal_Models - {0}.target is required".format(path))
+      error = error + 1
+    if self.disease is None:
+      logger.error("Animal_Models - {0}.disease is required".format(path))
       error = error + 1
     # type is mandatory
     if self.type is None :
@@ -469,7 +469,7 @@ class Animal_ModelsEvidence(object):
     return error
   
   def serialize(self):
-    classDict = {}
+    classDict = dict()
     if not self.orthologs is None: classDict['orthologs'] = self.orthologs.serialize()
     if not self.biological_model is None: classDict['biological_model'] = self.biological_model.serialize()
     if not self.disease_model_association is None: classDict['disease_model_association'] = self.disease_model_association.serialize()
@@ -488,20 +488,20 @@ class Drug(Base):
   :param type = None
   :param drug = None
   :param evidence = None
-  :param     literature = None
-  :param     target = None
-  :param access_level = None
   :param sourceID = None
-  :param     disease = None
-  :param unique_association_fields = None
+  :param access_level = None
   :param validated_against_schema_version = None
+  :param unique_association_fields = None
+  :param     target = None
+  :param     disease = None
+  :param     literature = None
   """
-  def __init__(self, type = None, drug = None, evidence = None,     literature = None,     target = None, access_level = None, sourceID = None,     disease = None, unique_association_fields = None, validated_against_schema_version = None):
+  def __init__(self, type = None, drug = None, evidence = None, sourceID = None, access_level = None, validated_against_schema_version = None, unique_association_fields = None,     target = None,     disease = None,     literature = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
     """
-    super(Drug, self).__init__(literature = literature,target = target,access_level = access_level,sourceID = sourceID,disease = disease,unique_association_fields = unique_association_fields,validated_against_schema_version = validated_against_schema_version)
+    super(Drug, self).__init__(sourceID = sourceID,access_level = access_level,validated_against_schema_version = validated_against_schema_version,unique_association_fields = unique_association_fields,target = target,disease = disease,literature = literature)
     
     """
     Name: type
@@ -530,7 +530,7 @@ class Drug(Base):
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['type','drug','evidence','literature','target','access_level','sourceID','disease','unique_association_fields','validated_against_schema_version']
+    cls_keys = ['type','drug','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = super(Drug, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Drug - DictType expected - {0} found\n".format(type(map)))
@@ -555,23 +555,23 @@ class Drug(Base):
     error = 0
     # cumulate errors from super class
     error = error + super(Drug, self).validate(logger, path = path)
-    if self.target is None:
-      logger.error("Drug - {0}.target is required".format(path))
+    if self.sourceID is None:
+      logger.error("Drug - {0}.sourceID is required".format(path))
       error = error + 1
     if self.access_level is None:
       logger.error("Drug - {0}.access_level is required".format(path))
       error = error + 1
-    if self.sourceID is None:
-      logger.error("Drug - {0}.sourceID is required".format(path))
-      error = error + 1
-    if self.disease is None:
-      logger.error("Drug - {0}.disease is required".format(path))
+    if self.validated_against_schema_version is None:
+      logger.error("Drug - {0}.validated_against_schema_version is required".format(path))
       error = error + 1
     if self.unique_association_fields is None:
       logger.error("Drug - {0}.unique_association_fields is required".format(path))
       error = error + 1
-    if self.validated_against_schema_version is None:
-      logger.error("Drug - {0}.validated_against_schema_version is required".format(path))
+    if self.target is None:
+      logger.error("Drug - {0}.target is required".format(path))
+      error = error + 1
+    if self.disease is None:
+      logger.error("Drug - {0}.disease is required".format(path))
       error = error + 1
     # type is mandatory
     if self.type is None :
@@ -680,7 +680,7 @@ class DrugEvidence(object):
     return error
   
   def serialize(self):
-    classDict = {}
+    classDict = dict()
     if not self.target2drug is None: classDict['target2drug'] = self.target2drug.serialize()
     if not self.drug2clinic is None: classDict['drug2clinic'] = self.drug2clinic.serialize()
     return classDict
@@ -697,20 +697,20 @@ class Expression(Base):
   Arguments:
   :param type = None
   :param evidence = None
-  :param     literature = None
-  :param     target = None
-  :param access_level = None
   :param sourceID = None
-  :param     disease = None
-  :param unique_association_fields = None
+  :param access_level = None
   :param validated_against_schema_version = None
+  :param unique_association_fields = None
+  :param     target = None
+  :param     disease = None
+  :param     literature = None
   """
-  def __init__(self, type = None, evidence = None,     literature = None,     target = None, access_level = None, sourceID = None,     disease = None, unique_association_fields = None, validated_against_schema_version = None):
+  def __init__(self, type = None, evidence = None, sourceID = None, access_level = None, validated_against_schema_version = None, unique_association_fields = None,     target = None,     disease = None,     literature = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
     """
-    super(Expression, self).__init__(literature = literature,target = target,access_level = access_level,sourceID = sourceID,disease = disease,unique_association_fields = unique_association_fields,validated_against_schema_version = validated_against_schema_version)
+    super(Expression, self).__init__(sourceID = sourceID,access_level = access_level,validated_against_schema_version = validated_against_schema_version,unique_association_fields = unique_association_fields,target = target,disease = disease,literature = literature)
     
     """
     Name: type
@@ -734,7 +734,7 @@ class Expression(Base):
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['type','evidence','literature','target','access_level','sourceID','disease','unique_association_fields','validated_against_schema_version']
+    cls_keys = ['type','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = super(Expression, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Expression - DictType expected - {0} found\n".format(type(map)))
@@ -757,23 +757,23 @@ class Expression(Base):
     error = 0
     # cumulate errors from super class
     error = error + super(Expression, self).validate(logger, path = path)
-    if self.target is None:
-      logger.error("Expression - {0}.target is required".format(path))
+    if self.sourceID is None:
+      logger.error("Expression - {0}.sourceID is required".format(path))
       error = error + 1
     if self.access_level is None:
       logger.error("Expression - {0}.access_level is required".format(path))
       error = error + 1
-    if self.sourceID is None:
-      logger.error("Expression - {0}.sourceID is required".format(path))
-      error = error + 1
-    if self.disease is None:
-      logger.error("Expression - {0}.disease is required".format(path))
+    if self.validated_against_schema_version is None:
+      logger.error("Expression - {0}.validated_against_schema_version is required".format(path))
       error = error + 1
     if self.unique_association_fields is None:
       logger.error("Expression - {0}.unique_association_fields is required".format(path))
       error = error + 1
-    if self.validated_against_schema_version is None:
-      logger.error("Expression - {0}.validated_against_schema_version is required".format(path))
+    if self.target is None:
+      logger.error("Expression - {0}.target is required".format(path))
+      error = error + 1
+    if self.disease is None:
+      logger.error("Expression - {0}.disease is required".format(path))
       error = error + 1
     # type is mandatory
     if self.type is None :
@@ -815,20 +815,20 @@ class Genetics(Base):
   :param type = None
   :param variant = None
   :param evidence = None
-  :param     literature = None
-  :param     target = None
-  :param access_level = None
   :param sourceID = None
-  :param     disease = None
-  :param unique_association_fields = None
+  :param access_level = None
   :param validated_against_schema_version = None
+  :param unique_association_fields = None
+  :param     target = None
+  :param     disease = None
+  :param     literature = None
   """
-  def __init__(self, type = None, variant = None, evidence = None,     literature = None,     target = None, access_level = None, sourceID = None,     disease = None, unique_association_fields = None, validated_against_schema_version = None):
+  def __init__(self, type = None, variant = None, evidence = None, sourceID = None, access_level = None, validated_against_schema_version = None, unique_association_fields = None,     target = None,     disease = None,     literature = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
     """
-    super(Genetics, self).__init__(literature = literature,target = target,access_level = access_level,sourceID = sourceID,disease = disease,unique_association_fields = unique_association_fields,validated_against_schema_version = validated_against_schema_version)
+    super(Genetics, self).__init__(sourceID = sourceID,access_level = access_level,validated_against_schema_version = validated_against_schema_version,unique_association_fields = unique_association_fields,target = target,disease = disease,literature = literature)
     
     """
     Name: type
@@ -857,7 +857,7 @@ class Genetics(Base):
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['type','variant','evidence','literature','target','access_level','sourceID','disease','unique_association_fields','validated_against_schema_version']
+    cls_keys = ['type','variant','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = super(Genetics, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Genetics - DictType expected - {0} found\n".format(type(map)))
@@ -882,23 +882,23 @@ class Genetics(Base):
     error = 0
     # cumulate errors from super class
     error = error + super(Genetics, self).validate(logger, path = path)
-    if self.target is None:
-      logger.error("Genetics - {0}.target is required".format(path))
+    if self.sourceID is None:
+      logger.error("Genetics - {0}.sourceID is required".format(path))
       error = error + 1
     if self.access_level is None:
       logger.error("Genetics - {0}.access_level is required".format(path))
       error = error + 1
-    if self.sourceID is None:
-      logger.error("Genetics - {0}.sourceID is required".format(path))
-      error = error + 1
-    if self.disease is None:
-      logger.error("Genetics - {0}.disease is required".format(path))
+    if self.validated_against_schema_version is None:
+      logger.error("Genetics - {0}.validated_against_schema_version is required".format(path))
       error = error + 1
     if self.unique_association_fields is None:
       logger.error("Genetics - {0}.unique_association_fields is required".format(path))
       error = error + 1
-    if self.validated_against_schema_version is None:
-      logger.error("Genetics - {0}.validated_against_schema_version is required".format(path))
+    if self.target is None:
+      logger.error("Genetics - {0}.target is required".format(path))
+      error = error + 1
+    if self.disease is None:
+      logger.error("Genetics - {0}.disease is required".format(path))
       error = error + 1
     # type is mandatory
     if self.type is None :
@@ -947,37 +947,37 @@ class GeneticsEvidence(object):
   """
   Constructor using all fields with default values
   Arguments:
-  :param variant2disease = None
   :param gene2variant = None
+  :param variant2disease = None
   """
-  def __init__(self, variant2disease = None, gene2variant = None):
-    """
-    Name: variant2disease
-    """
-    self.variant2disease = variant2disease
+  def __init__(self, gene2variant = None, variant2disease = None):
     """
     Name: gene2variant
     """
     self.gene2variant = gene2variant
+    """
+    Name: variant2disease
+    """
+    self.variant2disease = variant2disease
   
   @classmethod
   def cloneObject(cls, clone):
     obj = cls()
-    obj.variant2disease = evidence_genetics.Variant2Disease.cloneObject(clone.variant2disease)
     obj.gene2variant = evidence_genetics.Gene2Variant.cloneObject(clone.gene2variant)
+    obj.variant2disease = evidence_genetics.Variant2Disease.cloneObject(clone.variant2disease)
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['variant2disease','gene2variant']
+    cls_keys = ['gene2variant','variant2disease']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("GeneticsEvidence - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'variant2disease' in map:
-        obj.variant2disease = evidence_genetics.Variant2Disease.fromMap(map['variant2disease'])
     if  'gene2variant' in map:
         obj.gene2variant = evidence_genetics.Gene2Variant.fromMap(map['gene2variant'])
+    if  'variant2disease' in map:
+        obj.variant2disease = evidence_genetics.Variant2Disease.fromMap(map['variant2disease'])
     return obj
   
   def validate(self, logger, path = "root"):
@@ -986,15 +986,6 @@ class GeneticsEvidence(object):
     :returns: number of errors found during validation
     """
     error = 0
-    if self.variant2disease is None:
-        logger.error("GeneticsEvidence - {0}.variant2disease is required".format(path))
-        error = error + 1
-    elif not isinstance(self.variant2disease, evidence_genetics.Variant2Disease):
-        logger.error("evidence_genetics.Variant2Disease class instance expected for attribute - {0}.variant2disease".format(path))
-        error = error + 1
-    else:
-        variant2disease_error = self.variant2disease.validate(logger, path = '.'.join([path, 'variant2disease']))
-        error = error + variant2disease_error
     if self.gene2variant is None:
         logger.error("GeneticsEvidence - {0}.gene2variant is required".format(path))
         error = error + 1
@@ -1004,12 +995,21 @@ class GeneticsEvidence(object):
     else:
         gene2variant_error = self.gene2variant.validate(logger, path = '.'.join([path, 'gene2variant']))
         error = error + gene2variant_error
+    if self.variant2disease is None:
+        logger.error("GeneticsEvidence - {0}.variant2disease is required".format(path))
+        error = error + 1
+    elif not isinstance(self.variant2disease, evidence_genetics.Variant2Disease):
+        logger.error("evidence_genetics.Variant2Disease class instance expected for attribute - {0}.variant2disease".format(path))
+        error = error + 1
+    else:
+        variant2disease_error = self.variant2disease.validate(logger, path = '.'.join([path, 'variant2disease']))
+        error = error + variant2disease_error
     return error
   
   def serialize(self):
-    classDict = {}
-    if not self.variant2disease is None: classDict['variant2disease'] = self.variant2disease.serialize()
+    classDict = dict()
     if not self.gene2variant is None: classDict['gene2variant'] = self.gene2variant.serialize()
+    if not self.variant2disease is None: classDict['variant2disease'] = self.variant2disease.serialize()
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -1024,20 +1024,20 @@ class Literature_Curated(Base):
   Arguments:
   :param type = None
   :param evidence = None
-  :param     literature = None
-  :param     target = None
-  :param access_level = None
   :param sourceID = None
-  :param     disease = None
-  :param unique_association_fields = None
+  :param access_level = None
   :param validated_against_schema_version = None
+  :param unique_association_fields = None
+  :param     target = None
+  :param     disease = None
+  :param     literature = None
   """
-  def __init__(self, type = None, evidence = None,     literature = None,     target = None, access_level = None, sourceID = None,     disease = None, unique_association_fields = None, validated_against_schema_version = None):
+  def __init__(self, type = None, evidence = None, sourceID = None, access_level = None, validated_against_schema_version = None, unique_association_fields = None,     target = None,     disease = None,     literature = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
     """
-    super(Literature_Curated, self).__init__(literature = literature,target = target,access_level = access_level,sourceID = sourceID,disease = disease,unique_association_fields = unique_association_fields,validated_against_schema_version = validated_against_schema_version)
+    super(Literature_Curated, self).__init__(sourceID = sourceID,access_level = access_level,validated_against_schema_version = validated_against_schema_version,unique_association_fields = unique_association_fields,target = target,disease = disease,literature = literature)
     
     """
     Name: type
@@ -1061,7 +1061,7 @@ class Literature_Curated(Base):
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['type','evidence','literature','target','access_level','sourceID','disease','unique_association_fields','validated_against_schema_version']
+    cls_keys = ['type','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = super(Literature_Curated, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Literature_Curated - DictType expected - {0} found\n".format(type(map)))
@@ -1084,23 +1084,23 @@ class Literature_Curated(Base):
     error = 0
     # cumulate errors from super class
     error = error + super(Literature_Curated, self).validate(logger, path = path)
-    if self.target is None:
-      logger.error("Literature_Curated - {0}.target is required".format(path))
+    if self.sourceID is None:
+      logger.error("Literature_Curated - {0}.sourceID is required".format(path))
       error = error + 1
     if self.access_level is None:
       logger.error("Literature_Curated - {0}.access_level is required".format(path))
       error = error + 1
-    if self.sourceID is None:
-      logger.error("Literature_Curated - {0}.sourceID is required".format(path))
-      error = error + 1
-    if self.disease is None:
-      logger.error("Literature_Curated - {0}.disease is required".format(path))
+    if self.validated_against_schema_version is None:
+      logger.error("Literature_Curated - {0}.validated_against_schema_version is required".format(path))
       error = error + 1
     if self.unique_association_fields is None:
       logger.error("Literature_Curated - {0}.unique_association_fields is required".format(path))
       error = error + 1
-    if self.validated_against_schema_version is None:
-      logger.error("Literature_Curated - {0}.validated_against_schema_version is required".format(path))
+    if self.target is None:
+      logger.error("Literature_Curated - {0}.target is required".format(path))
+      error = error + 1
+    if self.disease is None:
+      logger.error("Literature_Curated - {0}.disease is required".format(path))
       error = error + 1
     # type is mandatory
     if self.type is None :
@@ -1141,20 +1141,20 @@ class Literature_Mining(Base):
   Arguments:
   :param type = None
   :param evidence = None
-  :param     literature = None
-  :param     target = None
-  :param access_level = None
   :param sourceID = None
-  :param     disease = None
-  :param unique_association_fields = None
+  :param access_level = None
   :param validated_against_schema_version = None
+  :param unique_association_fields = None
+  :param     target = None
+  :param     disease = None
+  :param     literature = None
   """
-  def __init__(self, type = None, evidence = None,     literature = None,     target = None, access_level = None, sourceID = None,     disease = None, unique_association_fields = None, validated_against_schema_version = None):
+  def __init__(self, type = None, evidence = None, sourceID = None, access_level = None, validated_against_schema_version = None, unique_association_fields = None,     target = None,     disease = None,     literature = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
     """
-    super(Literature_Mining, self).__init__(literature = literature,target = target,access_level = access_level,sourceID = sourceID,disease = disease,unique_association_fields = unique_association_fields,validated_against_schema_version = validated_against_schema_version)
+    super(Literature_Mining, self).__init__(sourceID = sourceID,access_level = access_level,validated_against_schema_version = validated_against_schema_version,unique_association_fields = unique_association_fields,target = target,disease = disease,literature = literature)
     
     """
     Name: type
@@ -1178,7 +1178,7 @@ class Literature_Mining(Base):
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['type','evidence','literature','target','access_level','sourceID','disease','unique_association_fields','validated_against_schema_version']
+    cls_keys = ['type','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = super(Literature_Mining, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Literature_Mining - DictType expected - {0} found\n".format(type(map)))
@@ -1201,23 +1201,23 @@ class Literature_Mining(Base):
     error = 0
     # cumulate errors from super class
     error = error + super(Literature_Mining, self).validate(logger, path = path)
-    if self.target is None:
-      logger.error("Literature_Mining - {0}.target is required".format(path))
+    if self.sourceID is None:
+      logger.error("Literature_Mining - {0}.sourceID is required".format(path))
       error = error + 1
     if self.access_level is None:
       logger.error("Literature_Mining - {0}.access_level is required".format(path))
       error = error + 1
-    if self.sourceID is None:
-      logger.error("Literature_Mining - {0}.sourceID is required".format(path))
-      error = error + 1
-    if self.disease is None:
-      logger.error("Literature_Mining - {0}.disease is required".format(path))
+    if self.validated_against_schema_version is None:
+      logger.error("Literature_Mining - {0}.validated_against_schema_version is required".format(path))
       error = error + 1
     if self.unique_association_fields is None:
       logger.error("Literature_Mining - {0}.unique_association_fields is required".format(path))
       error = error + 1
-    if self.validated_against_schema_version is None:
-      logger.error("Literature_Mining - {0}.validated_against_schema_version is required".format(path))
+    if self.target is None:
+      logger.error("Literature_Mining - {0}.target is required".format(path))
+      error = error + 1
+    if self.disease is None:
+      logger.error("Literature_Mining - {0}.disease is required".format(path))
       error = error + 1
     # type is mandatory
     if self.type is None :

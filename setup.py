@@ -9,7 +9,7 @@ long_description = open(os.path.join(os.path.dirname(__file__), "README.rst")).r
 
 setup(
     name="data_model",
-    version="1.2.5",
+    version="1.2.7",
     description=long_description.split("\n")[0],
     long_description=long_description,
     author="Gautier Koscielny",
@@ -30,7 +30,7 @@ setup(
     ],
     install_requires=[
           'opentargets',
-          'iso8601>=0.1.10',
+          'iso8601>=0.1.12',
     ],
     extras_require={
           'tests': [

@@ -29,7 +29,7 @@ __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.5"
+__version__ = "1.2.7"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -64,7 +64,7 @@ class Base(object):
     return error
   
   def serialize(self):
-    classDict = {}
+    classDict = dict()
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -77,18 +77,11 @@ class Method(object):
   """
   Constructor using all fields with default values
   Arguments:
-  :param url = None
   :param description = None
   :param reference = None
+  :param url = None
   """
-  def __init__(self, url = None, description = None, reference = None):
-    
-    """
-    Name: url
-    Type: string
-    String format: uri
-    """
-    self.url = url
+  def __init__(self, description = None, reference = None, url = None):
     
     """
     Name: description
@@ -102,31 +95,38 @@ class Method(object):
     Description: Note for pubmed identifiers, use the URI http://europepmc.org/abstract/MED/[0-9]+
     """
     self.reference = reference
+    
+    """
+    Name: url
+    Type: string
+    String format: uri
+    """
+    self.url = url
   
   @classmethod
   def cloneObject(cls, clone):
     obj = cls()
-    if clone.url:
-        obj.url = clone.url
     if clone.description:
         obj.description = clone.description
     if clone.reference:
         obj.reference = clone.reference
+    if clone.url:
+        obj.url = clone.url
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['url','description','reference']
+    cls_keys = ['description','reference','url']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("Method - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'url' in map:
-        obj.url = map['url']
     if  'description' in map:
         obj.description = map['description']
     if  'reference' in map:
         obj.reference = map['reference']
+    if  'url' in map:
+        obj.url = map['url']
     return obj
   
   def validate(self, logger, path = "root"):
@@ -135,9 +135,6 @@ class Method(object):
     :returns: number of errors found during validation
     """
     error = 0
-    if self.url and not isinstance(self.url, basestring):
-        logger.error("Method - {0}.url type should be a string".format(path))
-        error = error + 1
     if self.description and not isinstance(self.description, basestring):
         logger.error("Method - {0}.description type should be a string".format(path))
         error = error + 1
@@ -148,13 +145,16 @@ class Method(object):
     if self.reference and not isinstance(self.reference, basestring):
         logger.error("Method - {0}.reference type should be a string".format(path))
         error = error + 1
+    if self.url and not isinstance(self.url, basestring):
+        logger.error("Method - {0}.url type should be a string".format(path))
+        error = error + 1
     return error
   
   def serialize(self):
-    classDict = {}
-    if not self.url is None: classDict['url'] = self.url
+    classDict = dict()
     if not self.description is None: classDict['description'] = self.description
     if not self.reference is None: classDict['reference'] = self.reference
+    if not self.url is None: classDict['url'] = self.url
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -168,10 +168,10 @@ class Probability(Base):
   Constructor using all fields with default values
   Arguments:
   :param type = None
-  :param     method = None
   :param value = 0
+  :param     method = None
   """
-  def __init__(self, type = None,     method = None, value = 0):
+  def __init__(self, type = None, value = 0,     method = None):
     
     """
     Name: type
@@ -179,10 +179,6 @@ class Probability(Base):
     Required: {True}
     """
     self.type = type
-    """
-    Name: method
-    """
-    self.method = method
     
     """
     Name: value
@@ -190,6 +186,10 @@ class Probability(Base):
     Required: {True}
     """
     self.value = value
+    """
+    Name: method
+    """
+    self.method = method
   
   @classmethod
   def cloneObject(cls, clone):
@@ -197,25 +197,25 @@ class Probability(Base):
     obj = super(Probability, cls).cloneObject(clone)
     if clone.type:
         obj.type = clone.type
-    if clone.method:
-        obj.method = Method.cloneObject(clone.method)
     if clone.value:
         obj.value = clone.value
+    if clone.method:
+        obj.method = Method.cloneObject(clone.method)
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['type','method','value']
+    cls_keys = ['type','value','method']
     obj = super(Probability, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Probability - DictType expected - {0} found\n".format(type(map)))
       return
     if  'type' in map:
         obj.type = map['type']
-    if  'method' in map:
-        obj.method = Method.fromMap(map['method'])
     if  'value' in map:
         obj.value = map['value']
+    if  'method' in map:
+        obj.method = Method.fromMap(map['method'])
     for key in map:
       if not key in cls_keys:
         logger.warn("Probability - invalid field - {0} found".format(key))
@@ -240,13 +240,6 @@ class Probability(Base):
     if self.type and not isinstance(self.type, basestring):
         logger.error("Probability - {0}.type type should be a string".format(path))
         error = error + 1
-    if self.method:
-        if not isinstance(self.method, Method):
-            logger.error("Method class instance expected for attribute - {0}.method".format(path))
-            error = error + 1
-        else:
-            method_error = self.method.validate(logger, path = '.'.join([path, 'method']))
-            error = error + method_error
     # value is mandatory
     if self.value is None :
         logger.error("Probability - {0}.value is required".format(path))
@@ -254,13 +247,20 @@ class Probability(Base):
     if self.value <= 0 or self.value > 1:
         logger.error("Probability - {0}.value: {1} should be greater than 0 and should be lower than or equal to 1".format(path, self.value))
         error = error+1
+    if self.method:
+        if not isinstance(self.method, Method):
+            logger.error("Method class instance expected for attribute - {0}.method".format(path))
+            error = error + 1
+        else:
+            method_error = self.method.validate(logger, path = '.'.join([path, 'method']))
+            error = error + method_error
     return error
   
   def serialize(self):
     classDict = super(Probability, self).serialize()
     if not self.type is None: classDict['type'] = self.type
-    if not self.method is None: classDict['method'] = self.method.serialize()
     if not self.value is None: classDict['value'] = self.value
+    if not self.method is None: classDict['method'] = self.method.serialize()
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -274,10 +274,10 @@ class Pvalue(Base):
   Constructor using all fields with default values
   Arguments:
   :param type = None
-  :param     method = None
   :param value = 0
+  :param     method = None
   """
-  def __init__(self, type = None,     method = None, value = 0):
+  def __init__(self, type = None, value = 0,     method = None):
     
     """
     Name: type
@@ -285,10 +285,6 @@ class Pvalue(Base):
     Required: {True}
     """
     self.type = type
-    """
-    Name: method
-    """
-    self.method = method
     
     """
     Name: value
@@ -296,6 +292,10 @@ class Pvalue(Base):
     Required: {True}
     """
     self.value = value
+    """
+    Name: method
+    """
+    self.method = method
   
   @classmethod
   def cloneObject(cls, clone):
@@ -303,25 +303,25 @@ class Pvalue(Base):
     obj = super(Pvalue, cls).cloneObject(clone)
     if clone.type:
         obj.type = clone.type
-    if clone.method:
-        obj.method = Method.cloneObject(clone.method)
     if clone.value:
         obj.value = clone.value
+    if clone.method:
+        obj.method = Method.cloneObject(clone.method)
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['type','method','value']
+    cls_keys = ['type','value','method']
     obj = super(Pvalue, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Pvalue - DictType expected - {0} found\n".format(type(map)))
       return
     if  'type' in map:
         obj.type = map['type']
-    if  'method' in map:
-        obj.method = Method.fromMap(map['method'])
     if  'value' in map:
         obj.value = map['value']
+    if  'method' in map:
+        obj.method = Method.fromMap(map['method'])
     for key in map:
       if not key in cls_keys:
         logger.warn("Pvalue - invalid field - {0} found".format(key))
@@ -346,13 +346,6 @@ class Pvalue(Base):
     if self.type and not isinstance(self.type, basestring):
         logger.error("Pvalue - {0}.type type should be a string".format(path))
         error = error + 1
-    if self.method:
-        if not isinstance(self.method, Method):
-            logger.error("Method class instance expected for attribute - {0}.method".format(path))
-            error = error + 1
-        else:
-            method_error = self.method.validate(logger, path = '.'.join([path, 'method']))
-            error = error + method_error
     # value is mandatory
     if self.value is None :
         logger.error("Pvalue - {0}.value is required".format(path))
@@ -360,13 +353,20 @@ class Pvalue(Base):
     if self.value <= 0 or self.value > 1:
         logger.error("Pvalue - {0}.value: {1} should be greater than 0 and should be lower than or equal to 1".format(path, self.value))
         error = error+1
+    if self.method:
+        if not isinstance(self.method, Method):
+            logger.error("Method class instance expected for attribute - {0}.method".format(path))
+            error = error + 1
+        else:
+            method_error = self.method.validate(logger, path = '.'.join([path, 'method']))
+            error = error + method_error
     return error
   
   def serialize(self):
     classDict = super(Pvalue, self).serialize()
     if not self.type is None: classDict['type'] = self.type
-    if not self.method is None: classDict['method'] = self.method.serialize()
     if not self.value is None: classDict['value'] = self.value
+    if not self.method is None: classDict['method'] = self.method.serialize()
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -379,12 +379,19 @@ class Rank(object):
   """
   Constructor using all fields with default values
   Arguments:
-  :param position = 0
   :param type = None
-  :param     method = None
+  :param position = 0
   :param sample_size = 0
+  :param     method = None
   """
-  def __init__(self, position = 0, type = None,     method = None, sample_size = 0):
+  def __init__(self, type = None, position = 0, sample_size = 0,     method = None):
+    
+    """
+    Name: type
+    Type: string
+    Required: {True}
+    """
+    self.type = type
     
     """
     Name: position
@@ -394,51 +401,44 @@ class Rank(object):
     self.position = position
     
     """
-    Name: type
-    Type: string
-    Required: {True}
-    """
-    self.type = type
-    """
-    Name: method
-    """
-    self.method = method
-    
-    """
     Name: sample_size
     Type: number
     Required: {True}
     """
     self.sample_size = sample_size
+    """
+    Name: method
+    """
+    self.method = method
   
   @classmethod
   def cloneObject(cls, clone):
     obj = cls()
-    if clone.position:
-        obj.position = clone.position
     if clone.type:
         obj.type = clone.type
-    if clone.method:
-        obj.method = Method.cloneObject(clone.method)
+    if clone.position:
+        obj.position = clone.position
     if clone.sample_size:
         obj.sample_size = clone.sample_size
+    if clone.method:
+        obj.method = Method.cloneObject(clone.method)
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['position','type','method','sample_size']
+    cls_keys = ['type','position','sample_size','method']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("Rank - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'position' in map:
-        obj.position = map['position']
     if  'type' in map:
         obj.type = map['type']
-    if  'method' in map:
-        obj.method = Method.fromMap(map['method'])
+    if  'position' in map:
+        obj.position = map['position']
     if  'sample_size' in map:
         obj.sample_size = map['sample_size']
+    if  'method' in map:
+        obj.method = Method.fromMap(map['method'])
     return obj
   
   def validate(self, logger, path = "root"):
@@ -447,13 +447,6 @@ class Rank(object):
     :returns: number of errors found during validation
     """
     error = 0
-    # position is mandatory
-    if self.position is None :
-        logger.error("Rank - {0}.position is required".format(path))
-        error = error + 1
-    if self.position < 1:
-        logger.error("Rank - {0}.position: {1} should be greater than or equal to 1".format(path, self.position))
-        error = error+1
     # type is mandatory
     if self.type is None :
         logger.error("Rank - {0}.type is required".format(path))
@@ -464,13 +457,13 @@ class Rank(object):
     if self.type and not isinstance(self.type, basestring):
         logger.error("Rank - {0}.type type should be a string".format(path))
         error = error + 1
-    if self.method:
-        if not isinstance(self.method, Method):
-            logger.error("Method class instance expected for attribute - {0}.method".format(path))
-            error = error + 1
-        else:
-            method_error = self.method.validate(logger, path = '.'.join([path, 'method']))
-            error = error + method_error
+    # position is mandatory
+    if self.position is None :
+        logger.error("Rank - {0}.position is required".format(path))
+        error = error + 1
+    if self.position < 1:
+        logger.error("Rank - {0}.position: {1} should be greater than or equal to 1".format(path, self.position))
+        error = error+1
     # sample_size is mandatory
     if self.sample_size is None :
         logger.error("Rank - {0}.sample_size is required".format(path))
@@ -478,14 +471,21 @@ class Rank(object):
     if self.sample_size < 1:
         logger.error("Rank - {0}.sample_size: {1} should be greater than or equal to 1".format(path, self.sample_size))
         error = error+1
+    if self.method:
+        if not isinstance(self.method, Method):
+            logger.error("Method class instance expected for attribute - {0}.method".format(path))
+            error = error + 1
+        else:
+            method_error = self.method.validate(logger, path = '.'.join([path, 'method']))
+            error = error + method_error
     return error
   
   def serialize(self):
-    classDict = {}
-    if not self.position is None: classDict['position'] = self.position
+    classDict = dict()
     if not self.type is None: classDict['type'] = self.type
-    if not self.method is None: classDict['method'] = self.method.serialize()
+    if not self.position is None: classDict['position'] = self.position
     if not self.sample_size is None: classDict['sample_size'] = self.sample_size
+    if not self.method is None: classDict['method'] = self.method.serialize()
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -499,10 +499,10 @@ class Summed_Total(Base):
   Constructor using all fields with default values
   Arguments:
   :param type = None
-  :param     method = None
   :param value = 0
+  :param     method = None
   """
-  def __init__(self, type = None,     method = None, value = 0):
+  def __init__(self, type = None, value = 0,     method = None):
     
     """
     Name: type
@@ -510,10 +510,6 @@ class Summed_Total(Base):
     Required: {True}
     """
     self.type = type
-    """
-    Name: method
-    """
-    self.method = method
     
     """
     Name: value
@@ -521,6 +517,10 @@ class Summed_Total(Base):
     Required: {True}
     """
     self.value = value
+    """
+    Name: method
+    """
+    self.method = method
   
   @classmethod
   def cloneObject(cls, clone):
@@ -528,25 +528,25 @@ class Summed_Total(Base):
     obj = super(Summed_Total, cls).cloneObject(clone)
     if clone.type:
         obj.type = clone.type
-    if clone.method:
-        obj.method = Method.cloneObject(clone.method)
     if clone.value:
         obj.value = clone.value
+    if clone.method:
+        obj.method = Method.cloneObject(clone.method)
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['type','method','value']
+    cls_keys = ['type','value','method']
     obj = super(Summed_Total, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Summed_Total - DictType expected - {0} found\n".format(type(map)))
       return
     if  'type' in map:
         obj.type = map['type']
-    if  'method' in map:
-        obj.method = Method.fromMap(map['method'])
     if  'value' in map:
         obj.value = map['value']
+    if  'method' in map:
+        obj.method = Method.fromMap(map['method'])
     for key in map:
       if not key in cls_keys:
         logger.warn("Summed_Total - invalid field - {0} found".format(key))
@@ -571,13 +571,6 @@ class Summed_Total(Base):
     if self.type and not isinstance(self.type, basestring):
         logger.error("Summed_Total - {0}.type type should be a string".format(path))
         error = error + 1
-    if self.method:
-        if not isinstance(self.method, Method):
-            logger.error("Method class instance expected for attribute - {0}.method".format(path))
-            error = error + 1
-        else:
-            method_error = self.method.validate(logger, path = '.'.join([path, 'method']))
-            error = error + method_error
     # value is mandatory
     if self.value is None :
         logger.error("Summed_Total - {0}.value is required".format(path))
@@ -585,13 +578,20 @@ class Summed_Total(Base):
     if self.value <= 0:
         logger.error("Summed_Total - {0}.value: {1} should be greater than 0".format(path, self.value))
         error = error+1
+    if self.method:
+        if not isinstance(self.method, Method):
+            logger.error("Method class instance expected for attribute - {0}.method".format(path))
+            error = error + 1
+        else:
+            method_error = self.method.validate(logger, path = '.'.join([path, 'method']))
+            error = error + method_error
     return error
   
   def serialize(self):
     classDict = super(Summed_Total, self).serialize()
     if not self.type is None: classDict['type'] = self.type
-    if not self.method is None: classDict['method'] = self.method.serialize()
     if not self.value is None: classDict['value'] = self.value
+    if not self.method is None: classDict['method'] = self.method.serialize()
     return classDict
   
   def to_JSON(self, indentation=4):

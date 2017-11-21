@@ -32,7 +32,7 @@ __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.5"
+__version__ = "1.2.7"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -47,12 +47,12 @@ class Base(object):
   Constructor using all fields with default values
   Arguments:
   :param unique_experiment_reference = None
-  :param     provenance_type = None
   :param is_associated = False
-  :param resource_score = None
   :param date_asserted = None
+  :param resource_score = None
+  :param     provenance_type = None
   """
-  def __init__(self, unique_experiment_reference = None,     provenance_type = None, is_associated = False, resource_score = None, date_asserted = None):
+  def __init__(self, unique_experiment_reference = None, is_associated = False, date_asserted = None, resource_score = None,     provenance_type = None):
     
     """
     Name: unique_experiment_reference
@@ -60,20 +60,12 @@ class Base(object):
     Description: A unique experiment identifier or literature reference that uniquely identifies the study in your database
     """
     self.unique_experiment_reference = unique_experiment_reference
-    """
-    Name: provenance_type
-    """
-    self.provenance_type = provenance_type
     
     """
     Name: is_associated
     Type: boolean
     """
     self.is_associated = is_associated
-    """
-    Name: resource_score
-    """
-    self.resource_score = resource_score
     
     """
     Name: date_asserted
@@ -82,35 +74,43 @@ class Base(object):
     String format: date-time
     """
     self.date_asserted = date_asserted
+    """
+    Name: resource_score
+    """
+    self.resource_score = resource_score
+    """
+    Name: provenance_type
+    """
+    self.provenance_type = provenance_type
   
   @classmethod
   def cloneObject(cls, clone):
     obj = cls()
     if clone.unique_experiment_reference:
         obj.unique_experiment_reference = clone.unique_experiment_reference
-    if clone.provenance_type:
-        obj.provenance_type = BaseProvenance_Type.cloneObject(clone.provenance_type)
     if clone.is_associated:
         obj.is_associated = clone.is_associated
-    if clone.resource_score:
-        obj.resource_score = clone.resource_score
     if clone.date_asserted:
         obj.date_asserted = clone.date_asserted
+    if clone.resource_score:
+        obj.resource_score = clone.resource_score
+    if clone.provenance_type:
+        obj.provenance_type = BaseProvenance_Type.cloneObject(clone.provenance_type)
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['unique_experiment_reference','provenance_type','is_associated','resource_score','date_asserted']
+    cls_keys = ['unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("Base - DictType expected - {0} found\n".format(type(map)))
       return
     if  'unique_experiment_reference' in map:
         obj.unique_experiment_reference = map['unique_experiment_reference']
-    if  'provenance_type' in map:
-        obj.provenance_type = BaseProvenance_Type.fromMap(map['provenance_type'])
     if  'is_associated' in map:
         obj.is_associated = map['is_associated']
+    if  'date_asserted' in map:
+        obj.date_asserted = map['date_asserted']
     if 'resource_score' in map:
         if not evidence_association_score.Pvalue.fromMap(map['resource_score']) is None:
             obj.resource_score = evidence_association_score.Pvalue.fromMap(map['resource_score'])
@@ -122,8 +122,8 @@ class Base(object):
             obj.resource_score = evidence_association_score.Summed_Total.fromMap(map['resource_score'])
         else:
             raise opentargets.model.core.JSONException("resource_score can't be cast to any class")
-    if  'date_asserted' in map:
-        obj.date_asserted = map['date_asserted']
+    if  'provenance_type' in map:
+        obj.provenance_type = BaseProvenance_Type.fromMap(map['provenance_type'])
     return obj
   
   def validate(self, logger, path = "root"):
@@ -139,15 +139,17 @@ class Base(object):
     if self.unique_experiment_reference and not isinstance(self.unique_experiment_reference, basestring):
         logger.error("Base - {0}.unique_experiment_reference type should be a string".format(path))
         error = error + 1
-    if self.provenance_type:
-        if not isinstance(self.provenance_type, BaseProvenance_Type):
-            logger.error("BaseProvenance_Type class instance expected for attribute - {0}.provenance_type".format(path))
-            error = error + 1
-        else:
-            provenance_type_error = self.provenance_type.validate(logger, path = '.'.join([path, 'provenance_type']))
-            error = error + provenance_type_error
     if self.is_associated and not type(self.is_associated) is bool:
         logger.error("Base - {0}.is_associated type should be a boolean".format(path))
+        error = error + 1
+    if not self.date_asserted is None:
+        try:
+            iso8601.parse_date(self.date_asserted)
+        except iso8601.ParseError, e:
+            logger.error("Base - {0}.date_asserted '{1}' invalid ISO 8601 date (YYYY-MM-DDThh:mm:ss.sTZD expected)".format(path, self.date_asserted))
+            error = error+1
+    if self.date_asserted and not isinstance(self.date_asserted, basestring):
+        logger.error("Base - {0}.date_asserted type should be a string".format(path))
         error = error + 1
         if not ( isinstance(self.resource_score, evidence_association_score.Pvalue) or isinstance(self.resource_score, evidence_association_score.Probability) or isinstance(self.resource_score, evidence_association_score.Rank) or isinstance(self.resource_score, evidence_association_score.Summed_Total)):
             logger.error("Base - {0}.resource_score incorrect type".format(path))
@@ -155,26 +157,24 @@ class Base(object):
         else:
             resource_score_error = self.resource_score.validate(logger, path = '.'.join([path, 'resource_score']))
             error = error + resource_score_error
-    if not self.date_asserted is None:
-        try:
-            iso8601.parse_date(self.date_asserted)
-        except iso8601.iso8601.ParseError, e:
-            logger.error("Base - {0}.date_asserted '{1}' invalid ISO 8601 date (YYYY-MM-DDThh:mm:ss.sTZD expected)".format(path, self.date_asserted))
-            error = error+1
-    if self.date_asserted and not isinstance(self.date_asserted, basestring):
-        logger.error("Base - {0}.date_asserted type should be a string".format(path))
-        error = error + 1
+    if self.provenance_type:
+        if not isinstance(self.provenance_type, BaseProvenance_Type):
+            logger.error("BaseProvenance_Type class instance expected for attribute - {0}.provenance_type".format(path))
+            error = error + 1
+        else:
+            provenance_type_error = self.provenance_type.validate(logger, path = '.'.join([path, 'provenance_type']))
+            error = error + provenance_type_error
     return error
   def date_assertedto_isoformat(self):
     iso8601.parse_date(self.date_asserted).isoformat()
   
   def serialize(self):
-    classDict = {}
+    classDict = dict()
     if not self.unique_experiment_reference is None: classDict['unique_experiment_reference'] = self.unique_experiment_reference
-    if not self.provenance_type is None: classDict['provenance_type'] = self.provenance_type.serialize()
     if not self.is_associated is None: classDict['is_associated'] = self.is_associated
-    if not self.resource_score is None: classDict['resource_score'] = self.resource_score.serialize()
     if not self.date_asserted is None: classDict['date_asserted'] = self.date_asserted
+    if not self.resource_score is None: classDict['resource_score'] = self.resource_score.serialize()
+    if not self.provenance_type is None: classDict['provenance_type'] = self.provenance_type.serialize()
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -272,7 +272,7 @@ class Single_Lit_Reference(object):
     return error
   
   def serialize(self):
-    classDict = {}
+    classDict = dict()
     if not self.lit_id is None: classDict['lit_id'] = self.lit_id
     if not self.rank is None: classDict['rank'] = self.rank.serialize()
     if not self.mined_sentences is None: classDict['mined_sentences'] = map(lambda x: x.serialize(), self.mined_sentences)
@@ -291,11 +291,11 @@ class Base_Mined_Sentences_Item(object):
   :param text = None
   :param section = None
   :param t_start = None
-  :param d_end = None
-  :param d_start = None
   :param t_end = None
+  :param d_start = None
+  :param d_end = None
   """
-  def __init__(self, text = None, section = None, t_start = None, d_end = None, d_start = None, t_end = None):
+  def __init__(self, text = None, section = None, t_start = None, t_end = None, d_start = None, d_end = None):
     
     """
     Name: text
@@ -320,11 +320,11 @@ class Base_Mined_Sentences_Item(object):
     self.t_start = t_start
     
     """
-    Name: d_end
+    Name: t_end
     Type: number
-    Description: End co-ordinate of disease name in text
+    Description: End co-ordinate of target (protein/gene) in text
     """
-    self.d_end = d_end
+    self.t_end = t_end
     
     """
     Name: d_start
@@ -334,11 +334,11 @@ class Base_Mined_Sentences_Item(object):
     self.d_start = d_start
     
     """
-    Name: t_end
+    Name: d_end
     Type: number
-    Description: End co-ordinate of target (protein/gene) in text
+    Description: End co-ordinate of disease name in text
     """
-    self.t_end = t_end
+    self.d_end = d_end
   
   @classmethod
   def cloneObject(cls, clone):
@@ -349,17 +349,17 @@ class Base_Mined_Sentences_Item(object):
         obj.section = clone.section
     if clone.t_start:
         obj.t_start = clone.t_start
-    if clone.d_end:
-        obj.d_end = clone.d_end
-    if clone.d_start:
-        obj.d_start = clone.d_start
     if clone.t_end:
         obj.t_end = clone.t_end
+    if clone.d_start:
+        obj.d_start = clone.d_start
+    if clone.d_end:
+        obj.d_end = clone.d_end
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['text','section','t_start','d_end','d_start','t_end']
+    cls_keys = ['text','section','t_start','t_end','d_start','d_end']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("Base_Mined_Sentences_Item - DictType expected - {0} found\n".format(type(map)))
@@ -370,12 +370,12 @@ class Base_Mined_Sentences_Item(object):
         obj.section = map['section']
     if  't_start' in map:
         obj.t_start = map['t_start']
-    if  'd_end' in map:
-        obj.d_end = map['d_end']
-    if  'd_start' in map:
-        obj.d_start = map['d_start']
     if  't_end' in map:
         obj.t_end = map['t_end']
+    if  'd_start' in map:
+        obj.d_start = map['d_start']
+    if  'd_end' in map:
+        obj.d_end = map['d_end']
     return obj
   
   def validate(self, logger, path = "root"):
@@ -404,25 +404,25 @@ class Base_Mined_Sentences_Item(object):
     if self.t_start is not None and (self.t_start < 0):
         logger.error("Base_Mined_Sentences_Item - {0}.t_start: {1} should be greater than or equal to 0".format(path, self.t_start))
         error = error+1
-    if self.d_end is not None and (self.d_end < 0):
-        logger.error("Base_Mined_Sentences_Item - {0}.d_end: {1} should be greater than or equal to 0".format(path, self.d_end))
+    if self.t_end is not None and (self.t_end < 0):
+        logger.error("Base_Mined_Sentences_Item - {0}.t_end: {1} should be greater than or equal to 0".format(path, self.t_end))
         error = error+1
     if self.d_start is not None and (self.d_start < 0):
         logger.error("Base_Mined_Sentences_Item - {0}.d_start: {1} should be greater than or equal to 0".format(path, self.d_start))
         error = error+1
-    if self.t_end is not None and (self.t_end < 0):
-        logger.error("Base_Mined_Sentences_Item - {0}.t_end: {1} should be greater than or equal to 0".format(path, self.t_end))
+    if self.d_end is not None and (self.d_end < 0):
+        logger.error("Base_Mined_Sentences_Item - {0}.d_end: {1} should be greater than or equal to 0".format(path, self.d_end))
         error = error+1
     return error
   
   def serialize(self):
-    classDict = {}
+    classDict = dict()
     if not self.text is None: classDict['text'] = self.text
     if not self.section is None: classDict['section'] = self.section
     if not self.t_start is None: classDict['t_start'] = self.t_start
-    if not self.d_end is None: classDict['d_end'] = self.d_end
-    if not self.d_start is None: classDict['d_start'] = self.d_start
     if not self.t_end is None: classDict['t_end'] = self.t_end
+    if not self.d_start is None: classDict['d_start'] = self.d_start
+    if not self.d_end is None: classDict['d_end'] = self.d_end
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -435,19 +435,19 @@ class BaseProvenance_Type(object):
   """
   Constructor using all fields with default values
   Arguments:
-  :param     literature = None
   :param     expert = None
+  :param     literature = None
   :param     database = None
   """
-  def __init__(self,     literature = None,     expert = None,     database = None):
-    """
-    Name: literature
-    """
-    self.literature = literature
+  def __init__(self,     expert = None,     literature = None,     database = None):
     """
     Name: expert
     """
     self.expert = expert
+    """
+    Name: literature
+    """
+    self.literature = literature
     """
     Name: database
     """
@@ -456,25 +456,25 @@ class BaseProvenance_Type(object):
   @classmethod
   def cloneObject(cls, clone):
     obj = cls()
-    if clone.literature:
-        obj.literature = BaseLiterature.cloneObject(clone.literature)
     if clone.expert:
         obj.expert = BaseExpert.cloneObject(clone.expert)
+    if clone.literature:
+        obj.literature = BaseLiterature.cloneObject(clone.literature)
     if clone.database:
         obj.database = BaseDatabase.cloneObject(clone.database)
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['literature','expert','database']
+    cls_keys = ['expert','literature','database']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("BaseProvenance_Type - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'literature' in map:
-        obj.literature = BaseLiterature.fromMap(map['literature'])
     if  'expert' in map:
         obj.expert = BaseExpert.fromMap(map['expert'])
+    if  'literature' in map:
+        obj.literature = BaseLiterature.fromMap(map['literature'])
     if  'database' in map:
         obj.database = BaseDatabase.fromMap(map['database'])
     return obj
@@ -485,13 +485,6 @@ class BaseProvenance_Type(object):
     :returns: number of errors found during validation
     """
     error = 0
-    if self.literature:
-        if not isinstance(self.literature, BaseLiterature):
-            logger.error("BaseLiterature class instance expected for attribute - {0}.literature".format(path))
-            error = error + 1
-        else:
-            literature_error = self.literature.validate(logger, path = '.'.join([path, 'literature']))
-            error = error + literature_error
     if self.expert:
         if not isinstance(self.expert, BaseExpert):
             logger.error("BaseExpert class instance expected for attribute - {0}.expert".format(path))
@@ -499,6 +492,13 @@ class BaseProvenance_Type(object):
         else:
             expert_error = self.expert.validate(logger, path = '.'.join([path, 'expert']))
             error = error + expert_error
+    if self.literature:
+        if not isinstance(self.literature, BaseLiterature):
+            logger.error("BaseLiterature class instance expected for attribute - {0}.literature".format(path))
+            error = error + 1
+        else:
+            literature_error = self.literature.validate(logger, path = '.'.join([path, 'literature']))
+            error = error + literature_error
     if self.database:
         if not isinstance(self.database, BaseDatabase):
             logger.error("BaseDatabase class instance expected for attribute - {0}.database".format(path))
@@ -509,77 +509,10 @@ class BaseProvenance_Type(object):
     return error
   
   def serialize(self):
-    classDict = {}
-    if not self.literature is None: classDict['literature'] = self.literature.serialize()
+    classDict = dict()
     if not self.expert is None: classDict['expert'] = self.expert.serialize()
+    if not self.literature is None: classDict['literature'] = self.literature.serialize()
     if not self.database is None: classDict['database'] = self.database.serialize()
-    return classDict
-  
-  def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
-
-"""
-https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/base.json inner class:(literature)
-"""
-class BaseLiterature(object):
-  """
-  Constructor using all fields with default values
-  Arguments:
-  :param references = None
-  """
-  def __init__(self, references = None):
-    
-    """
-    Name: references
-    Type: array
-    Required: {True}
-    """
-    self.references = references
-  
-  @classmethod
-  def cloneObject(cls, clone):
-    obj = cls()
-    if clone.references:
-        obj.references = []; obj.references.extend(clone.references)
-    return obj
-  
-  @classmethod
-  def fromMap(cls, map):
-    cls_keys = ['references']
-    obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("BaseLiterature - DictType expected - {0} found\n".format(type(map)))
-      return
-    if 'references' in map and isinstance(map['references'], list):
-        obj.references = []
-        for item in map['references']:
-            obj.references.append(Single_Lit_Reference.fromMap(item))
-    return obj
-  
-  def validate(self, logger, path = "root"):
-    """
-    Validate class BaseLiterature
-    :returns: number of errors found during validation
-    """
-    error = 0
-    # references is mandatory
-    if self.references is None :
-        logger.error("BaseLiterature - {0}.references is required".format(path))
-        error = error + 1
-    if not self.references is None and len(self.references) > 0 and not all(isinstance(n, Single_Lit_Reference) for n in self.references):
-        logger.error("BaseLiterature - {0}.references array should have elements of type 'Single_Lit_Reference'".format(path))
-        error = error+1
-    if self.references and len(self.references) < 1:
-        logger.error("BaseLiterature - {0}.references array should have at least 1 elements".format(path))
-        error = error + 1
-    if self.references and len(set(self.references)) != len(self.references):
-        logger.error("BaseLiterature - {0}.references array have duplicated elements".format(path))
-        error = error + 1
-    return error
-  
-  def serialize(self):
-    classDict = {}
-    if not self.references is None: classDict['references'] = map(lambda x: x.serialize(), self.references)
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -592,18 +525,11 @@ class BaseExpert(object):
   """
   Constructor using all fields with default values
   Arguments:
-  :param status = False
   :param statement = None
   :param     author = None
+  :param status = False
   """
-  def __init__(self, status = False, statement = None,     author = None):
-    
-    """
-    Name: status
-    Type: boolean
-    Required: {True}
-    """
-    self.status = status
+  def __init__(self, statement = None,     author = None, status = False):
     
     """
     Name: statement
@@ -614,31 +540,38 @@ class BaseExpert(object):
     Name: author
     """
     self.author = author
+    
+    """
+    Name: status
+    Type: boolean
+    Required: {True}
+    """
+    self.status = status
   
   @classmethod
   def cloneObject(cls, clone):
     obj = cls()
-    if clone.status:
-        obj.status = clone.status
     if clone.statement:
         obj.statement = clone.statement
     if clone.author:
         obj.author = BaseAuthor.cloneObject(clone.author)
+    if clone.status:
+        obj.status = clone.status
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['status','statement','author']
+    cls_keys = ['statement','author','status']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("BaseExpert - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'status' in map:
-        obj.status = map['status']
     if  'statement' in map:
         obj.statement = map['statement']
     if  'author' in map:
         obj.author = BaseAuthor.fromMap(map['author'])
+    if  'status' in map:
+        obj.status = map['status']
     return obj
   
   def validate(self, logger, path = "root"):
@@ -647,13 +580,6 @@ class BaseExpert(object):
     :returns: number of errors found during validation
     """
     error = 0
-    # status is mandatory
-    if self.status is None :
-        logger.error("BaseExpert - {0}.status is required".format(path))
-        error = error + 1
-    if self.status and not type(self.status) is bool:
-        logger.error("BaseExpert - {0}.status type should be a boolean".format(path))
-        error = error + 1
     if self.statement and not isinstance(self.statement, basestring):
         logger.error("BaseExpert - {0}.statement type should be a string".format(path))
         error = error + 1
@@ -664,13 +590,20 @@ class BaseExpert(object):
         else:
             author_error = self.author.validate(logger, path = '.'.join([path, 'author']))
             error = error + author_error
+    # status is mandatory
+    if self.status is None :
+        logger.error("BaseExpert - {0}.status is required".format(path))
+        error = error + 1
+    if self.status and not type(self.status) is bool:
+        logger.error("BaseExpert - {0}.status type should be a boolean".format(path))
+        error = error + 1
     return error
   
   def serialize(self):
-    classDict = {}
-    if not self.status is None: classDict['status'] = self.status
+    classDict = dict()
     if not self.statement is None: classDict['statement'] = self.statement
     if not self.author is None: classDict['author'] = self.author.serialize()
+    if not self.status is None: classDict['status'] = self.status
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -756,10 +689,77 @@ class BaseAuthor(object):
     return error
   
   def serialize(self):
-    classDict = {}
+    classDict = dict()
     if not self.organization is None: classDict['organization'] = self.organization
     if not self.email is None: classDict['email'] = self.email
     if not self.name is None: classDict['name'] = self.name
+    return classDict
+  
+  def to_JSON(self, indentation=4):
+    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+
+"""
+https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/base.json inner class:(literature)
+"""
+class BaseLiterature(object):
+  """
+  Constructor using all fields with default values
+  Arguments:
+  :param references = None
+  """
+  def __init__(self, references = None):
+    
+    """
+    Name: references
+    Type: array
+    Required: {True}
+    """
+    self.references = references
+  
+  @classmethod
+  def cloneObject(cls, clone):
+    obj = cls()
+    if clone.references:
+        obj.references = []; obj.references.extend(clone.references)
+    return obj
+  
+  @classmethod
+  def fromMap(cls, map):
+    cls_keys = ['references']
+    obj = cls()
+    if not isinstance(map, types.DictType):
+      logger.warn("BaseLiterature - DictType expected - {0} found\n".format(type(map)))
+      return
+    if 'references' in map and isinstance(map['references'], list):
+        obj.references = []
+        for item in map['references']:
+            obj.references.append(Single_Lit_Reference.fromMap(item))
+    return obj
+  
+  def validate(self, logger, path = "root"):
+    """
+    Validate class BaseLiterature
+    :returns: number of errors found during validation
+    """
+    error = 0
+    # references is mandatory
+    if self.references is None :
+        logger.error("BaseLiterature - {0}.references is required".format(path))
+        error = error + 1
+    if not self.references is None and len(self.references) > 0 and not all(isinstance(n, Single_Lit_Reference) for n in self.references):
+        logger.error("BaseLiterature - {0}.references array should have elements of type 'Single_Lit_Reference'".format(path))
+        error = error+1
+    if self.references and len(self.references) < 1:
+        logger.error("BaseLiterature - {0}.references array should have at least 1 elements".format(path))
+        error = error + 1
+    if self.references and len(set(self.references)) != len(self.references):
+        logger.error("BaseLiterature - {0}.references array have duplicated elements".format(path))
+        error = error + 1
+    return error
+  
+  def serialize(self):
+    classDict = dict()
+    if not self.references is None: classDict['references'] = map(lambda x: x.serialize(), self.references)
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -852,7 +852,7 @@ class BaseDatabase(object):
     return error
   
   def serialize(self):
-    classDict = {}
+    classDict = dict()
     if not self.dbxref is None: classDict['dbxref'] = self.dbxref.serialize()
     if not self.id is None: classDict['id'] = self.id
     if not self.version is None: classDict['version'] = self.version
@@ -868,11 +868,19 @@ class BaseDbxref(object):
   """
   Constructor using all fields with default values
   Arguments:
+  :param id = None
   :param url = None
   :param version = None
-  :param id = None
   """
-  def __init__(self, url = None, version = None, id = None):
+  def __init__(self, id = None, url = None, version = None):
+    
+    """
+    Name: id
+    Type: string
+    Description: Please provide the original DB name
+    Required: {True}
+    """
+    self.id = id
     
     """
     Name: url
@@ -888,39 +896,31 @@ class BaseDbxref(object):
     Required: {True}
     """
     self.version = version
-    
-    """
-    Name: id
-    Type: string
-    Description: Please provide the original DB name
-    Required: {True}
-    """
-    self.id = id
   
   @classmethod
   def cloneObject(cls, clone):
     obj = cls()
+    if clone.id:
+        obj.id = clone.id
     if clone.url:
         obj.url = clone.url
     if clone.version:
         obj.version = clone.version
-    if clone.id:
-        obj.id = clone.id
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['url','version','id']
+    cls_keys = ['id','url','version']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("BaseDbxref - DictType expected - {0} found\n".format(type(map)))
       return
+    if  'id' in map:
+        obj.id = map['id']
     if  'url' in map:
         obj.url = map['url']
     if  'version' in map:
         obj.version = map['version']
-    if  'id' in map:
-        obj.id = map['id']
     return obj
   
   def validate(self, logger, path = "root"):
@@ -929,6 +929,13 @@ class BaseDbxref(object):
     :returns: number of errors found during validation
     """
     error = 0
+    # id is mandatory
+    if self.id is None :
+        logger.error("BaseDbxref - {0}.id is required".format(path))
+        error = error + 1
+    if self.id and not isinstance(self.id, basestring):
+        logger.error("BaseDbxref - {0}.id type should be a string".format(path))
+        error = error + 1
     if self.url and not isinstance(self.url, basestring):
         logger.error("BaseDbxref - {0}.url type should be a string".format(path))
         error = error + 1
@@ -939,20 +946,13 @@ class BaseDbxref(object):
     if self.version and not isinstance(self.version, basestring):
         logger.error("BaseDbxref - {0}.version type should be a string".format(path))
         error = error + 1
-    # id is mandatory
-    if self.id is None :
-        logger.error("BaseDbxref - {0}.id is required".format(path))
-        error = error + 1
-    if self.id and not isinstance(self.id, basestring):
-        logger.error("BaseDbxref - {0}.id type should be a string".format(path))
-        error = error + 1
     return error
   
   def serialize(self):
-    classDict = {}
+    classDict = dict()
+    if not self.id is None: classDict['id'] = self.id
     if not self.url is None: classDict['url'] = self.url
     if not self.version is None: classDict['version'] = self.version
-    if not self.id is None: classDict['id'] = self.id
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -965,40 +965,35 @@ class Expression(Base):
   """
   Constructor using all fields with default values
   Arguments:
-  :param log2_fold_change = None
-  :param reference_replicates_n = 0
+  :param organism_part = None
   :param comparison_name = None
-  :param test_replicates_n = 0
-  :param experiment_overview = None
-  :param confidence_level = None
+  :param log2_fold_change = None
   :param test_sample = None
-  :param urls = None
   :param reference_sample = None
+  :param test_replicates_n = 0
+  :param reference_replicates_n = 0
+  :param confidence_level = None
+  :param experiment_overview = None
   :param evidence_codes = None
+  :param urls = None
   :param unique_experiment_reference = None
-  :param     provenance_type = None
   :param is_associated = False
-  :param resource_score = None
   :param date_asserted = None
+  :param resource_score = None
+  :param     provenance_type = None
   """
-  def __init__(self, log2_fold_change = None, reference_replicates_n = 0, comparison_name = None, test_replicates_n = 0, experiment_overview = None, confidence_level = None, test_sample = None, urls = None, reference_sample = None, evidence_codes = None, unique_experiment_reference = None,     provenance_type = None, is_associated = False, resource_score = None, date_asserted = None):
+  def __init__(self, organism_part = None, comparison_name = None, log2_fold_change = None, test_sample = None, reference_sample = None, test_replicates_n = 0, reference_replicates_n = 0, confidence_level = None, experiment_overview = None, evidence_codes = None, urls = None, unique_experiment_reference = None, is_associated = False, date_asserted = None, resource_score = None,     provenance_type = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
     """
-    super(Expression, self).__init__(unique_experiment_reference = unique_experiment_reference,provenance_type = provenance_type,is_associated = is_associated,resource_score = resource_score,date_asserted = date_asserted)
-    """
-    Name: log2_fold_change
-    """
-    self.log2_fold_change = log2_fold_change
+    super(Expression, self).__init__(unique_experiment_reference = unique_experiment_reference,is_associated = is_associated,date_asserted = date_asserted,resource_score = resource_score,provenance_type = provenance_type)
     
     """
-    Name: reference_replicates_n
-    Type: number
-    Description: Count of reference replicates
-    Required: {True}
+    Name: organism_part
+    Type: string
     """
-    self.reference_replicates_n = reference_replicates_n
+    self.organism_part = organism_part
     
     """
     Name: comparison_name
@@ -1006,29 +1001,10 @@ class Expression(Base):
     Required: {True}
     """
     self.comparison_name = comparison_name
-    
     """
-    Name: test_replicates_n
-    Type: number
-    Description: Count of test replicates
-    Required: {True}
+    Name: log2_fold_change
     """
-    self.test_replicates_n = test_replicates_n
-    
-    """
-    Name: experiment_overview
-    Type: string
-    Required: {True}
-    """
-    self.experiment_overview = experiment_overview
-    
-    """
-    Name: confidence_level
-    Type: string
-    Description: high = if the disease state is the only variable (i.e. case vs control); medium = if the disease is a variable but there is one or more other variables; low = where all samples have the disease but the variable is something else e.g. a treatment
-    Required: {True}
-    """
-    self.confidence_level = confidence_level
+    self.log2_fold_change = log2_fold_change
     
     """
     Name: test_sample
@@ -1039,12 +1015,6 @@ class Expression(Base):
     self.test_sample = test_sample
     
     """
-    Name: urls
-    Type: array
-    """
-    self.urls = urls
-    
-    """
     Name: reference_sample
     Type: string
     Description: Free text - reference sample
@@ -1053,67 +1023,108 @@ class Expression(Base):
     self.reference_sample = reference_sample
     
     """
+    Name: test_replicates_n
+    Type: number
+    Description: Count of test replicates
+    Required: {True}
+    """
+    self.test_replicates_n = test_replicates_n
+    
+    """
+    Name: reference_replicates_n
+    Type: number
+    Description: Count of reference replicates
+    Required: {True}
+    """
+    self.reference_replicates_n = reference_replicates_n
+    
+    """
+    Name: confidence_level
+    Type: string
+    Description: high = if the disease state is the only variable (i.e. case vs control); medium = if the disease is a variable but there is one or more other variables; low = where all samples have the disease but the variable is something else e.g. a treatment
+    Required: {True}
+    """
+    self.confidence_level = confidence_level
+    
+    """
+    Name: experiment_overview
+    Type: string
+    Required: {True}
+    """
+    self.experiment_overview = experiment_overview
+    
+    """
     Name: evidence_codes
     Type: array
     Description: An array of evidence codes
     Required: {True}
     """
     self.evidence_codes = evidence_codes
+    
+    """
+    Name: urls
+    Type: array
+    """
+    self.urls = urls
   
   @classmethod
   def cloneObject(cls, clone):
     # super will return an instance of the subtype
     obj = super(Expression, cls).cloneObject(clone)
-    obj.log2_fold_change = ExpressionLog2_Fold_Change.cloneObject(clone.log2_fold_change)
-    if clone.reference_replicates_n:
-        obj.reference_replicates_n = clone.reference_replicates_n
+    if clone.organism_part:
+        obj.organism_part = clone.organism_part
     if clone.comparison_name:
         obj.comparison_name = clone.comparison_name
-    if clone.test_replicates_n:
-        obj.test_replicates_n = clone.test_replicates_n
-    if clone.experiment_overview:
-        obj.experiment_overview = clone.experiment_overview
-    if clone.confidence_level:
-        obj.confidence_level = clone.confidence_level
+    obj.log2_fold_change = ExpressionLog2_Fold_Change.cloneObject(clone.log2_fold_change)
     if clone.test_sample:
         obj.test_sample = clone.test_sample
-    if clone.urls:
-        obj.urls = []; obj.urls.extend(clone.urls)
     if clone.reference_sample:
         obj.reference_sample = clone.reference_sample
+    if clone.test_replicates_n:
+        obj.test_replicates_n = clone.test_replicates_n
+    if clone.reference_replicates_n:
+        obj.reference_replicates_n = clone.reference_replicates_n
+    if clone.confidence_level:
+        obj.confidence_level = clone.confidence_level
+    if clone.experiment_overview:
+        obj.experiment_overview = clone.experiment_overview
     if clone.evidence_codes:
         obj.evidence_codes = []; obj.evidence_codes.extend(clone.evidence_codes)
+    if clone.urls:
+        obj.urls = []; obj.urls.extend(clone.urls)
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['log2_fold_change','reference_replicates_n','comparison_name','test_replicates_n','experiment_overview','confidence_level','test_sample','urls','reference_sample','evidence_codes','unique_experiment_reference','provenance_type','is_associated','resource_score','date_asserted']
+    cls_keys = ['organism_part','comparison_name','log2_fold_change','test_sample','reference_sample','test_replicates_n','reference_replicates_n','confidence_level','experiment_overview','evidence_codes','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = super(Expression, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Expression - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'log2_fold_change' in map:
-        obj.log2_fold_change = ExpressionLog2_Fold_Change.fromMap(map['log2_fold_change'])
-    if  'reference_replicates_n' in map:
-        obj.reference_replicates_n = map['reference_replicates_n']
+    if  'organism_part' in map:
+        obj.organism_part = map['organism_part']
     if  'comparison_name' in map:
         obj.comparison_name = map['comparison_name']
-    if  'test_replicates_n' in map:
-        obj.test_replicates_n = map['test_replicates_n']
-    if  'experiment_overview' in map:
-        obj.experiment_overview = map['experiment_overview']
-    if  'confidence_level' in map:
-        obj.confidence_level = map['confidence_level']
+    if  'log2_fold_change' in map:
+        obj.log2_fold_change = ExpressionLog2_Fold_Change.fromMap(map['log2_fold_change'])
     if  'test_sample' in map:
         obj.test_sample = map['test_sample']
+    if  'reference_sample' in map:
+        obj.reference_sample = map['reference_sample']
+    if  'test_replicates_n' in map:
+        obj.test_replicates_n = map['test_replicates_n']
+    if  'reference_replicates_n' in map:
+        obj.reference_replicates_n = map['reference_replicates_n']
+    if  'confidence_level' in map:
+        obj.confidence_level = map['confidence_level']
+    if  'experiment_overview' in map:
+        obj.experiment_overview = map['experiment_overview']
+    if  'evidence_codes' in map:
+        obj.evidence_codes = map['evidence_codes']
     if 'urls' in map and isinstance(map['urls'], list):
         obj.urls = []
         for item in map['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromMap(item))
-    if  'reference_sample' in map:
-        obj.reference_sample = map['reference_sample']
-    if  'evidence_codes' in map:
-        obj.evidence_codes = map['evidence_codes']
     for key in map:
       if not key in cls_keys:
         logger.warn("Expression - invalid field - {0} found".format(key))
@@ -1131,18 +1142,28 @@ class Expression(Base):
     if self.unique_experiment_reference is None:
       logger.error("Expression - {0}.unique_experiment_reference is required".format(path))
       error = error + 1
-    if self.provenance_type is None:
-      logger.error("Expression - {0}.provenance_type is required".format(path))
-      error = error + 1
     if self.is_associated is None:
       logger.error("Expression - {0}.is_associated is required".format(path))
-      error = error + 1
-    if self.resource_score is None:
-      logger.error("Expression - {0}.resource_score is required".format(path))
       error = error + 1
     if self.date_asserted is None:
       logger.error("Expression - {0}.date_asserted is required".format(path))
       error = error + 1
+    if self.resource_score is None:
+      logger.error("Expression - {0}.resource_score is required".format(path))
+      error = error + 1
+    if self.provenance_type is None:
+      logger.error("Expression - {0}.provenance_type is required".format(path))
+      error = error + 1
+    if self.organism_part and not isinstance(self.organism_part, basestring):
+        logger.error("Expression - {0}.organism_part type should be a string".format(path))
+        error = error + 1
+    # comparison_name is mandatory
+    if self.comparison_name is None :
+        logger.error("Expression - {0}.comparison_name is required".format(path))
+        error = error + 1
+    if self.comparison_name and not isinstance(self.comparison_name, basestring):
+        logger.error("Expression - {0}.comparison_name type should be a string".format(path))
+        error = error + 1
     if self.log2_fold_change is None:
         logger.error("Expression - {0}.log2_fold_change is required".format(path))
         error = error + 1
@@ -1152,19 +1173,19 @@ class Expression(Base):
     else:
         log2_fold_change_error = self.log2_fold_change.validate(logger, path = '.'.join([path, 'log2_fold_change']))
         error = error + log2_fold_change_error
-    # reference_replicates_n is mandatory
-    if self.reference_replicates_n is None :
-        logger.error("Expression - {0}.reference_replicates_n is required".format(path))
+    # test_sample is mandatory
+    if self.test_sample is None :
+        logger.error("Expression - {0}.test_sample is required".format(path))
         error = error + 1
-    if self.reference_replicates_n < 1:
-        logger.error("Expression - {0}.reference_replicates_n: {1} should be greater than or equal to 1".format(path, self.reference_replicates_n))
-        error = error+1
-    # comparison_name is mandatory
-    if self.comparison_name is None :
-        logger.error("Expression - {0}.comparison_name is required".format(path))
+    if self.test_sample and not isinstance(self.test_sample, basestring):
+        logger.error("Expression - {0}.test_sample type should be a string".format(path))
         error = error + 1
-    if self.comparison_name and not isinstance(self.comparison_name, basestring):
-        logger.error("Expression - {0}.comparison_name type should be a string".format(path))
+    # reference_sample is mandatory
+    if self.reference_sample is None :
+        logger.error("Expression - {0}.reference_sample is required".format(path))
+        error = error + 1
+    if self.reference_sample and not isinstance(self.reference_sample, basestring):
+        logger.error("Expression - {0}.reference_sample type should be a string".format(path))
         error = error + 1
     # test_replicates_n is mandatory
     if self.test_replicates_n is None :
@@ -1173,13 +1194,13 @@ class Expression(Base):
     if self.test_replicates_n < 1:
         logger.error("Expression - {0}.test_replicates_n: {1} should be greater than or equal to 1".format(path, self.test_replicates_n))
         error = error+1
-    # experiment_overview is mandatory
-    if self.experiment_overview is None :
-        logger.error("Expression - {0}.experiment_overview is required".format(path))
+    # reference_replicates_n is mandatory
+    if self.reference_replicates_n is None :
+        logger.error("Expression - {0}.reference_replicates_n is required".format(path))
         error = error + 1
-    if self.experiment_overview and not isinstance(self.experiment_overview, basestring):
-        logger.error("Expression - {0}.experiment_overview type should be a string".format(path))
-        error = error + 1
+    if self.reference_replicates_n < 1:
+        logger.error("Expression - {0}.reference_replicates_n: {1} should be greater than or equal to 1".format(path, self.reference_replicates_n))
+        error = error+1
     # confidence_level is mandatory
     if self.confidence_level is None :
         logger.error("Expression - {0}.confidence_level is required".format(path))
@@ -1190,22 +1211,12 @@ class Expression(Base):
     if self.confidence_level and not isinstance(self.confidence_level, basestring):
         logger.error("Expression - {0}.confidence_level type should be a string".format(path))
         error = error + 1
-    # test_sample is mandatory
-    if self.test_sample is None :
-        logger.error("Expression - {0}.test_sample is required".format(path))
+    # experiment_overview is mandatory
+    if self.experiment_overview is None :
+        logger.error("Expression - {0}.experiment_overview is required".format(path))
         error = error + 1
-    if self.test_sample and not isinstance(self.test_sample, basestring):
-        logger.error("Expression - {0}.test_sample type should be a string".format(path))
-        error = error + 1
-    if not self.urls is None and len(self.urls) > 0 and not all(isinstance(n, evidence_linkout.Linkout) for n in self.urls):
-        logger.error("Expression - {0}.urls array should have elements of type 'evidence_linkout.Linkout'".format(path))
-        error = error+1
-    # reference_sample is mandatory
-    if self.reference_sample is None :
-        logger.error("Expression - {0}.reference_sample is required".format(path))
-        error = error + 1
-    if self.reference_sample and not isinstance(self.reference_sample, basestring):
-        logger.error("Expression - {0}.reference_sample type should be a string".format(path))
+    if self.experiment_overview and not isinstance(self.experiment_overview, basestring):
+        logger.error("Expression - {0}.experiment_overview type should be a string".format(path))
         error = error + 1
     # evidence_codes is mandatory
     if self.evidence_codes is None :
@@ -1223,20 +1234,24 @@ class Expression(Base):
     if self.evidence_codes and len(self.evidence_codes) < 1:
         logger.error("Expression - {0}.evidence_codes array should have at least 1 elements".format(path))
         error = error + 1
+    if not self.urls is None and len(self.urls) > 0 and not all(isinstance(n, evidence_linkout.Linkout) for n in self.urls):
+        logger.error("Expression - {0}.urls array should have elements of type 'evidence_linkout.Linkout'".format(path))
+        error = error+1
     return error
   
   def serialize(self):
     classDict = super(Expression, self).serialize()
-    if not self.log2_fold_change is None: classDict['log2_fold_change'] = self.log2_fold_change.serialize()
-    if not self.reference_replicates_n is None: classDict['reference_replicates_n'] = self.reference_replicates_n
+    if not self.organism_part is None: classDict['organism_part'] = self.organism_part
     if not self.comparison_name is None: classDict['comparison_name'] = self.comparison_name
-    if not self.test_replicates_n is None: classDict['test_replicates_n'] = self.test_replicates_n
-    if not self.experiment_overview is None: classDict['experiment_overview'] = self.experiment_overview
-    if not self.confidence_level is None: classDict['confidence_level'] = self.confidence_level
+    if not self.log2_fold_change is None: classDict['log2_fold_change'] = self.log2_fold_change.serialize()
     if not self.test_sample is None: classDict['test_sample'] = self.test_sample
-    if not self.urls is None: classDict['urls'] = map(lambda x: x.serialize(), self.urls)
     if not self.reference_sample is None: classDict['reference_sample'] = self.reference_sample
+    if not self.test_replicates_n is None: classDict['test_replicates_n'] = self.test_replicates_n
+    if not self.reference_replicates_n is None: classDict['reference_replicates_n'] = self.reference_replicates_n
+    if not self.confidence_level is None: classDict['confidence_level'] = self.confidence_level
+    if not self.experiment_overview is None: classDict['experiment_overview'] = self.experiment_overview
     if not self.evidence_codes is None: classDict['evidence_codes'] = self.evidence_codes
+    if not self.urls is None: classDict['urls'] = map(lambda x: x.serialize(), self.urls)
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -1249,17 +1264,10 @@ class ExpressionLog2_Fold_Change(object):
   """
   Constructor using all fields with default values
   Arguments:
-  :param percentile_rank = 0
   :param value = 0
+  :param percentile_rank = 0
   """
-  def __init__(self, percentile_rank = 0, value = 0):
-    
-    """
-    Name: percentile_rank
-    Type: number
-    Required: {True}
-    """
-    self.percentile_rank = percentile_rank
+  def __init__(self, value = 0, percentile_rank = 0):
     
     """
     Name: value
@@ -1267,27 +1275,34 @@ class ExpressionLog2_Fold_Change(object):
     Required: {True}
     """
     self.value = value
+    
+    """
+    Name: percentile_rank
+    Type: number
+    Required: {True}
+    """
+    self.percentile_rank = percentile_rank
   
   @classmethod
   def cloneObject(cls, clone):
     obj = cls()
-    if clone.percentile_rank:
-        obj.percentile_rank = clone.percentile_rank
     if clone.value:
         obj.value = clone.value
+    if clone.percentile_rank:
+        obj.percentile_rank = clone.percentile_rank
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['percentile_rank','value']
+    cls_keys = ['value','percentile_rank']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("ExpressionLog2_Fold_Change - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'percentile_rank' in map:
-        obj.percentile_rank = map['percentile_rank']
     if  'value' in map:
         obj.value = map['value']
+    if  'percentile_rank' in map:
+        obj.percentile_rank = map['percentile_rank']
     return obj
   
   def validate(self, logger, path = "root"):
@@ -1296,20 +1311,20 @@ class ExpressionLog2_Fold_Change(object):
     :returns: number of errors found during validation
     """
     error = 0
-    # percentile_rank is mandatory
-    if self.percentile_rank is None :
-        logger.error("ExpressionLog2_Fold_Change - {0}.percentile_rank is required".format(path))
-        error = error + 1
     # value is mandatory
     if self.value is None :
         logger.error("ExpressionLog2_Fold_Change - {0}.value is required".format(path))
         error = error + 1
+    # percentile_rank is mandatory
+    if self.percentile_rank is None :
+        logger.error("ExpressionLog2_Fold_Change - {0}.percentile_rank is required".format(path))
+        error = error + 1
     return error
   
   def serialize(self):
-    classDict = {}
-    if not self.percentile_rank is None: classDict['percentile_rank'] = self.percentile_rank
+    classDict = dict()
     if not self.value is None: classDict['value'] = self.value
+    if not self.percentile_rank is None: classDict['percentile_rank'] = self.percentile_rank
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -1322,28 +1337,28 @@ class Literature_Curated(Base):
   """
   Constructor using all fields with default values
   Arguments:
-  :param known_mutations = None
+  :param clinical_significance = None
   :param evidence_codes = None
+  :param known_mutations = None
   :param urls = None
   :param unique_experiment_reference = None
-  :param     provenance_type = None
   :param is_associated = False
-  :param resource_score = None
   :param date_asserted = None
+  :param resource_score = None
+  :param     provenance_type = None
   """
-  def __init__(self, known_mutations = None, evidence_codes = None, urls = None, unique_experiment_reference = None,     provenance_type = None, is_associated = False, resource_score = None, date_asserted = None):
+  def __init__(self, clinical_significance = None, evidence_codes = None, known_mutations = None, urls = None, unique_experiment_reference = None, is_associated = False, date_asserted = None, resource_score = None,     provenance_type = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
     """
-    super(Literature_Curated, self).__init__(unique_experiment_reference = unique_experiment_reference,provenance_type = provenance_type,is_associated = is_associated,resource_score = resource_score,date_asserted = date_asserted)
+    super(Literature_Curated, self).__init__(unique_experiment_reference = unique_experiment_reference,is_associated = is_associated,date_asserted = date_asserted,resource_score = resource_score,provenance_type = provenance_type)
     
     """
-    Name: known_mutations
-    Type: array
-    Description: An array of mutations
+    Name: clinical_significance
+    Type: string
     """
-    self.known_mutations = known_mutations
+    self.clinical_significance = clinical_significance
     
     """
     Name: evidence_codes
@@ -1352,6 +1367,13 @@ class Literature_Curated(Base):
     Required: {True}
     """
     self.evidence_codes = evidence_codes
+    
+    """
+    Name: known_mutations
+    Type: array
+    Description: An array of mutations
+    """
+    self.known_mutations = known_mutations
     
     """
     Name: urls
@@ -1363,27 +1385,31 @@ class Literature_Curated(Base):
   def cloneObject(cls, clone):
     # super will return an instance of the subtype
     obj = super(Literature_Curated, cls).cloneObject(clone)
-    if clone.known_mutations:
-        obj.known_mutations = []; obj.known_mutations.extend(clone.known_mutations)
+    if clone.clinical_significance:
+        obj.clinical_significance = clone.clinical_significance
     if clone.evidence_codes:
         obj.evidence_codes = []; obj.evidence_codes.extend(clone.evidence_codes)
+    if clone.known_mutations:
+        obj.known_mutations = []; obj.known_mutations.extend(clone.known_mutations)
     if clone.urls:
         obj.urls = []; obj.urls.extend(clone.urls)
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['known_mutations','evidence_codes','urls','unique_experiment_reference','provenance_type','is_associated','resource_score','date_asserted']
+    cls_keys = ['clinical_significance','evidence_codes','known_mutations','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = super(Literature_Curated, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Literature_Curated - DictType expected - {0} found\n".format(type(map)))
       return
+    if  'clinical_significance' in map:
+        obj.clinical_significance = map['clinical_significance']
+    if  'evidence_codes' in map:
+        obj.evidence_codes = map['evidence_codes']
     if 'known_mutations' in map and isinstance(map['known_mutations'], list):
         obj.known_mutations = []
         for item in map['known_mutations']:
             obj.known_mutations.append(evidence_mutation.Mutation.fromMap(item))
-    if  'evidence_codes' in map:
-        obj.evidence_codes = map['evidence_codes']
     if 'urls' in map and isinstance(map['urls'], list):
         obj.urls = []
         for item in map['urls']:
@@ -1402,23 +1428,23 @@ class Literature_Curated(Base):
     error = 0
     # cumulate errors from super class
     error = error + super(Literature_Curated, self).validate(logger, path = path)
-    if self.provenance_type is None:
-      logger.error("Literature_Curated - {0}.provenance_type is required".format(path))
-      error = error + 1
     if self.is_associated is None:
       logger.error("Literature_Curated - {0}.is_associated is required".format(path))
-      error = error + 1
-    if self.resource_score is None:
-      logger.error("Literature_Curated - {0}.resource_score is required".format(path))
       error = error + 1
     if self.date_asserted is None:
       logger.error("Literature_Curated - {0}.date_asserted is required".format(path))
       error = error + 1
-    if not self.known_mutations is None and len(self.known_mutations) > 0 and not all(isinstance(n, evidence_mutation.Mutation) for n in self.known_mutations):
-        logger.error("Literature_Curated - {0}.known_mutations array should have elements of type 'evidence_mutation.Mutation'".format(path))
-        error = error+1
-    if self.known_mutations and len(self.known_mutations) < 1:
-        logger.error("Literature_Curated - {0}.known_mutations array should have at least 1 elements".format(path))
+    if self.resource_score is None:
+      logger.error("Literature_Curated - {0}.resource_score is required".format(path))
+      error = error + 1
+    if self.provenance_type is None:
+      logger.error("Literature_Curated - {0}.provenance_type is required".format(path))
+      error = error + 1
+    if not self.clinical_significance is None and not self.clinical_significance in ['Pathogenic','Likely pathogenic','protective','association','risk_factor','Affects','drug response']:
+        logger.error("Literature_Curated - {0}.clinical_significance value is restricted to the fixed set of values 'Pathogenic','Likely pathogenic','protective','association','risk_factor','Affects','drug response' ('{1}' given)".format(path, self.clinical_significance))
+        error = error + 1
+    if self.clinical_significance and not isinstance(self.clinical_significance, basestring):
+        logger.error("Literature_Curated - {0}.clinical_significance type should be a string".format(path))
         error = error + 1
     # evidence_codes is mandatory
     if self.evidence_codes is None :
@@ -1436,6 +1462,12 @@ class Literature_Curated(Base):
     if self.evidence_codes and len(self.evidence_codes) < 1:
         logger.error("Literature_Curated - {0}.evidence_codes array should have at least 1 elements".format(path))
         error = error + 1
+    if not self.known_mutations is None and len(self.known_mutations) > 0 and not all(isinstance(n, evidence_mutation.Mutation) for n in self.known_mutations):
+        logger.error("Literature_Curated - {0}.known_mutations array should have elements of type 'evidence_mutation.Mutation'".format(path))
+        error = error+1
+    if self.known_mutations and len(self.known_mutations) < 0:
+        logger.error("Literature_Curated - {0}.known_mutations array should have at least 0 elements".format(path))
+        error = error + 1
     if not self.urls is None and len(self.urls) > 0 and not all(isinstance(n, evidence_linkout.Linkout) for n in self.urls):
         logger.error("Literature_Curated - {0}.urls array should have elements of type 'evidence_linkout.Linkout'".format(path))
         error = error+1
@@ -1443,8 +1475,9 @@ class Literature_Curated(Base):
   
   def serialize(self):
     classDict = super(Literature_Curated, self).serialize()
-    if not self.known_mutations is None: classDict['known_mutations'] = map(lambda x: x.serialize(), self.known_mutations)
+    if not self.clinical_significance is None: classDict['clinical_significance'] = self.clinical_significance
     if not self.evidence_codes is None: classDict['evidence_codes'] = self.evidence_codes
+    if not self.known_mutations is None: classDict['known_mutations'] = map(lambda x: x.serialize(), self.known_mutations)
     if not self.urls is None: classDict['urls'] = map(lambda x: x.serialize(), self.urls)
     return classDict
   
@@ -1458,24 +1491,20 @@ class Literature_Mining(Base):
   """
   Constructor using all fields with default values
   Arguments:
-  :param literature_ref = None
   :param evidence_codes = None
+  :param literature_ref = None
   :param unique_experiment_reference = None
-  :param     provenance_type = None
   :param is_associated = False
-  :param resource_score = None
   :param date_asserted = None
+  :param resource_score = None
+  :param     provenance_type = None
   """
-  def __init__(self, literature_ref = None, evidence_codes = None, unique_experiment_reference = None,     provenance_type = None, is_associated = False, resource_score = None, date_asserted = None):
+  def __init__(self, evidence_codes = None, literature_ref = None, unique_experiment_reference = None, is_associated = False, date_asserted = None, resource_score = None,     provenance_type = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
     """
-    super(Literature_Mining, self).__init__(unique_experiment_reference = unique_experiment_reference,provenance_type = provenance_type,is_associated = is_associated,resource_score = resource_score,date_asserted = date_asserted)
-    """
-    Name: literature_ref
-    """
-    self.literature_ref = literature_ref
+    super(Literature_Mining, self).__init__(unique_experiment_reference = unique_experiment_reference,is_associated = is_associated,date_asserted = date_asserted,resource_score = resource_score,provenance_type = provenance_type)
     
     """
     Name: evidence_codes
@@ -1484,27 +1513,31 @@ class Literature_Mining(Base):
     Required: {True}
     """
     self.evidence_codes = evidence_codes
+    """
+    Name: literature_ref
+    """
+    self.literature_ref = literature_ref
   
   @classmethod
   def cloneObject(cls, clone):
     # super will return an instance of the subtype
     obj = super(Literature_Mining, cls).cloneObject(clone)
-    obj.literature_ref = Single_Lit_Reference.cloneObject(clone.literature_ref)
     if clone.evidence_codes:
         obj.evidence_codes = []; obj.evidence_codes.extend(clone.evidence_codes)
+    obj.literature_ref = Single_Lit_Reference.cloneObject(clone.literature_ref)
     return obj
   
   @classmethod
   def fromMap(cls, map):
-    cls_keys = ['literature_ref','evidence_codes','unique_experiment_reference','provenance_type','is_associated','resource_score','date_asserted']
+    cls_keys = ['evidence_codes','literature_ref','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = super(Literature_Mining, cls).fromMap(map)
     if not isinstance(map, types.DictType):
       logger.warn("Literature_Mining - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'literature_ref' in map:
-        obj.literature_ref = Single_Lit_Reference.fromMap(map['literature_ref'])
     if  'evidence_codes' in map:
         obj.evidence_codes = map['evidence_codes']
+    if  'literature_ref' in map:
+        obj.literature_ref = Single_Lit_Reference.fromMap(map['literature_ref'])
     for key in map:
       if not key in cls_keys:
         logger.warn("Literature_Mining - invalid field - {0} found".format(key))
@@ -1522,27 +1555,18 @@ class Literature_Mining(Base):
     if self.unique_experiment_reference is None:
       logger.error("Literature_Mining - {0}.unique_experiment_reference is required".format(path))
       error = error + 1
-    if self.provenance_type is None:
-      logger.error("Literature_Mining - {0}.provenance_type is required".format(path))
-      error = error + 1
     if self.is_associated is None:
       logger.error("Literature_Mining - {0}.is_associated is required".format(path))
-      error = error + 1
-    if self.resource_score is None:
-      logger.error("Literature_Mining - {0}.resource_score is required".format(path))
       error = error + 1
     if self.date_asserted is None:
       logger.error("Literature_Mining - {0}.date_asserted is required".format(path))
       error = error + 1
-    if self.literature_ref is None:
-        logger.error("Literature_Mining - {0}.literature_ref is required".format(path))
-        error = error + 1
-    elif not isinstance(self.literature_ref, Single_Lit_Reference):
-        logger.error("Single_Lit_Reference class instance expected for attribute - {0}.literature_ref".format(path))
-        error = error + 1
-    else:
-        literature_ref_error = self.literature_ref.validate(logger, path = '.'.join([path, 'literature_ref']))
-        error = error + literature_ref_error
+    if self.resource_score is None:
+      logger.error("Literature_Mining - {0}.resource_score is required".format(path))
+      error = error + 1
+    if self.provenance_type is None:
+      logger.error("Literature_Mining - {0}.provenance_type is required".format(path))
+      error = error + 1
     # evidence_codes is mandatory
     if self.evidence_codes is None :
         logger.error("Literature_Mining - {0}.evidence_codes is required".format(path))
@@ -1559,12 +1583,21 @@ class Literature_Mining(Base):
     if self.evidence_codes and len(self.evidence_codes) < 1:
         logger.error("Literature_Mining - {0}.evidence_codes array should have at least 1 elements".format(path))
         error = error + 1
+    if self.literature_ref is None:
+        logger.error("Literature_Mining - {0}.literature_ref is required".format(path))
+        error = error + 1
+    elif not isinstance(self.literature_ref, Single_Lit_Reference):
+        logger.error("Single_Lit_Reference class instance expected for attribute - {0}.literature_ref".format(path))
+        error = error + 1
+    else:
+        literature_ref_error = self.literature_ref.validate(logger, path = '.'.join([path, 'literature_ref']))
+        error = error + literature_ref_error
     return error
   
   def serialize(self):
     classDict = super(Literature_Mining, self).serialize()
-    if not self.literature_ref is None: classDict['literature_ref'] = self.literature_ref.serialize()
     if not self.evidence_codes is None: classDict['evidence_codes'] = self.evidence_codes
+    if not self.literature_ref is None: classDict['literature_ref'] = self.literature_ref.serialize()
     return classDict
   
   def to_JSON(self, indentation=4):
