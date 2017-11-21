@@ -145,7 +145,7 @@ class Base(object):
     if not self.date_asserted is None:
         try:
             iso8601.parse_date(self.date_asserted)
-        except iso8601.ParseError, e:
+        except iso8601.ParseError as e:
             logger.error("Base - {0}.date_asserted '{1}' invalid ISO 8601 date (YYYY-MM-DDThh:mm:ss.sTZD expected)".format(path, self.date_asserted))
             error = error+1
     if self.date_asserted and not isinstance(self.date_asserted, basestring):
