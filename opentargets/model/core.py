@@ -24,6 +24,7 @@ import iso8601
 import types
 import json
 import logging
+import six
 import opentargets.model.bioentity as bioentity
 import opentargets.model.evidence.core as evidence_core
 import opentargets.model.evidence.phenotype as evidence_phenotype
@@ -151,19 +152,19 @@ class Base(object):
     if self.sourceID and not re.match('^[a-z0-9_]+$', self.sourceID):
         logger.error("Base - {0}.sourceID '{1}'".format(path,self.sourceID) + " does not match pattern '^[a-z0-9_]+$'")
         logger.warn(json.dumps(self.sourceID, sort_keys=True, indent=2))
-    if self.sourceID and not isinstance(self.sourceID, basestring):
+    if self.sourceID and not isinstance(self.sourceID, six.string_types):
         logger.error("Base - {0}.sourceID type should be a string".format(path))
         error = error + 1
     if not self.access_level is None and not self.access_level in ['public','private']:
         logger.error("Base - {0}.access_level value is restricted to the fixed set of values 'public','private' ('{1}' given)".format(path, self.access_level))
         error = error + 1
-    if self.access_level and not isinstance(self.access_level, basestring):
+    if self.access_level and not isinstance(self.access_level, six.string_types):
         logger.error("Base - {0}.access_level type should be a string".format(path))
         error = error + 1
     if not self.validated_against_schema_version is None and not self.validated_against_schema_version in ['1.2.7']:
         logger.error("Base - {0}.validated_against_schema_version value is restricted to the fixed set of values '1.2.7' ('{1}' given)".format(path, self.validated_against_schema_version))
         error = error + 1
-    if self.validated_against_schema_version and not isinstance(self.validated_against_schema_version, basestring):
+    if self.validated_against_schema_version and not isinstance(self.validated_against_schema_version, six.string_types):
         logger.error("Base - {0}.validated_against_schema_version type should be a string".format(path))
         error = error + 1
     if self.unique_association_fields and not isinstance(self.unique_association_fields, dict):
@@ -362,7 +363,7 @@ class Animal_Models(Base):
     if not self.type is None and not self.type in ['animal_model']:
         logger.error("Animal_Models - {0}.type value is restricted to the fixed set of values 'animal_model' ('{1}' given)".format(path, self.type))
         error = error + 1
-    if self.type and not isinstance(self.type, basestring):
+    if self.type and not isinstance(self.type, six.string_types):
         logger.error("Animal_Models - {0}.type type should be a string".format(path))
         error = error + 1
     if self.evidence is None:
@@ -580,7 +581,7 @@ class Drug(Base):
     if not self.type is None and not self.type in ['known_drug']:
         logger.error("Drug - {0}.type value is restricted to the fixed set of values 'known_drug' ('{1}' given)".format(path, self.type))
         error = error + 1
-    if self.type and not isinstance(self.type, basestring):
+    if self.type and not isinstance(self.type, six.string_types):
         logger.error("Drug - {0}.type type should be a string".format(path))
         error = error + 1
     if self.drug is None:
@@ -782,7 +783,7 @@ class Expression(Base):
     if not self.type is None and not self.type in ['rna_expression']:
         logger.error("Expression - {0}.type value is restricted to the fixed set of values 'rna_expression' ('{1}' given)".format(path, self.type))
         error = error + 1
-    if self.type and not isinstance(self.type, basestring):
+    if self.type and not isinstance(self.type, six.string_types):
         logger.error("Expression - {0}.type type should be a string".format(path))
         error = error + 1
     if self.evidence is None:
@@ -907,7 +908,7 @@ class Genetics(Base):
     if not self.type is None and not self.type in ['genetic_association']:
         logger.error("Genetics - {0}.type value is restricted to the fixed set of values 'genetic_association' ('{1}' given)".format(path, self.type))
         error = error + 1
-    if self.type and not isinstance(self.type, basestring):
+    if self.type and not isinstance(self.type, six.string_types):
         logger.error("Genetics - {0}.type type should be a string".format(path))
         error = error + 1
     if self.variant is None:
@@ -1109,7 +1110,7 @@ class Literature_Curated(Base):
     if not self.type is None and not self.type in ['genetic_literature','affected_pathway','somatic_mutation']:
         logger.error("Literature_Curated - {0}.type value is restricted to the fixed set of values 'genetic_literature','affected_pathway','somatic_mutation' ('{1}' given)".format(path, self.type))
         error = error + 1
-    if self.type and not isinstance(self.type, basestring):
+    if self.type and not isinstance(self.type, six.string_types):
         logger.error("Literature_Curated - {0}.type type should be a string".format(path))
         error = error + 1
     if self.evidence is None:
@@ -1226,7 +1227,7 @@ class Literature_Mining(Base):
     if not self.type is None and not self.type in ['literature']:
         logger.error("Literature_Mining - {0}.type value is restricted to the fixed set of values 'literature' ('{1}' given)".format(path, self.type))
         error = error + 1
-    if self.type and not isinstance(self.type, basestring):
+    if self.type and not isinstance(self.type, six.string_types):
         logger.error("Literature_Mining - {0}.type type should be a string".format(path))
         error = error + 1
     if self.evidence is None:

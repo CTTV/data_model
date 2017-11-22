@@ -24,6 +24,7 @@ import iso8601
 import types
 import json
 import logging
+import six
 
 __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
@@ -164,18 +165,18 @@ class Mutation(object):
     :returns: number of errors found during validation
     """
     error = 0
-    if self.role_in_cancer and not isinstance(self.role_in_cancer, basestring):
+    if self.role_in_cancer and not isinstance(self.role_in_cancer, six.string_types):
         logger.error("Mutation - {0}.role_in_cancer type should be a string".format(path))
         error = error + 1
     # preferred_name is mandatory
     if self.preferred_name is None :
         logger.error("Mutation - {0}.preferred_name is required".format(path))
         error = error + 1
-    if self.preferred_name and not isinstance(self.preferred_name, basestring):
+    if self.preferred_name and not isinstance(self.preferred_name, six.string_types):
         logger.error("Mutation - {0}.preferred_name type should be a string".format(path))
         error = error + 1
-    if not self.alternative_names is None and len(self.alternative_names) > 0 and not all(isinstance(n, basestring) for n in self.alternative_names):
-        logger.error("Mutation - {0}.alternative_names array should have elements of type 'basestring'".format(path))
+    if not self.alternative_names is None and len(self.alternative_names) > 0 and not all(isinstance(n, six.string_types) for n in self.alternative_names):
+        logger.error("Mutation - {0}.alternative_names array should have elements of type 'six.string_types'".format(path))
         error = error+1
     if self.alternative_names and len(self.alternative_names) < 1:
         logger.error("Mutation - {0}.alternative_names array should have at least 1 elements".format(path))
@@ -187,7 +188,7 @@ class Mutation(object):
     if not self.functional_consequence is None and not self.functional_consequence in ['http://purl.obolibrary.org/obo/SO_0001893','http://purl.obolibrary.org/obo/SO_0001632','http://purl.obolibrary.org/obo/SO_0001631','http://purl.obolibrary.org/obo/SO_0000159','http://purl.obolibrary.org/obo/SO_0001583','http://purl.obolibrary.org/obo/SO_0001587','http://purl.obolibrary.org/obo/SO_0001590','http://purl.obolibrary.org/obo/SO_1000065','http://purl.obolibrary.org/obo/SO_0001539','http://purl.obolibrary.org/obo/SO_0001605','http://purl.obolibrary.org/obo/SO_0001825','http://purl.obolibrary.org/obo/SO_0001553','http://purl.obolibrary.org/obo/SO_0001059','http://purl.obolibrary.org/obo/SO_0001821','http://purl.obolibrary.org/obo/SO_0001578','http://purl.obolibrary.org/obo/SO_0001630','http://purl.obolibrary.org/obo/SO_0001575','http://purl.obolibrary.org/obo/SO_0001589','http://targetvalidation.org/sequence/nearest_gene_five_prime_end','http://purl.obolibrary.org/obo/SO_0001574','http://purl.obolibrary.org/obo/SO_0001819','http://purl.obolibrary.org/obo/SO_0001822','http://purl.obolibrary.org/obo/SO_0001818','http://purl.obolibrary.org/obo/SO_0001564','http://purl.obolibrary.org/obo/SO_0001565','http://purl.obolibrary.org/obo/SO_0002012','http://purl.obolibrary.org/obo/SO_0001627','http://purl.obolibrary.org/obo/SO_0001060','http://purl.obolibrary.org/obo/SO_0001624']:
         logger.error("Mutation - {0}.functional_consequence value is restricted to the fixed set of values 'http://purl.obolibrary.org/obo/SO_0001893','http://purl.obolibrary.org/obo/SO_0001632','http://purl.obolibrary.org/obo/SO_0001631','http://purl.obolibrary.org/obo/SO_0000159','http://purl.obolibrary.org/obo/SO_0001583','http://purl.obolibrary.org/obo/SO_0001587','http://purl.obolibrary.org/obo/SO_0001590','http://purl.obolibrary.org/obo/SO_1000065','http://purl.obolibrary.org/obo/SO_0001539','http://purl.obolibrary.org/obo/SO_0001605','http://purl.obolibrary.org/obo/SO_0001825','http://purl.obolibrary.org/obo/SO_0001553','http://purl.obolibrary.org/obo/SO_0001059','http://purl.obolibrary.org/obo/SO_0001821','http://purl.obolibrary.org/obo/SO_0001578','http://purl.obolibrary.org/obo/SO_0001630','http://purl.obolibrary.org/obo/SO_0001575','http://purl.obolibrary.org/obo/SO_0001589','http://targetvalidation.org/sequence/nearest_gene_five_prime_end','http://purl.obolibrary.org/obo/SO_0001574','http://purl.obolibrary.org/obo/SO_0001819','http://purl.obolibrary.org/obo/SO_0001822','http://purl.obolibrary.org/obo/SO_0001818','http://purl.obolibrary.org/obo/SO_0001564','http://purl.obolibrary.org/obo/SO_0001565','http://purl.obolibrary.org/obo/SO_0002012','http://purl.obolibrary.org/obo/SO_0001627','http://purl.obolibrary.org/obo/SO_0001060','http://purl.obolibrary.org/obo/SO_0001624' ('{1}' given)".format(path, self.functional_consequence))
         error = error + 1
-    if self.functional_consequence and not isinstance(self.functional_consequence, basestring):
+    if self.functional_consequence and not isinstance(self.functional_consequence, six.string_types):
         logger.error("Mutation - {0}.functional_consequence type should be a string".format(path))
         error = error + 1
     if self.number_samples_tested is not None and (self.number_samples_tested < 0):
@@ -202,7 +203,7 @@ class Mutation(object):
     if not self.inheritance_pattern is None and not self.inheritance_pattern in ['unknown','dominant','semi-dominant','co-dominant','recessive','dominant/recessive','X-linked recessive']:
         logger.error("Mutation - {0}.inheritance_pattern value is restricted to the fixed set of values 'unknown','dominant','semi-dominant','co-dominant','recessive','dominant/recessive','X-linked recessive' ('{1}' given)".format(path, self.inheritance_pattern))
         error = error + 1
-    if self.inheritance_pattern and not isinstance(self.inheritance_pattern, basestring):
+    if self.inheritance_pattern and not isinstance(self.inheritance_pattern, six.string_types):
         logger.error("Mutation - {0}.inheritance_pattern type should be a string".format(path))
         error = error + 1
     return error

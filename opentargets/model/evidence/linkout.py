@@ -24,6 +24,7 @@ import iso8601
 import types
 import json
 import logging
+import six
 
 __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
@@ -95,14 +96,14 @@ class Linkout(object):
     if self.nice_name is None :
         logger.error("Linkout - {0}.nice_name is required".format(path))
         error = error + 1
-    if self.nice_name and not isinstance(self.nice_name, basestring):
+    if self.nice_name and not isinstance(self.nice_name, six.string_types):
         logger.error("Linkout - {0}.nice_name type should be a string".format(path))
         error = error + 1
     # url is mandatory
     if self.url is None :
         logger.error("Linkout - {0}.url is required".format(path))
         error = error + 1
-    if self.url and not isinstance(self.url, basestring):
+    if self.url and not isinstance(self.url, six.string_types):
         logger.error("Linkout - {0}.url type should be a string".format(path))
         error = error + 1
     return error

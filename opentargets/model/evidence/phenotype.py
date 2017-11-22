@@ -24,6 +24,7 @@ import iso8601
 import types
 import json
 import logging
+import six
 import opentargets.model.evidence.core
 import opentargets.model.evidence.linkout as evidence_linkout
 import opentargets.model.bioentity as bioentity
@@ -172,8 +173,8 @@ class Orthologs(evidence_core.Base):
             if item not in validValues:
                 logger.error("Orthologs - {0}.evidence_codes value is restricted to the fixed set of values 'http://identifiers.org/eco/ECO:0000265' ('{1}' given)".format(path, item))
                 error = error + 1
-    if not self.evidence_codes is None and len(self.evidence_codes) > 0 and not all(isinstance(n, basestring) for n in self.evidence_codes):
-        logger.error("Orthologs - {0}.evidence_codes array should have elements of type 'basestring'".format(path))
+    if not self.evidence_codes is None and len(self.evidence_codes) > 0 and not all(isinstance(n, six.string_types) for n in self.evidence_codes):
+        logger.error("Orthologs - {0}.evidence_codes array should have elements of type 'six.string_types'".format(path))
         error = error+1
     if self.evidence_codes and len(self.evidence_codes) < 1:
         logger.error("Orthologs - {0}.evidence_codes array should have at least 1 elements".format(path))
@@ -186,7 +187,7 @@ class Orthologs(evidence_core.Base):
     if self.human_gene_id and not re.match('^http://identifiers.org/ensembl/ENSG[0-9]{4,}$', self.human_gene_id):
         logger.error("Orthologs - {0}.human_gene_id '{1}'".format(path,self.human_gene_id) + " does not match pattern '^http://identifiers.org/ensembl/ENSG[0-9]{4,}$'")
         logger.warn(json.dumps(self.human_gene_id, sort_keys=True, indent=2))
-    if self.human_gene_id and not isinstance(self.human_gene_id, basestring):
+    if self.human_gene_id and not isinstance(self.human_gene_id, six.string_types):
         logger.error("Orthologs - {0}.human_gene_id type should be a string".format(path))
         error = error + 1
     # model_gene_id is mandatory
@@ -197,7 +198,7 @@ class Orthologs(evidence_core.Base):
     if self.model_gene_id and not re.match('^http://identifiers.org/ensembl/ENS[A-Z]{0,3}G[0-9]{4,}$', self.model_gene_id):
         logger.error("Orthologs - {0}.model_gene_id '{1}'".format(path,self.model_gene_id) + " does not match pattern '^http://identifiers.org/ensembl/ENS[A-Z]{0,3}G[0-9]{4,}$'")
         logger.warn(json.dumps(self.model_gene_id, sort_keys=True, indent=2))
-    if self.model_gene_id and not isinstance(self.model_gene_id, basestring):
+    if self.model_gene_id and not isinstance(self.model_gene_id, six.string_types):
         logger.error("Orthologs - {0}.model_gene_id type should be a string".format(path))
         error = error + 1
     # species is mandatory
@@ -207,7 +208,7 @@ class Orthologs(evidence_core.Base):
     if not self.species is None and not self.species in ['mouse','human','rat','zebrafish','dog']:
         logger.error("Orthologs - {0}.species value is restricted to the fixed set of values 'mouse','human','rat','zebrafish','dog' ('{1}' given)".format(path, self.species))
         error = error + 1
-    if self.species and not isinstance(self.species, basestring):
+    if self.species and not isinstance(self.species, six.string_types):
         logger.error("Orthologs - {0}.species type should be a string".format(path))
         error = error + 1
     if not self.urls is None and len(self.urls) > 0 and not all(isinstance(n, evidence_linkout.Linkout) for n in self.urls):
@@ -426,8 +427,8 @@ class Biological_Model(evidence_core.Base):
             if item not in validValues:
                 logger.error("Biological_Model - {0}.evidence_codes value is restricted to the fixed set of values 'http://identifiers.org/eco/ECO:0000179' ('{1}' given)".format(path, item))
                 error = error + 1
-    if not self.evidence_codes is None and len(self.evidence_codes) > 0 and not all(isinstance(n, basestring) for n in self.evidence_codes):
-        logger.error("Biological_Model - {0}.evidence_codes array should have elements of type 'basestring'".format(path))
+    if not self.evidence_codes is None and len(self.evidence_codes) > 0 and not all(isinstance(n, six.string_types) for n in self.evidence_codes):
+        logger.error("Biological_Model - {0}.evidence_codes array should have elements of type 'six.string_types'".format(path))
         error = error+1
     if self.evidence_codes and len(self.evidence_codes) < 1:
         logger.error("Biological_Model - {0}.evidence_codes array should have at least 1 elements".format(path))
@@ -440,35 +441,35 @@ class Biological_Model(evidence_core.Base):
     if self.model_gene_id and not re.match('^http://identifiers.org/ensembl/ENS[A-Z]{0,3}G[0-9]{4,}$', self.model_gene_id):
         logger.error("Biological_Model - {0}.model_gene_id '{1}'".format(path,self.model_gene_id) + " does not match pattern '^http://identifiers.org/ensembl/ENS[A-Z]{0,3}G[0-9]{4,}$'")
         logger.warn(json.dumps(self.model_gene_id, sort_keys=True, indent=2))
-    if self.model_gene_id and not isinstance(self.model_gene_id, basestring):
+    if self.model_gene_id and not isinstance(self.model_gene_id, six.string_types):
         logger.error("Biological_Model - {0}.model_gene_id type should be a string".format(path))
         error = error + 1
     # model_id is mandatory
     if self.model_id is None :
         logger.error("Biological_Model - {0}.model_id is required".format(path))
         error = error + 1
-    if self.model_id and not isinstance(self.model_id, basestring):
+    if self.model_id and not isinstance(self.model_id, six.string_types):
         logger.error("Biological_Model - {0}.model_id type should be a string".format(path))
         error = error + 1
     # allelic_composition is mandatory
     if self.allelic_composition is None :
         logger.error("Biological_Model - {0}.allelic_composition is required".format(path))
         error = error + 1
-    if self.allelic_composition and not isinstance(self.allelic_composition, basestring):
+    if self.allelic_composition and not isinstance(self.allelic_composition, six.string_types):
         logger.error("Biological_Model - {0}.allelic_composition type should be a string".format(path))
         error = error + 1
     # genetic_background is mandatory
     if self.genetic_background is None :
         logger.error("Biological_Model - {0}.genetic_background is required".format(path))
         error = error + 1
-    if self.genetic_background and not isinstance(self.genetic_background, basestring):
+    if self.genetic_background and not isinstance(self.genetic_background, six.string_types):
         logger.error("Biological_Model - {0}.genetic_background type should be a string".format(path))
         error = error + 1
     # allele_ids is mandatory
     if self.allele_ids is None :
         logger.error("Biological_Model - {0}.allele_ids is required".format(path))
         error = error + 1
-    if self.allele_ids and not isinstance(self.allele_ids, basestring):
+    if self.allele_ids and not isinstance(self.allele_ids, six.string_types):
         logger.error("Biological_Model - {0}.allele_ids type should be a string".format(path))
         error = error + 1
     # zygosity is mandatory
@@ -478,7 +479,7 @@ class Biological_Model(evidence_core.Base):
     if not self.zygosity is None and not self.zygosity in ['hom','het','hem','oth']:
         logger.error("Biological_Model - {0}.zygosity value is restricted to the fixed set of values 'hom','het','hem','oth' ('{1}' given)".format(path, self.zygosity))
         error = error + 1
-    if self.zygosity and not isinstance(self.zygosity, basestring):
+    if self.zygosity and not isinstance(self.zygosity, six.string_types):
         logger.error("Biological_Model - {0}.zygosity type should be a string".format(path))
         error = error + 1
     # species is mandatory
@@ -488,7 +489,7 @@ class Biological_Model(evidence_core.Base):
     if not self.species is None and not self.species in ['mouse','human','rat','zebrafish','dog']:
         logger.error("Biological_Model - {0}.species value is restricted to the fixed set of values 'mouse','human','rat','zebrafish','dog' ('{1}' given)".format(path, self.species))
         error = error + 1
-    if self.species and not isinstance(self.species, basestring):
+    if self.species and not isinstance(self.species, six.string_types):
         logger.error("Biological_Model - {0}.species type should be a string".format(path))
         error = error + 1
     # phenotypes is mandatory
@@ -674,8 +675,8 @@ class Disease_Model_Association(evidence_core.Base):
             if item not in validValues:
                 logger.error("Disease_Model_Association - {0}.evidence_codes value is restricted to the fixed set of values 'http://identifiers.org/eco/ECO:0000057' ('{1}' given)".format(path, item))
                 error = error + 1
-    if not self.evidence_codes is None and len(self.evidence_codes) > 0 and not all(isinstance(n, basestring) for n in self.evidence_codes):
-        logger.error("Disease_Model_Association - {0}.evidence_codes array should have elements of type 'basestring'".format(path))
+    if not self.evidence_codes is None and len(self.evidence_codes) > 0 and not all(isinstance(n, six.string_types) for n in self.evidence_codes):
+        logger.error("Disease_Model_Association - {0}.evidence_codes array should have elements of type 'six.string_types'".format(path))
         error = error+1
     if self.evidence_codes and len(self.evidence_codes) < 1:
         logger.error("Disease_Model_Association - {0}.evidence_codes array should have at least 1 elements".format(path))
@@ -684,7 +685,7 @@ class Disease_Model_Association(evidence_core.Base):
     if self.model_id is None :
         logger.error("Disease_Model_Association - {0}.model_id is required".format(path))
         error = error + 1
-    if self.model_id and not isinstance(self.model_id, basestring):
+    if self.model_id and not isinstance(self.model_id, six.string_types):
         logger.error("Disease_Model_Association - {0}.model_id type should be a string".format(path))
         error = error + 1
     # disease_id is mandatory
@@ -695,7 +696,7 @@ class Disease_Model_Association(evidence_core.Base):
     if self.disease_id and not re.match('^http://www.orpha.net/ORDO/Orphanet_[0-9]{1,}|http://purl.obolibrary.org/obo/DOID_[0-9]{2,}|http://www.ebi.ac.uk/efo/EFO_[0-9]{4,}|http://purl.obolibrary.org/obo/HP_[0-9]{4,}|http://purl.obolibrary.org/obo/GO_[0-9]{4,}|http://purl.obolibrary.org/obo/MP_[0-9]{3,}$', self.disease_id):
         logger.error("Disease_Model_Association - {0}.disease_id '{1}'".format(path,self.disease_id) + " does not match pattern '^http://www.orpha.net/ORDO/Orphanet_[0-9]{1,}|http://purl.obolibrary.org/obo/DOID_[0-9]{2,}|http://www.ebi.ac.uk/efo/EFO_[0-9]{4,}|http://purl.obolibrary.org/obo/HP_[0-9]{4,}|http://purl.obolibrary.org/obo/GO_[0-9]{4,}|http://purl.obolibrary.org/obo/MP_[0-9]{3,}$'")
         logger.warn(json.dumps(self.disease_id, sort_keys=True, indent=2))
-    if self.disease_id and not isinstance(self.disease_id, basestring):
+    if self.disease_id and not isinstance(self.disease_id, six.string_types):
         logger.error("Disease_Model_Association - {0}.disease_id type should be a string".format(path))
         error = error + 1
     # human_phenotypes is mandatory
