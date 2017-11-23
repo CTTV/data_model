@@ -205,7 +205,10 @@ class Base(object):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
 https://raw.githubusercontent.com/opentargets/json_schema/master/src/base.json inner class:(literature)
@@ -267,7 +270,10 @@ class BaseLiterature(object):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
 https://raw.githubusercontent.com/opentargets/json_schema/master/src/animal_models.json
@@ -384,7 +390,10 @@ class Animal_Models(Base):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
 https://raw.githubusercontent.com/opentargets/json_schema/master/src/animal_models.json inner class:(evidence)
@@ -477,7 +486,10 @@ class Animal_ModelsEvidence(object):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
 https://raw.githubusercontent.com/opentargets/json_schema/master/src/drug.json
@@ -612,7 +624,10 @@ class Drug(Base):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
 https://raw.githubusercontent.com/opentargets/json_schema/master/src/drug.json inner class:(evidence)
@@ -687,7 +702,10 @@ class DrugEvidence(object):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
 https://raw.githubusercontent.com/opentargets/json_schema/master/src/expression.json
@@ -804,7 +822,10 @@ class Expression(Base):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
 https://raw.githubusercontent.com/opentargets/json_schema/master/src/genetics.json
@@ -939,7 +960,10 @@ class Genetics(Base):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
 https://raw.githubusercontent.com/opentargets/json_schema/master/src/genetics.json inner class:(evidence)
@@ -1014,7 +1038,10 @@ class GeneticsEvidence(object):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
 https://raw.githubusercontent.com/opentargets/json_schema/master/src/literature_curated.json
@@ -1131,7 +1158,10 @@ class Literature_Curated(Base):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
 """
 https://raw.githubusercontent.com/opentargets/json_schema/master/src/literature_mining.json
@@ -1248,4 +1278,7 @@ class Literature_Mining(Base):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)

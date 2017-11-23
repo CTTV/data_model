@@ -226,7 +226,10 @@ class Orthologs(evidence_core.Base):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 import opentargets.model.evidence.core as evidence_core
 """
 https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/phenotype/biological_model.json
@@ -522,7 +525,10 @@ class Biological_Model(evidence_core.Base):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 import opentargets.model.evidence.core as evidence_core
 """
 https://raw.githubusercontent.com/opentargets/json_schema/master/src/evidence/phenotype/disease_model_association.json
@@ -735,4 +741,7 @@ class Disease_Model_Association(evidence_core.Base):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)

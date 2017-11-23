@@ -115,4 +115,7 @@ class Linkout(object):
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
