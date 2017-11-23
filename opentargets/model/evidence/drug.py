@@ -194,7 +194,7 @@ class Target2Drug(evidence_core.Base):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 import opentargets.model.evidence.core as evidence_core
@@ -345,7 +345,7 @@ class Drug2Clinic(evidence_core.Base):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -425,6 +425,6 @@ class Diseasephase(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)

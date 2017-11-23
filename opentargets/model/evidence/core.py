@@ -181,7 +181,7 @@ class Base(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -285,7 +285,7 @@ class Single_Lit_Reference(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -435,7 +435,7 @@ class Base_Mined_Sentences_Item(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -528,7 +528,7 @@ class BaseProvenance_Type(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -622,7 +622,7 @@ class BaseExpert(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -714,7 +714,7 @@ class BaseAuthor(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -784,7 +784,7 @@ class BaseLiterature(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -883,7 +883,7 @@ class BaseDatabase(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -983,7 +983,7 @@ class BaseDbxref(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -1285,7 +1285,7 @@ class Expression(Base):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -1361,7 +1361,7 @@ class ExpressionLog2_Fold_Change(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -1518,7 +1518,7 @@ class Literature_Curated(Base):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -1640,6 +1640,6 @@ class Literature_Mining(Base):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
