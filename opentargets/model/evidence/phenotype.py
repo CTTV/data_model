@@ -108,7 +108,7 @@ class Orthologs(evidence_core.Base):
     # super will return an instance of the subtype
     obj = super(Orthologs, cls).cloneObject(clone)
     if clone.evidence_codes:
-        obj.evidence_codes = []; obj.evidence_codes.extend(clone.evidence_codes)
+        obj.evidence_codes = list(); obj.evidence_codes.extend(clone.evidence_codes)
     if clone.human_gene_id:
         obj.human_gene_id = clone.human_gene_id
     if clone.model_gene_id:
@@ -116,7 +116,7 @@ class Orthologs(evidence_core.Base):
     if clone.species:
         obj.species = clone.species
     if clone.urls:
-        obj.urls = []; obj.urls.extend(clone.urls)
+        obj.urls = list(); obj.urls.extend(clone.urls)
     return obj
   
   @classmethod
@@ -135,7 +135,7 @@ class Orthologs(evidence_core.Base):
     if  'species' in map:
         obj.species = map['species']
     if 'urls' in map and isinstance(map['urls'], list):
-        obj.urls = []
+        obj.urls = list()
         for item in map['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromMap(item))
     for key in map:
@@ -343,7 +343,7 @@ class Biological_Model(evidence_core.Base):
     # super will return an instance of the subtype
     obj = super(Biological_Model, cls).cloneObject(clone)
     if clone.evidence_codes:
-        obj.evidence_codes = []; obj.evidence_codes.extend(clone.evidence_codes)
+        obj.evidence_codes = list(); obj.evidence_codes.extend(clone.evidence_codes)
     if clone.model_gene_id:
         obj.model_gene_id = clone.model_gene_id
     if clone.model_id:
@@ -359,9 +359,9 @@ class Biological_Model(evidence_core.Base):
     if clone.species:
         obj.species = clone.species
     if clone.phenotypes:
-        obj.phenotypes = []; obj.phenotypes.extend(clone.phenotypes)
+        obj.phenotypes = list(); obj.phenotypes.extend(clone.phenotypes)
     if clone.urls:
-        obj.urls = []; obj.urls.extend(clone.urls)
+        obj.urls = list(); obj.urls.extend(clone.urls)
     return obj
   
   @classmethod
@@ -388,11 +388,11 @@ class Biological_Model(evidence_core.Base):
     if  'species' in map:
         obj.species = map['species']
     if 'phenotypes' in map and isinstance(map['phenotypes'], list):
-        obj.phenotypes = []
+        obj.phenotypes = list()
         for item in map['phenotypes']:
             obj.phenotypes.append(bioentity.Phenotype.fromMap(item))
     if 'urls' in map and isinstance(map['urls'], list):
-        obj.urls = []
+        obj.urls = list()
         for item in map['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromMap(item))
     for key in map:
@@ -608,17 +608,17 @@ class Disease_Model_Association(evidence_core.Base):
     # super will return an instance of the subtype
     obj = super(Disease_Model_Association, cls).cloneObject(clone)
     if clone.evidence_codes:
-        obj.evidence_codes = []; obj.evidence_codes.extend(clone.evidence_codes)
+        obj.evidence_codes = list(); obj.evidence_codes.extend(clone.evidence_codes)
     if clone.model_id:
         obj.model_id = clone.model_id
     if clone.disease_id:
         obj.disease_id = clone.disease_id
     if clone.human_phenotypes:
-        obj.human_phenotypes = []; obj.human_phenotypes.extend(clone.human_phenotypes)
+        obj.human_phenotypes = list(); obj.human_phenotypes.extend(clone.human_phenotypes)
     if clone.model_phenotypes:
-        obj.model_phenotypes = []; obj.model_phenotypes.extend(clone.model_phenotypes)
+        obj.model_phenotypes = list(); obj.model_phenotypes.extend(clone.model_phenotypes)
     if clone.urls:
-        obj.urls = []; obj.urls.extend(clone.urls)
+        obj.urls = list(); obj.urls.extend(clone.urls)
     return obj
   
   @classmethod
@@ -635,15 +635,15 @@ class Disease_Model_Association(evidence_core.Base):
     if  'disease_id' in map:
         obj.disease_id = map['disease_id']
     if 'human_phenotypes' in map and isinstance(map['human_phenotypes'], list):
-        obj.human_phenotypes = []
+        obj.human_phenotypes = list()
         for item in map['human_phenotypes']:
             obj.human_phenotypes.append(bioentity.Phenotype.fromMap(item))
     if 'model_phenotypes' in map and isinstance(map['model_phenotypes'], list):
-        obj.model_phenotypes = []
+        obj.model_phenotypes = list()
         for item in map['model_phenotypes']:
             obj.model_phenotypes.append(bioentity.Phenotype.fromMap(item))
     if 'urls' in map and isinstance(map['urls'], list):
-        obj.urls = []
+        obj.urls = list()
         for item in map['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromMap(item))
     for key in map:

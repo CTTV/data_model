@@ -89,11 +89,11 @@ class Gene2Variant(evidence_core.Base):
     # super will return an instance of the subtype
     obj = super(Gene2Variant, cls).cloneObject(clone)
     if clone.evidence_codes:
-        obj.evidence_codes = []; obj.evidence_codes.extend(clone.evidence_codes)
+        obj.evidence_codes = list(); obj.evidence_codes.extend(clone.evidence_codes)
     if clone.functional_consequence:
         obj.functional_consequence = clone.functional_consequence
     if clone.urls:
-        obj.urls = []; obj.urls.extend(clone.urls)
+        obj.urls = list(); obj.urls.extend(clone.urls)
     return obj
   
   @classmethod
@@ -108,7 +108,7 @@ class Gene2Variant(evidence_core.Base):
     if  'functional_consequence' in map:
         obj.functional_consequence = map['functional_consequence']
     if 'urls' in map and isinstance(map['urls'], list):
-        obj.urls = []
+        obj.urls = list()
         for item in map['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromMap(item))
     for key in map:
@@ -248,9 +248,9 @@ class Variant2Disease(evidence_core.Base):
     if clone.gwas_sample_size:
         obj.gwas_sample_size = clone.gwas_sample_size
     if clone.evidence_codes:
-        obj.evidence_codes = []; obj.evidence_codes.extend(clone.evidence_codes)
+        obj.evidence_codes = list(); obj.evidence_codes.extend(clone.evidence_codes)
     if clone.urls:
-        obj.urls = []; obj.urls.extend(clone.urls)
+        obj.urls = list(); obj.urls.extend(clone.urls)
     return obj
   
   @classmethod
@@ -269,7 +269,7 @@ class Variant2Disease(evidence_core.Base):
     if  'evidence_codes' in map:
         obj.evidence_codes = map['evidence_codes']
     if 'urls' in map and isinstance(map['urls'], list):
-        obj.urls = []
+        obj.urls = list()
         for item in map['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromMap(item))
     for key in map:

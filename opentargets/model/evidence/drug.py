@@ -97,13 +97,13 @@ class Target2Drug(evidence_core.Base):
     # super will return an instance of the subtype
     obj = super(Target2Drug, cls).cloneObject(clone)
     if clone.evidence_codes:
-        obj.evidence_codes = []; obj.evidence_codes.extend(clone.evidence_codes)
+        obj.evidence_codes = list(); obj.evidence_codes.extend(clone.evidence_codes)
     if clone.mechanism_of_action:
         obj.mechanism_of_action = clone.mechanism_of_action
     if clone.action_type:
         obj.action_type = clone.action_type
     if clone.urls:
-        obj.urls = []; obj.urls.extend(clone.urls)
+        obj.urls = list(); obj.urls.extend(clone.urls)
     return obj
   
   @classmethod
@@ -120,7 +120,7 @@ class Target2Drug(evidence_core.Base):
     if  'action_type' in map:
         obj.action_type = map['action_type']
     if 'urls' in map and isinstance(map['urls'], list):
-        obj.urls = []
+        obj.urls = list()
         for item in map['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromMap(item))
     for key in map:
@@ -251,10 +251,10 @@ class Drug2Clinic(evidence_core.Base):
     # super will return an instance of the subtype
     obj = super(Drug2Clinic, cls).cloneObject(clone)
     if clone.evidence_codes:
-        obj.evidence_codes = []; obj.evidence_codes.extend(clone.evidence_codes)
+        obj.evidence_codes = list(); obj.evidence_codes.extend(clone.evidence_codes)
     obj.max_phase_for_disease = Diseasephase.cloneObject(clone.max_phase_for_disease)
     if clone.urls:
-        obj.urls = []; obj.urls.extend(clone.urls)
+        obj.urls = list(); obj.urls.extend(clone.urls)
     if clone.status:
         obj.status = clone.status
     return obj
@@ -271,7 +271,7 @@ class Drug2Clinic(evidence_core.Base):
     if  'max_phase_for_disease' in map:
         obj.max_phase_for_disease = Diseasephase.fromMap(map['max_phase_for_disease'])
     if 'urls' in map and isinstance(map['urls'], list):
-        obj.urls = []
+        obj.urls = list()
         for item in map['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromMap(item))
     if  'status' in map:

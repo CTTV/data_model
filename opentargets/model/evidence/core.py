@@ -224,7 +224,7 @@ class Single_Lit_Reference(object):
     if clone.rank:
         obj.rank = evidence_association_score.Rank.cloneObject(clone.rank)
     if clone.mined_sentences:
-        obj.mined_sentences = []; obj.mined_sentences.extend(clone.mined_sentences)
+        obj.mined_sentences = list(); obj.mined_sentences.extend(clone.mined_sentences)
     return obj
   
   @classmethod
@@ -239,7 +239,7 @@ class Single_Lit_Reference(object):
     if  'rank' in map:
         obj.rank = evidence_association_score.Rank.fromMap(map['rank'])
     if 'mined_sentences' in map and isinstance(map['mined_sentences'], list):
-        obj.mined_sentences = []
+        obj.mined_sentences = list()
         for item in map['mined_sentences']:
             obj.mined_sentences.append(Base_Mined_Sentences_Item.fromMap(item))
     return obj
@@ -740,7 +740,7 @@ class BaseLiterature(object):
   def cloneObject(cls, clone):
     obj = cls()
     if clone.references:
-        obj.references = []; obj.references.extend(clone.references)
+        obj.references = list(); obj.references.extend(clone.references)
     return obj
   
   @classmethod
@@ -751,7 +751,7 @@ class BaseLiterature(object):
       logger.warn("BaseLiterature - DictType expected - {0} found\n".format(type(map)))
       return
     if 'references' in map and isinstance(map['references'], list):
-        obj.references = []
+        obj.references = list()
         for item in map['references']:
             obj.references.append(Single_Lit_Reference.fromMap(item))
     return obj
@@ -1118,9 +1118,9 @@ class Expression(Base):
     if clone.experiment_overview:
         obj.experiment_overview = clone.experiment_overview
     if clone.evidence_codes:
-        obj.evidence_codes = []; obj.evidence_codes.extend(clone.evidence_codes)
+        obj.evidence_codes = list(); obj.evidence_codes.extend(clone.evidence_codes)
     if clone.urls:
-        obj.urls = []; obj.urls.extend(clone.urls)
+        obj.urls = list(); obj.urls.extend(clone.urls)
     return obj
   
   @classmethod
@@ -1151,7 +1151,7 @@ class Expression(Base):
     if  'evidence_codes' in map:
         obj.evidence_codes = map['evidence_codes']
     if 'urls' in map and isinstance(map['urls'], list):
-        obj.urls = []
+        obj.urls = list()
         for item in map['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromMap(item))
     for key in map:
@@ -1423,11 +1423,11 @@ class Literature_Curated(Base):
     if clone.clinical_significance:
         obj.clinical_significance = clone.clinical_significance
     if clone.evidence_codes:
-        obj.evidence_codes = []; obj.evidence_codes.extend(clone.evidence_codes)
+        obj.evidence_codes = list(); obj.evidence_codes.extend(clone.evidence_codes)
     if clone.known_mutations:
-        obj.known_mutations = []; obj.known_mutations.extend(clone.known_mutations)
+        obj.known_mutations = list(); obj.known_mutations.extend(clone.known_mutations)
     if clone.urls:
-        obj.urls = []; obj.urls.extend(clone.urls)
+        obj.urls = list(); obj.urls.extend(clone.urls)
     return obj
   
   @classmethod
@@ -1442,11 +1442,11 @@ class Literature_Curated(Base):
     if  'evidence_codes' in map:
         obj.evidence_codes = map['evidence_codes']
     if 'known_mutations' in map and isinstance(map['known_mutations'], list):
-        obj.known_mutations = []
+        obj.known_mutations = list()
         for item in map['known_mutations']:
             obj.known_mutations.append(evidence_mutation.Mutation.fromMap(item))
     if 'urls' in map and isinstance(map['urls'], list):
-        obj.urls = []
+        obj.urls = list()
         for item in map['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromMap(item))
     for key in map:
@@ -1561,7 +1561,7 @@ class Literature_Mining(Base):
     # super will return an instance of the subtype
     obj = super(Literature_Mining, cls).cloneObject(clone)
     if clone.evidence_codes:
-        obj.evidence_codes = []; obj.evidence_codes.extend(clone.evidence_codes)
+        obj.evidence_codes = list(); obj.evidence_codes.extend(clone.evidence_codes)
     obj.literature_ref = Single_Lit_Reference.cloneObject(clone.literature_ref)
     return obj
   

@@ -122,7 +122,7 @@ class Mutation(object):
     if clone.preferred_name:
         obj.preferred_name = clone.preferred_name
     if clone.alternative_names:
-        obj.alternative_names = []; obj.alternative_names.extend(clone.alternative_names)
+        obj.alternative_names = list(); obj.alternative_names.extend(clone.alternative_names)
     if clone.functional_consequence:
         obj.functional_consequence = clone.functional_consequence
     if clone.number_samples_tested:

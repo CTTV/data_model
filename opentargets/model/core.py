@@ -232,7 +232,7 @@ class BaseLiterature(object):
   def cloneObject(cls, clone):
     obj = cls()
     if clone.references:
-        obj.references = []; obj.references.extend(clone.references)
+        obj.references = list(); obj.references.extend(clone.references)
     return obj
   
   @classmethod
@@ -243,7 +243,7 @@ class BaseLiterature(object):
       logger.warn("BaseLiterature - DictType expected - {0} found\n".format(type(map)))
       return
     if 'references' in map and isinstance(map['references'], list):
-        obj.references = []
+        obj.references = list()
         for item in map['references']:
             obj.references.append(evidence_core.Single_Lit_Reference.fromMap(item))
     return obj

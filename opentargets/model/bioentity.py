@@ -406,7 +406,7 @@ class Target(Base):
     if clone.complex_id:
         obj.complex_id = clone.complex_id
     if clone.complex_members:
-        obj.complex_members = []; obj.complex_members.extend(clone.complex_members)
+        obj.complex_members = list(); obj.complex_members.extend(clone.complex_members)
     if clone.complex_type:
         obj.complex_type = clone.complex_type
     if clone.target_type:
@@ -416,7 +416,7 @@ class Target(Base):
     if clone.target_name:
         obj.target_name = clone.target_name
     if clone.target_class:
-        obj.target_class = []; obj.target_class.extend(clone.target_class)
+        obj.target_class = list(); obj.target_class.extend(clone.target_class)
     return obj
   
   @classmethod
