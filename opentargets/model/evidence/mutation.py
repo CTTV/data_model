@@ -136,28 +136,28 @@ class Mutation(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['role_in_cancer','preferred_name','alternative_names','functional_consequence','number_samples_tested','number_samples_with_mutation_type','number_mutated_samples','inheritance_pattern']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("Mutation - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'role_in_cancer' in map:
-        obj.role_in_cancer = map['role_in_cancer']
-    if  'preferred_name' in map:
-        obj.preferred_name = map['preferred_name']
-    if  'alternative_names' in map:
-        obj.alternative_names = map['alternative_names']
-    if  'functional_consequence' in map:
-        obj.functional_consequence = map['functional_consequence']
-    if  'number_samples_tested' in map:
-        obj.number_samples_tested = map['number_samples_tested']
-    if  'number_samples_with_mutation_type' in map:
-        obj.number_samples_with_mutation_type = map['number_samples_with_mutation_type']
-    if  'number_mutated_samples' in map:
-        obj.number_mutated_samples = map['number_mutated_samples']
-    if  'inheritance_pattern' in map:
-        obj.inheritance_pattern = map['inheritance_pattern']
+    if  'role_in_cancer' in dict_obj:
+        obj.role_in_cancer = dict_obj['role_in_cancer']
+    if  'preferred_name' in dict_obj:
+        obj.preferred_name = dict_obj['preferred_name']
+    if  'alternative_names' in dict_obj:
+        obj.alternative_names = dict_obj['alternative_names']
+    if  'functional_consequence' in dict_obj:
+        obj.functional_consequence = dict_obj['functional_consequence']
+    if  'number_samples_tested' in dict_obj:
+        obj.number_samples_tested = dict_obj['number_samples_tested']
+    if  'number_samples_with_mutation_type' in dict_obj:
+        obj.number_samples_with_mutation_type = dict_obj['number_samples_with_mutation_type']
+    if  'number_mutated_samples' in dict_obj:
+        obj.number_mutated_samples = dict_obj['number_mutated_samples']
+    if  'inheritance_pattern' in dict_obj:
+        obj.inheritance_pattern = dict_obj['inheritance_pattern']
     return obj
   
   def validate(self, logger, path = "root"):

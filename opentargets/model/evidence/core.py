@@ -101,31 +101,31 @@ class Base(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("Base - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'unique_experiment_reference' in map:
-        obj.unique_experiment_reference = map['unique_experiment_reference']
-    if  'is_associated' in map:
-        obj.is_associated = map['is_associated']
-    if  'date_asserted' in map:
-        obj.date_asserted = map['date_asserted']
-    if 'resource_score' in map:
-        if not evidence_association_score.Pvalue.fromMap(map['resource_score']) is None:
-            obj.resource_score = evidence_association_score.Pvalue.fromMap(map['resource_score'])
-        elif not evidence_association_score.Probability.fromMap(map['resource_score']) is None:
-            obj.resource_score = evidence_association_score.Probability.fromMap(map['resource_score'])
-        elif not evidence_association_score.Rank.fromMap(map['resource_score']) is None:
-            obj.resource_score = evidence_association_score.Rank.fromMap(map['resource_score'])
-        elif not evidence_association_score.Summed_Total.fromMap(map['resource_score']) is None:
-            obj.resource_score = evidence_association_score.Summed_Total.fromMap(map['resource_score'])
+    if  'unique_experiment_reference' in dict_obj:
+        obj.unique_experiment_reference = dict_obj['unique_experiment_reference']
+    if  'is_associated' in dict_obj:
+        obj.is_associated = dict_obj['is_associated']
+    if  'date_asserted' in dict_obj:
+        obj.date_asserted = dict_obj['date_asserted']
+    if 'resource_score' in dict_obj:
+        if not evidence_association_score.Pvalue.fromDict(dict_obj['resource_score']) is None:
+            obj.resource_score = evidence_association_score.Pvalue.fromDict(dict_obj['resource_score'])
+        elif not evidence_association_score.Probability.fromDict(dict_obj['resource_score']) is None:
+            obj.resource_score = evidence_association_score.Probability.fromDict(dict_obj['resource_score'])
+        elif not evidence_association_score.Rank.fromDict(dict_obj['resource_score']) is None:
+            obj.resource_score = evidence_association_score.Rank.fromDict(dict_obj['resource_score'])
+        elif not evidence_association_score.Summed_Total.fromDict(dict_obj['resource_score']) is None:
+            obj.resource_score = evidence_association_score.Summed_Total.fromDict(dict_obj['resource_score'])
         else:
             raise opentargets.model.core.JSONException("resource_score can't be cast to any class")
-    if  'provenance_type' in map:
-        obj.provenance_type = BaseProvenance_Type.fromMap(map['provenance_type'])
+    if  'provenance_type' in dict_obj:
+        obj.provenance_type = BaseProvenance_Type.fromDict(dict_obj['provenance_type'])
     return obj
   
   def validate(self, logger, path = "root"):
@@ -228,20 +228,20 @@ class Single_Lit_Reference(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['lit_id','rank','mined_sentences']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("Single_Lit_Reference - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'lit_id' in map:
-        obj.lit_id = map['lit_id']
-    if  'rank' in map:
-        obj.rank = evidence_association_score.Rank.fromMap(map['rank'])
-    if 'mined_sentences' in map and isinstance(map['mined_sentences'], list):
+    if  'lit_id' in dict_obj:
+        obj.lit_id = dict_obj['lit_id']
+    if  'rank' in dict_obj:
+        obj.rank = evidence_association_score.Rank.fromDict(dict_obj['rank'])
+    if 'mined_sentences' in dict_obj and isinstance(dict_obj['mined_sentences'], list):
         obj.mined_sentences = list()
-        for item in map['mined_sentences']:
-            obj.mined_sentences.append(Base_Mined_Sentences_Item.fromMap(item))
+        for item in dict_obj['mined_sentences']:
+            obj.mined_sentences.append(Base_Mined_Sentences_Item.fromDict(item))
     return obj
   
   def validate(self, logger, path = "root"):
@@ -366,24 +366,24 @@ class Base_Mined_Sentences_Item(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['text','section','t_start','t_end','d_start','d_end']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("Base_Mined_Sentences_Item - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'text' in map:
-        obj.text = map['text']
-    if  'section' in map:
-        obj.section = map['section']
-    if  't_start' in map:
-        obj.t_start = map['t_start']
-    if  't_end' in map:
-        obj.t_end = map['t_end']
-    if  'd_start' in map:
-        obj.d_start = map['d_start']
-    if  'd_end' in map:
-        obj.d_end = map['d_end']
+    if  'text' in dict_obj:
+        obj.text = dict_obj['text']
+    if  'section' in dict_obj:
+        obj.section = dict_obj['section']
+    if  't_start' in dict_obj:
+        obj.t_start = dict_obj['t_start']
+    if  't_end' in dict_obj:
+        obj.t_end = dict_obj['t_end']
+    if  'd_start' in dict_obj:
+        obj.d_start = dict_obj['d_start']
+    if  'd_end' in dict_obj:
+        obj.d_end = dict_obj['d_end']
     return obj
   
   def validate(self, logger, path = "root"):
@@ -476,18 +476,18 @@ class BaseProvenance_Type(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['expert','literature','database']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("BaseProvenance_Type - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'expert' in map:
-        obj.expert = BaseExpert.fromMap(map['expert'])
-    if  'literature' in map:
-        obj.literature = BaseLiterature.fromMap(map['literature'])
-    if  'database' in map:
-        obj.database = BaseDatabase.fromMap(map['database'])
+    if  'expert' in dict_obj:
+        obj.expert = BaseExpert.fromDict(dict_obj['expert'])
+    if  'literature' in dict_obj:
+        obj.literature = BaseLiterature.fromDict(dict_obj['literature'])
+    if  'database' in dict_obj:
+        obj.database = BaseDatabase.fromDict(dict_obj['database'])
     return obj
   
   def validate(self, logger, path = "root"):
@@ -574,18 +574,18 @@ class BaseExpert(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['statement','author','status']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("BaseExpert - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'statement' in map:
-        obj.statement = map['statement']
-    if  'author' in map:
-        obj.author = BaseAuthor.fromMap(map['author'])
-    if  'status' in map:
-        obj.status = map['status']
+    if  'statement' in dict_obj:
+        obj.statement = dict_obj['statement']
+    if  'author' in dict_obj:
+        obj.author = BaseAuthor.fromDict(dict_obj['author'])
+    if  'status' in dict_obj:
+        obj.status = dict_obj['status']
     return obj
   
   def validate(self, logger, path = "root"):
@@ -670,18 +670,18 @@ class BaseAuthor(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['organization','email','name']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("BaseAuthor - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'organization' in map:
-        obj.organization = map['organization']
-    if  'email' in map:
-        obj.email = map['email']
-    if  'name' in map:
-        obj.name = map['name']
+    if  'organization' in dict_obj:
+        obj.organization = dict_obj['organization']
+    if  'email' in dict_obj:
+        obj.email = dict_obj['email']
+    if  'name' in dict_obj:
+        obj.name = dict_obj['name']
     return obj
   
   def validate(self, logger, path = "root"):
@@ -744,16 +744,16 @@ class BaseLiterature(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['references']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("BaseLiterature - DictType expected - {0} found\n".format(type(map)))
       return
-    if 'references' in map and isinstance(map['references'], list):
+    if 'references' in dict_obj and isinstance(dict_obj['references'], list):
         obj.references = list()
-        for item in map['references']:
-            obj.references.append(Single_Lit_Reference.fromMap(item))
+        for item in dict_obj['references']:
+            obj.references.append(Single_Lit_Reference.fromDict(item))
     return obj
   
   def validate(self, logger, path = "root"):
@@ -831,18 +831,18 @@ class BaseDatabase(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['dbxref','id','version']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("BaseDatabase - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'dbxref' in map:
-        obj.dbxref = BaseDbxref.fromMap(map['dbxref'])
-    if  'id' in map:
-        obj.id = map['id']
-    if  'version' in map:
-        obj.version = map['version']
+    if  'dbxref' in dict_obj:
+        obj.dbxref = BaseDbxref.fromDict(dict_obj['dbxref'])
+    if  'id' in dict_obj:
+        obj.id = dict_obj['id']
+    if  'version' in dict_obj:
+        obj.version = dict_obj['version']
     return obj
   
   def validate(self, logger, path = "root"):
@@ -935,18 +935,18 @@ class BaseDbxref(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['id','url','version']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("BaseDbxref - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'id' in map:
-        obj.id = map['id']
-    if  'url' in map:
-        obj.url = map['url']
-    if  'version' in map:
-        obj.version = map['version']
+    if  'id' in dict_obj:
+        obj.id = dict_obj['id']
+    if  'url' in dict_obj:
+        obj.url = dict_obj['url']
+    if  'version' in dict_obj:
+        obj.version = dict_obj['version']
     return obj
   
   def validate(self, logger, path = "root"):
@@ -1124,36 +1124,36 @@ class Expression(Base):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['organism_part','comparison_name','log2_fold_change','test_sample','reference_sample','test_replicates_n','reference_replicates_n','confidence_level','experiment_overview','evidence_codes','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Expression, cls).fromMap(map)
+    obj = super(Expression, cls).fromDict(map)
     if not isinstance(map, types.DictType):
       logger.warn("Expression - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'organism_part' in map:
-        obj.organism_part = map['organism_part']
-    if  'comparison_name' in map:
-        obj.comparison_name = map['comparison_name']
-    if  'log2_fold_change' in map:
-        obj.log2_fold_change = ExpressionLog2_Fold_Change.fromMap(map['log2_fold_change'])
-    if  'test_sample' in map:
-        obj.test_sample = map['test_sample']
-    if  'reference_sample' in map:
-        obj.reference_sample = map['reference_sample']
-    if  'test_replicates_n' in map:
-        obj.test_replicates_n = map['test_replicates_n']
-    if  'reference_replicates_n' in map:
-        obj.reference_replicates_n = map['reference_replicates_n']
-    if  'confidence_level' in map:
-        obj.confidence_level = map['confidence_level']
-    if  'experiment_overview' in map:
-        obj.experiment_overview = map['experiment_overview']
-    if  'evidence_codes' in map:
-        obj.evidence_codes = map['evidence_codes']
-    if 'urls' in map and isinstance(map['urls'], list):
+    if  'organism_part' in dict_obj:
+        obj.organism_part = dict_obj['organism_part']
+    if  'comparison_name' in dict_obj:
+        obj.comparison_name = dict_obj['comparison_name']
+    if  'log2_fold_change' in dict_obj:
+        obj.log2_fold_change = ExpressionLog2_Fold_Change.fromDict(dict_obj['log2_fold_change'])
+    if  'test_sample' in dict_obj:
+        obj.test_sample = dict_obj['test_sample']
+    if  'reference_sample' in dict_obj:
+        obj.reference_sample = dict_obj['reference_sample']
+    if  'test_replicates_n' in dict_obj:
+        obj.test_replicates_n = dict_obj['test_replicates_n']
+    if  'reference_replicates_n' in dict_obj:
+        obj.reference_replicates_n = dict_obj['reference_replicates_n']
+    if  'confidence_level' in dict_obj:
+        obj.confidence_level = dict_obj['confidence_level']
+    if  'experiment_overview' in dict_obj:
+        obj.experiment_overview = dict_obj['experiment_overview']
+    if  'evidence_codes' in dict_obj:
+        obj.evidence_codes = dict_obj['evidence_codes']
+    if 'urls' in dict_obj and isinstance(dict_obj['urls'], list):
         obj.urls = list()
-        for item in map['urls']:
-            obj.urls.append(evidence_linkout.Linkout.fromMap(item))
+        for item in dict_obj['urls']:
+            obj.urls.append(evidence_linkout.Linkout.fromDict(item))
     for key in map:
       if not key in cls_keys:
         logger.warn("Expression - invalid field - {0} found".format(key))
@@ -1325,16 +1325,16 @@ class ExpressionLog2_Fold_Change(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['value','percentile_rank']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("ExpressionLog2_Fold_Change - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'value' in map:
-        obj.value = map['value']
-    if  'percentile_rank' in map:
-        obj.percentile_rank = map['percentile_rank']
+    if  'value' in dict_obj:
+        obj.value = dict_obj['value']
+    if  'percentile_rank' in dict_obj:
+        obj.percentile_rank = dict_obj['percentile_rank']
     return obj
   
   def validate(self, logger, path = "root"):
@@ -1431,24 +1431,24 @@ class Literature_Curated(Base):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['clinical_significance','evidence_codes','known_mutations','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Literature_Curated, cls).fromMap(map)
+    obj = super(Literature_Curated, cls).fromDict(map)
     if not isinstance(map, types.DictType):
       logger.warn("Literature_Curated - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'clinical_significance' in map:
-        obj.clinical_significance = map['clinical_significance']
-    if  'evidence_codes' in map:
-        obj.evidence_codes = map['evidence_codes']
-    if 'known_mutations' in map and isinstance(map['known_mutations'], list):
+    if  'clinical_significance' in dict_obj:
+        obj.clinical_significance = dict_obj['clinical_significance']
+    if  'evidence_codes' in dict_obj:
+        obj.evidence_codes = dict_obj['evidence_codes']
+    if 'known_mutations' in dict_obj and isinstance(dict_obj['known_mutations'], list):
         obj.known_mutations = list()
-        for item in map['known_mutations']:
-            obj.known_mutations.append(evidence_mutation.Mutation.fromMap(item))
-    if 'urls' in map and isinstance(map['urls'], list):
+        for item in dict_obj['known_mutations']:
+            obj.known_mutations.append(evidence_mutation.Mutation.fromDict(item))
+    if 'urls' in dict_obj and isinstance(dict_obj['urls'], list):
         obj.urls = list()
-        for item in map['urls']:
-            obj.urls.append(evidence_linkout.Linkout.fromMap(item))
+        for item in dict_obj['urls']:
+            obj.urls.append(evidence_linkout.Linkout.fromDict(item))
     for key in map:
       if not key in cls_keys:
         logger.warn("Literature_Curated - invalid field - {0} found".format(key))
@@ -1566,16 +1566,16 @@ class Literature_Mining(Base):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['evidence_codes','literature_ref','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Literature_Mining, cls).fromMap(map)
+    obj = super(Literature_Mining, cls).fromDict(map)
     if not isinstance(map, types.DictType):
       logger.warn("Literature_Mining - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'evidence_codes' in map:
-        obj.evidence_codes = map['evidence_codes']
-    if  'literature_ref' in map:
-        obj.literature_ref = Single_Lit_Reference.fromMap(map['literature_ref'])
+    if  'evidence_codes' in dict_obj:
+        obj.evidence_codes = dict_obj['evidence_codes']
+    if  'literature_ref' in dict_obj:
+        obj.literature_ref = Single_Lit_Reference.fromDict(dict_obj['literature_ref'])
     for key in map:
       if not key in cls_keys:
         logger.warn("Literature_Mining - invalid field - {0} found".format(key))

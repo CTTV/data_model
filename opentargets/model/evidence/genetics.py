@@ -97,20 +97,20 @@ class Gene2Variant(evidence_core.Base):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['evidence_codes','functional_consequence','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Gene2Variant, cls).fromMap(map)
+    obj = super(Gene2Variant, cls).fromDict(map)
     if not isinstance(map, types.DictType):
       logger.warn("Gene2Variant - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'evidence_codes' in map:
-        obj.evidence_codes = map['evidence_codes']
-    if  'functional_consequence' in map:
-        obj.functional_consequence = map['functional_consequence']
-    if 'urls' in map and isinstance(map['urls'], list):
+    if  'evidence_codes' in dict_obj:
+        obj.evidence_codes = dict_obj['evidence_codes']
+    if  'functional_consequence' in dict_obj:
+        obj.functional_consequence = dict_obj['functional_consequence']
+    if 'urls' in dict_obj and isinstance(dict_obj['urls'], list):
         obj.urls = list()
-        for item in map['urls']:
-            obj.urls.append(evidence_linkout.Linkout.fromMap(item))
+        for item in dict_obj['urls']:
+            obj.urls.append(evidence_linkout.Linkout.fromDict(item))
     for key in map:
       if not key in cls_keys:
         logger.warn("Gene2Variant - invalid field - {0} found".format(key))
@@ -254,24 +254,24 @@ class Variant2Disease(evidence_core.Base):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['clinical_significance','gwas_panel_resolution','gwas_sample_size','evidence_codes','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Variant2Disease, cls).fromMap(map)
+    obj = super(Variant2Disease, cls).fromDict(map)
     if not isinstance(map, types.DictType):
       logger.warn("Variant2Disease - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'clinical_significance' in map:
-        obj.clinical_significance = map['clinical_significance']
-    if  'gwas_panel_resolution' in map:
-        obj.gwas_panel_resolution = map['gwas_panel_resolution']
-    if  'gwas_sample_size' in map:
-        obj.gwas_sample_size = map['gwas_sample_size']
-    if  'evidence_codes' in map:
-        obj.evidence_codes = map['evidence_codes']
-    if 'urls' in map and isinstance(map['urls'], list):
+    if  'clinical_significance' in dict_obj:
+        obj.clinical_significance = dict_obj['clinical_significance']
+    if  'gwas_panel_resolution' in dict_obj:
+        obj.gwas_panel_resolution = dict_obj['gwas_panel_resolution']
+    if  'gwas_sample_size' in dict_obj:
+        obj.gwas_sample_size = dict_obj['gwas_sample_size']
+    if  'evidence_codes' in dict_obj:
+        obj.evidence_codes = dict_obj['evidence_codes']
+    if 'urls' in dict_obj and isinstance(dict_obj['urls'], list):
         obj.urls = list()
-        for item in map['urls']:
-            obj.urls.append(evidence_linkout.Linkout.fromMap(item))
+        for item in dict_obj['urls']:
+            obj.urls.append(evidence_linkout.Linkout.fromDict(item))
     for key in map:
       if not key in cls_keys:
         logger.warn("Variant2Disease - invalid field - {0} found".format(key))

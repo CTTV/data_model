@@ -49,7 +49,7 @@ class Base(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['']
     obj = cls()
     if not isinstance(map, types.DictType):
@@ -120,18 +120,18 @@ class Method(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['description','reference','url']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("Method - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'description' in map:
-        obj.description = map['description']
-    if  'reference' in map:
-        obj.reference = map['reference']
-    if  'url' in map:
-        obj.url = map['url']
+    if  'description' in dict_obj:
+        obj.description = dict_obj['description']
+    if  'reference' in dict_obj:
+        obj.reference = dict_obj['reference']
+    if  'url' in dict_obj:
+        obj.url = dict_obj['url']
     return obj
   
   def validate(self, logger, path = "root"):
@@ -212,18 +212,18 @@ class Probability(Base):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['type','value','method']
-    obj = super(Probability, cls).fromMap(map)
+    obj = super(Probability, cls).fromDict(map)
     if not isinstance(map, types.DictType):
       logger.warn("Probability - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'type' in map:
-        obj.type = map['type']
-    if  'value' in map:
-        obj.value = map['value']
-    if  'method' in map:
-        obj.method = Method.fromMap(map['method'])
+    if  'type' in dict_obj:
+        obj.type = dict_obj['type']
+    if  'value' in dict_obj:
+        obj.value = dict_obj['value']
+    if  'method' in dict_obj:
+        obj.method = Method.fromDict(dict_obj['method'])
     for key in map:
       if not key in cls_keys:
         logger.warn("Probability - invalid field - {0} found".format(key))
@@ -321,18 +321,18 @@ class Pvalue(Base):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['type','value','method']
-    obj = super(Pvalue, cls).fromMap(map)
+    obj = super(Pvalue, cls).fromDict(map)
     if not isinstance(map, types.DictType):
       logger.warn("Pvalue - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'type' in map:
-        obj.type = map['type']
-    if  'value' in map:
-        obj.value = map['value']
-    if  'method' in map:
-        obj.method = Method.fromMap(map['method'])
+    if  'type' in dict_obj:
+        obj.type = dict_obj['type']
+    if  'value' in dict_obj:
+        obj.value = dict_obj['value']
+    if  'method' in dict_obj:
+        obj.method = Method.fromDict(dict_obj['method'])
     for key in map:
       if not key in cls_keys:
         logger.warn("Pvalue - invalid field - {0} found".format(key))
@@ -439,20 +439,20 @@ class Rank(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['type','position','sample_size','method']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("Rank - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'type' in map:
-        obj.type = map['type']
-    if  'position' in map:
-        obj.position = map['position']
-    if  'sample_size' in map:
-        obj.sample_size = map['sample_size']
-    if  'method' in map:
-        obj.method = Method.fromMap(map['method'])
+    if  'type' in dict_obj:
+        obj.type = dict_obj['type']
+    if  'position' in dict_obj:
+        obj.position = dict_obj['position']
+    if  'sample_size' in dict_obj:
+        obj.sample_size = dict_obj['sample_size']
+    if  'method' in dict_obj:
+        obj.method = Method.fromDict(dict_obj['method'])
     return obj
   
   def validate(self, logger, path = "root"):
@@ -552,18 +552,18 @@ class Summed_Total(Base):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['type','value','method']
-    obj = super(Summed_Total, cls).fromMap(map)
+    obj = super(Summed_Total, cls).fromDict(map)
     if not isinstance(map, types.DictType):
       logger.warn("Summed_Total - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'type' in map:
-        obj.type = map['type']
-    if  'value' in map:
-        obj.value = map['value']
-    if  'method' in map:
-        obj.method = Method.fromMap(map['method'])
+    if  'type' in dict_obj:
+        obj.type = dict_obj['type']
+    if  'value' in dict_obj:
+        obj.value = dict_obj['value']
+    if  'method' in dict_obj:
+        obj.method = Method.fromDict(dict_obj['method'])
     for key in map:
       if not key in cls_keys:
         logger.warn("Summed_Total - invalid field - {0} found".format(key))

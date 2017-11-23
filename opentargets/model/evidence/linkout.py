@@ -75,16 +75,16 @@ class Linkout(object):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['nice_name','url']
     obj = cls()
     if not isinstance(map, types.DictType):
       logger.warn("Linkout - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'nice_name' in map:
-        obj.nice_name = map['nice_name']
-    if  'url' in map:
-        obj.url = map['url']
+    if  'nice_name' in dict_obj:
+        obj.nice_name = dict_obj['nice_name']
+    if  'url' in dict_obj:
+        obj.url = dict_obj['url']
     return obj
   
   def validate(self, logger, path = "root"):

@@ -120,24 +120,24 @@ class Orthologs(evidence_core.Base):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['evidence_codes','human_gene_id','model_gene_id','species','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Orthologs, cls).fromMap(map)
+    obj = super(Orthologs, cls).fromDict(map)
     if not isinstance(map, types.DictType):
       logger.warn("Orthologs - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'evidence_codes' in map:
-        obj.evidence_codes = map['evidence_codes']
-    if  'human_gene_id' in map:
-        obj.human_gene_id = map['human_gene_id']
-    if  'model_gene_id' in map:
-        obj.model_gene_id = map['model_gene_id']
-    if  'species' in map:
-        obj.species = map['species']
-    if 'urls' in map and isinstance(map['urls'], list):
+    if  'evidence_codes' in dict_obj:
+        obj.evidence_codes = dict_obj['evidence_codes']
+    if  'human_gene_id' in dict_obj:
+        obj.human_gene_id = dict_obj['human_gene_id']
+    if  'model_gene_id' in dict_obj:
+        obj.model_gene_id = dict_obj['model_gene_id']
+    if  'species' in dict_obj:
+        obj.species = dict_obj['species']
+    if 'urls' in dict_obj and isinstance(dict_obj['urls'], list):
         obj.urls = list()
-        for item in map['urls']:
-            obj.urls.append(evidence_linkout.Linkout.fromMap(item))
+        for item in dict_obj['urls']:
+            obj.urls.append(evidence_linkout.Linkout.fromDict(item))
     for key in map:
       if not key in cls_keys:
         logger.warn("Orthologs - invalid field - {0} found".format(key))
@@ -365,36 +365,36 @@ class Biological_Model(evidence_core.Base):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['evidence_codes','model_gene_id','model_id','allelic_composition','genetic_background','allele_ids','zygosity','species','phenotypes','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Biological_Model, cls).fromMap(map)
+    obj = super(Biological_Model, cls).fromDict(map)
     if not isinstance(map, types.DictType):
       logger.warn("Biological_Model - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'evidence_codes' in map:
-        obj.evidence_codes = map['evidence_codes']
-    if  'model_gene_id' in map:
-        obj.model_gene_id = map['model_gene_id']
-    if  'model_id' in map:
-        obj.model_id = map['model_id']
-    if  'allelic_composition' in map:
-        obj.allelic_composition = map['allelic_composition']
-    if  'genetic_background' in map:
-        obj.genetic_background = map['genetic_background']
-    if  'allele_ids' in map:
-        obj.allele_ids = map['allele_ids']
-    if  'zygosity' in map:
-        obj.zygosity = map['zygosity']
-    if  'species' in map:
-        obj.species = map['species']
-    if 'phenotypes' in map and isinstance(map['phenotypes'], list):
+    if  'evidence_codes' in dict_obj:
+        obj.evidence_codes = dict_obj['evidence_codes']
+    if  'model_gene_id' in dict_obj:
+        obj.model_gene_id = dict_obj['model_gene_id']
+    if  'model_id' in dict_obj:
+        obj.model_id = dict_obj['model_id']
+    if  'allelic_composition' in dict_obj:
+        obj.allelic_composition = dict_obj['allelic_composition']
+    if  'genetic_background' in dict_obj:
+        obj.genetic_background = dict_obj['genetic_background']
+    if  'allele_ids' in dict_obj:
+        obj.allele_ids = dict_obj['allele_ids']
+    if  'zygosity' in dict_obj:
+        obj.zygosity = dict_obj['zygosity']
+    if  'species' in dict_obj:
+        obj.species = dict_obj['species']
+    if 'phenotypes' in dict_obj and isinstance(dict_obj['phenotypes'], list):
         obj.phenotypes = list()
-        for item in map['phenotypes']:
-            obj.phenotypes.append(bioentity.Phenotype.fromMap(item))
-    if 'urls' in map and isinstance(map['urls'], list):
+        for item in dict_obj['phenotypes']:
+            obj.phenotypes.append(bioentity.Phenotype.fromDict(item))
+    if 'urls' in dict_obj and isinstance(dict_obj['urls'], list):
         obj.urls = list()
-        for item in map['urls']:
-            obj.urls.append(evidence_linkout.Linkout.fromMap(item))
+        for item in dict_obj['urls']:
+            obj.urls.append(evidence_linkout.Linkout.fromDict(item))
     for key in map:
       if not key in cls_keys:
         logger.warn("Biological_Model - invalid field - {0} found".format(key))
@@ -622,30 +622,30 @@ class Disease_Model_Association(evidence_core.Base):
     return obj
   
   @classmethod
-  def fromMap(cls, map):
+  def fromDict(cls, map):
     cls_keys = ['evidence_codes','model_id','disease_id','human_phenotypes','model_phenotypes','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Disease_Model_Association, cls).fromMap(map)
+    obj = super(Disease_Model_Association, cls).fromDict(map)
     if not isinstance(map, types.DictType):
       logger.warn("Disease_Model_Association - DictType expected - {0} found\n".format(type(map)))
       return
-    if  'evidence_codes' in map:
-        obj.evidence_codes = map['evidence_codes']
-    if  'model_id' in map:
-        obj.model_id = map['model_id']
-    if  'disease_id' in map:
-        obj.disease_id = map['disease_id']
-    if 'human_phenotypes' in map and isinstance(map['human_phenotypes'], list):
+    if  'evidence_codes' in dict_obj:
+        obj.evidence_codes = dict_obj['evidence_codes']
+    if  'model_id' in dict_obj:
+        obj.model_id = dict_obj['model_id']
+    if  'disease_id' in dict_obj:
+        obj.disease_id = dict_obj['disease_id']
+    if 'human_phenotypes' in dict_obj and isinstance(dict_obj['human_phenotypes'], list):
         obj.human_phenotypes = list()
-        for item in map['human_phenotypes']:
-            obj.human_phenotypes.append(bioentity.Phenotype.fromMap(item))
-    if 'model_phenotypes' in map and isinstance(map['model_phenotypes'], list):
+        for item in dict_obj['human_phenotypes']:
+            obj.human_phenotypes.append(bioentity.Phenotype.fromDict(item))
+    if 'model_phenotypes' in dict_obj and isinstance(dict_obj['model_phenotypes'], list):
         obj.model_phenotypes = list()
-        for item in map['model_phenotypes']:
-            obj.model_phenotypes.append(bioentity.Phenotype.fromMap(item))
-    if 'urls' in map and isinstance(map['urls'], list):
+        for item in dict_obj['model_phenotypes']:
+            obj.model_phenotypes.append(bioentity.Phenotype.fromDict(item))
+    if 'urls' in dict_obj and isinstance(dict_obj['urls'], list):
         obj.urls = list()
-        for item in map['urls']:
-            obj.urls.append(evidence_linkout.Linkout.fromMap(item))
+        for item in dict_obj['urls']:
+            obj.urls.append(evidence_linkout.Linkout.fromDict(item))
     for key in map:
       if not key in cls_keys:
         logger.warn("Disease_Model_Association - invalid field - {0} found".format(key))
