@@ -23,6 +23,7 @@ limitations under the License.
 from __future__ import absolute_import, print_function
 from nose.tools.nontrivial import with_setup
 import sys
+import json
 import logging
 logging.basicConfig()
 logger = logging.getLogger(__name__)
@@ -114,17 +115,18 @@ def test_base_create_and_clone():
 
 @with_setup(my_setup_function, my_teardown_function)
 def test_genomics_englad_create_and_clone():
+    print("test_genomics_englad_create_and_clone")
     obj = opentargets.Literature_Curated(type='genetic_literature')
     obj.access_level = "public"
     obj.sourceID = "genomics_england"
     obj.validated_against_schema_version = "1.2.7"
-    obj.unique_association_fields = {
-        "target": "http://identifiers.org/ensembl/ENSG00000213724",
-        "object": "http://www.ebi.ac.uk/efo/EFO_0003767",
-        "variant": "http://identifiers.org/dbsnp/rs11010067",
-        "study_name": "cttv009_gwas_catalog",
-        "pvalue": "2.000000039082963e-25",
-        "pubmed_refs": "http://europepmc.org/abstract/MED/23128233"}
+    obj.unique_association_fields = dict(
+        target="http://identifiers.org/ensembl/ENSG00000213724",
+        object="http://www.ebi.ac.uk/efo/EFO_0003767",
+        variant="http://identifiers.org/dbsnp/rs11010067",
+        study_name="cttv009_gwas_catalog",
+        pvalue="2.000000039082963e-25",
+        pubmed_refs="http://europepmc.org/abstract/MED/23128233")
 
     # create target, disease and variant
     obj.target = bioentity.Target(
@@ -134,7 +136,7 @@ def test_genomics_englad_create_and_clone():
     obj.disease = bioentity.Disease(id="http://www.ebi.ac.uk/efo/EFO_0003767")
 
     publications = None
-    single_lit_ref_list = []
+    single_lit_ref_list = list()
     if publications is not None:
         publications = re.findall(r"\'(.+?)\'", str(publications))
         if len(publications) > 0:
@@ -160,6 +162,9 @@ def test_genomics_englad_create_and_clone():
         )
     )
 
+    d = provenance_type.serialize()
+    print(json.dumps(d, indent=2))
+
     level_of_confidence = 'HighEvidence'
     resource_score = evidence_score.Probability(
         type="probability",
@@ -183,10 +188,17 @@ def test_genomics_englad_create_and_clone():
         url="http://www.genomicsengland.co.uk/dummy",
         nice_name='Further details in the Genomics England PanelApp')
 
-    obj.evidence.urls = [linkout]
+    d = linkout.serialize()
+    print(json.dumps(d, indent=2))
 
+    obj.evidence.urls = [linkout]
+    d = obj.serialize()
+    print(json.dumps(d, indent=2))
     errors = obj.validate(logger)
+
     assert not obj == None and errors == 0
+
+    tojson = obj.to_JSON()
 
 
 @with_setup(my_setup_function, my_teardown_function)

@@ -189,7 +189,7 @@ class Target2Drug(evidence_core.Base):
     if not self.evidence_codes is None: classDict['evidence_codes'] = self.evidence_codes
     if not self.mechanism_of_action is None: classDict['mechanism_of_action'] = self.mechanism_of_action
     if not self.action_type is None: classDict['action_type'] = self.action_type
-    if not self.urls is None: classDict['urls'] = map(lambda x: x.serialize(), self.urls)
+    if not self.urls is None: classDict['urls'] = list(map(lambda x: x.serialize(), self.urls))
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -339,7 +339,7 @@ class Drug2Clinic(evidence_core.Base):
     classDict = super(Drug2Clinic, self).serialize()
     if not self.evidence_codes is None: classDict['evidence_codes'] = self.evidence_codes
     if not self.max_phase_for_disease is None: classDict['max_phase_for_disease'] = self.max_phase_for_disease.serialize()
-    if not self.urls is None: classDict['urls'] = map(lambda x: x.serialize(), self.urls)
+    if not self.urls is None: classDict['urls'] = list(map(lambda x: x.serialize(), self.urls))
     if not self.status is None: classDict['status'] = self.status
     return classDict
   

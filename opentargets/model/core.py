@@ -267,7 +267,7 @@ class BaseLiterature(object):
   
   def serialize(self):
     classDict = collections.OrderedDict()
-    if not self.references is None: classDict['references'] = map(lambda x: x.serialize(), self.references)
+    if not self.references is None: classDict['references'] = list(map(lambda x: x.serialize(), self.references))
     return classDict
   
   def to_JSON(self, indentation=4):

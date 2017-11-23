@@ -169,7 +169,7 @@ class Gene2Variant(evidence_core.Base):
     classDict = super(Gene2Variant, self).serialize()
     if not self.evidence_codes is None: classDict['evidence_codes'] = self.evidence_codes
     if not self.functional_consequence is None: classDict['functional_consequence'] = self.functional_consequence
-    if not self.urls is None: classDict['urls'] = map(lambda x: x.serialize(), self.urls)
+    if not self.urls is None: classDict['urls'] = list(map(lambda x: x.serialize(), self.urls))
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -340,7 +340,7 @@ class Variant2Disease(evidence_core.Base):
     if not self.gwas_panel_resolution is None: classDict['gwas_panel_resolution'] = self.gwas_panel_resolution
     if not self.gwas_sample_size is None: classDict['gwas_sample_size'] = self.gwas_sample_size
     if not self.evidence_codes is None: classDict['evidence_codes'] = self.evidence_codes
-    if not self.urls is None: classDict['urls'] = map(lambda x: x.serialize(), self.urls)
+    if not self.urls is None: classDict['urls'] = list(map(lambda x: x.serialize(), self.urls))
     return classDict
   
   def to_JSON(self, indentation=4):

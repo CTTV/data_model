@@ -280,7 +280,7 @@ class Single_Lit_Reference(object):
     classDict = collections.OrderedDict()
     if not self.lit_id is None: classDict['lit_id'] = self.lit_id
     if not self.rank is None: classDict['rank'] = self.rank.serialize()
-    if not self.mined_sentences is None: classDict['mined_sentences'] = map(lambda x: x.serialize(), self.mined_sentences)
+    if not self.mined_sentences is None: classDict['mined_sentences'] = list(map(lambda x: x.serialize(), self.mined_sentences))
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -779,7 +779,7 @@ class BaseLiterature(object):
   
   def serialize(self):
     classDict = collections.OrderedDict()
-    if not self.references is None: classDict['references'] = map(lambda x: x.serialize(), self.references)
+    if not self.references is None: classDict['references'] = list(map(lambda x: x.serialize(), self.references))
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -1280,7 +1280,7 @@ class Expression(Base):
     if not self.confidence_level is None: classDict['confidence_level'] = self.confidence_level
     if not self.experiment_overview is None: classDict['experiment_overview'] = self.experiment_overview
     if not self.evidence_codes is None: classDict['evidence_codes'] = self.evidence_codes
-    if not self.urls is None: classDict['urls'] = map(lambda x: x.serialize(), self.urls)
+    if not self.urls is None: classDict['urls'] = list(map(lambda x: x.serialize(), self.urls))
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -1512,8 +1512,8 @@ class Literature_Curated(Base):
     classDict = super(Literature_Curated, self).serialize()
     if not self.clinical_significance is None: classDict['clinical_significance'] = self.clinical_significance
     if not self.evidence_codes is None: classDict['evidence_codes'] = self.evidence_codes
-    if not self.known_mutations is None: classDict['known_mutations'] = map(lambda x: x.serialize(), self.known_mutations)
-    if not self.urls is None: classDict['urls'] = map(lambda x: x.serialize(), self.urls)
+    if not self.known_mutations is None: classDict['known_mutations'] = list(map(lambda x: x.serialize(), self.known_mutations))
+    if not self.urls is None: classDict['urls'] = list(map(lambda x: x.serialize(), self.urls))
     return classDict
   
   def to_JSON(self, indentation=4):

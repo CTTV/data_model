@@ -223,7 +223,7 @@ class Orthologs(evidence_core.Base):
     if not self.human_gene_id is None: classDict['human_gene_id'] = self.human_gene_id
     if not self.model_gene_id is None: classDict['model_gene_id'] = self.model_gene_id
     if not self.species is None: classDict['species'] = self.species
-    if not self.urls is None: classDict['urls'] = map(lambda x: x.serialize(), self.urls)
+    if not self.urls is None: classDict['urls'] = list(map(lambda x: x.serialize(), self.urls))
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -521,8 +521,8 @@ class Biological_Model(evidence_core.Base):
     if not self.allele_ids is None: classDict['allele_ids'] = self.allele_ids
     if not self.zygosity is None: classDict['zygosity'] = self.zygosity
     if not self.species is None: classDict['species'] = self.species
-    if not self.phenotypes is None: classDict['phenotypes'] = map(lambda x: x.serialize(), self.phenotypes)
-    if not self.urls is None: classDict['urls'] = map(lambda x: x.serialize(), self.urls)
+    if not self.phenotypes is None: classDict['phenotypes'] = list(map(lambda x: x.serialize(), self.phenotypes))
+    if not self.urls is None: classDict['urls'] = list(map(lambda x: x.serialize(), self.urls))
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -736,9 +736,9 @@ class Disease_Model_Association(evidence_core.Base):
     if not self.evidence_codes is None: classDict['evidence_codes'] = self.evidence_codes
     if not self.model_id is None: classDict['model_id'] = self.model_id
     if not self.disease_id is None: classDict['disease_id'] = self.disease_id
-    if not self.human_phenotypes is None: classDict['human_phenotypes'] = map(lambda x: x.serialize(), self.human_phenotypes)
-    if not self.model_phenotypes is None: classDict['model_phenotypes'] = map(lambda x: x.serialize(), self.model_phenotypes)
-    if not self.urls is None: classDict['urls'] = map(lambda x: x.serialize(), self.urls)
+    if not self.human_phenotypes is None: classDict['human_phenotypes'] = list(map(lambda x: x.serialize(), self.human_phenotypes))
+    if not self.model_phenotypes is None: classDict['model_phenotypes'] = list(map(lambda x: x.serialize(), self.model_phenotypes))
+    if not self.urls is None: classDict['urls'] = list(map(lambda x: x.serialize(), self.urls))
     return classDict
   
   def to_JSON(self, indentation=4):
