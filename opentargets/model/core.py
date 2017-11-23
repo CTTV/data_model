@@ -121,11 +121,11 @@ class Base(object):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("Base - DictType expected - {0} found\n".format(type(map)))
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Base - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'sourceID' in dict_obj:
         obj.sourceID = dict_obj['sourceID']
@@ -236,11 +236,11 @@ class BaseLiterature(object):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['references']
     obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("BaseLiterature - DictType expected - {0} found\n".format(type(map)))
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("BaseLiterature - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if 'references' in dict_obj and isinstance(dict_obj['references'], list):
         obj.references = list()
@@ -321,17 +321,17 @@ class Animal_Models(Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['type','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
-    obj = super(Animal_Models, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Animal_Models - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Animal_Models, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Animal_Models - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
         obj.type = dict_obj['type']
     if  'evidence' in dict_obj:
         obj.evidence = Animal_ModelsEvidence.fromDict(dict_obj['evidence'])
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Animal_Models - invalid field - {0} found".format(key))
         return
@@ -430,11 +430,11 @@ class Animal_ModelsEvidence(object):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['orthologs','biological_model','disease_model_association']
     obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("Animal_ModelsEvidence - DictType expected - {0} found\n".format(type(map)))
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Animal_ModelsEvidence - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'orthologs' in dict_obj:
         obj.orthologs = evidence_phenotype.Orthologs.fromDict(dict_obj['orthologs'])
@@ -543,11 +543,11 @@ class Drug(Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['type','drug','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
-    obj = super(Drug, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Drug - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Drug, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Drug - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
         obj.type = dict_obj['type']
@@ -555,7 +555,7 @@ class Drug(Base):
         obj.drug = bioentity.Drug.fromDict(dict_obj['drug'])
     if  'evidence' in dict_obj:
         obj.evidence = DrugEvidence.fromDict(dict_obj['evidence'])
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Drug - invalid field - {0} found".format(key))
         return
@@ -658,11 +658,11 @@ class DrugEvidence(object):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['target2drug','drug2clinic']
     obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("DrugEvidence - DictType expected - {0} found\n".format(type(map)))
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("DrugEvidence - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'target2drug' in dict_obj:
         obj.target2drug = evidence_drug.Target2Drug.fromDict(dict_obj['target2drug'])
@@ -753,17 +753,17 @@ class Expression(Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['type','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
-    obj = super(Expression, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Expression - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Expression, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Expression - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
         obj.type = dict_obj['type']
     if  'evidence' in dict_obj:
         obj.evidence = evidence_core.Expression.fromDict(dict_obj['evidence'])
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Expression - invalid field - {0} found".format(key))
         return
@@ -879,11 +879,11 @@ class Genetics(Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['type','variant','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
-    obj = super(Genetics, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Genetics - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Genetics, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Genetics - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
         obj.type = dict_obj['type']
@@ -891,7 +891,7 @@ class Genetics(Base):
         obj.variant = bioentity.Variant.fromDict(dict_obj['variant'])
     if  'evidence' in dict_obj:
         obj.evidence = GeneticsEvidence.fromDict(dict_obj['evidence'])
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Genetics - invalid field - {0} found".format(key))
         return
@@ -994,11 +994,11 @@ class GeneticsEvidence(object):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['gene2variant','variant2disease']
     obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("GeneticsEvidence - DictType expected - {0} found\n".format(type(map)))
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("GeneticsEvidence - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'gene2variant' in dict_obj:
         obj.gene2variant = evidence_genetics.Gene2Variant.fromDict(dict_obj['gene2variant'])
@@ -1089,17 +1089,17 @@ class Literature_Curated(Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['type','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
-    obj = super(Literature_Curated, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Literature_Curated - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Literature_Curated, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Literature_Curated - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
         obj.type = dict_obj['type']
     if  'evidence' in dict_obj:
         obj.evidence = evidence_core.Literature_Curated.fromDict(dict_obj['evidence'])
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Literature_Curated - invalid field - {0} found".format(key))
         return
@@ -1209,17 +1209,17 @@ class Literature_Mining(Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['type','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
-    obj = super(Literature_Mining, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Literature_Mining - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Literature_Mining, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Literature_Mining - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
         obj.type = dict_obj['type']
     if  'evidence' in dict_obj:
         obj.evidence = evidence_core.Literature_Mining.fromDict(dict_obj['evidence'])
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Literature_Mining - invalid field - {0} found".format(key))
         return

@@ -49,11 +49,11 @@ class Base(object):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['']
     obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("Base - DictType expected - {0} found\n".format(type(map)))
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Base - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     return obj
   
@@ -120,11 +120,11 @@ class Method(object):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['description','reference','url']
     obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("Method - DictType expected - {0} found\n".format(type(map)))
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Method - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'description' in dict_obj:
         obj.description = dict_obj['description']
@@ -212,11 +212,11 @@ class Probability(Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['type','value','method']
-    obj = super(Probability, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Probability - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Probability, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Probability - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
         obj.type = dict_obj['type']
@@ -224,7 +224,7 @@ class Probability(Base):
         obj.value = dict_obj['value']
     if  'method' in dict_obj:
         obj.method = Method.fromDict(dict_obj['method'])
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Probability - invalid field - {0} found".format(key))
         return
@@ -321,11 +321,11 @@ class Pvalue(Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['type','value','method']
-    obj = super(Pvalue, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Pvalue - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Pvalue, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Pvalue - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
         obj.type = dict_obj['type']
@@ -333,7 +333,7 @@ class Pvalue(Base):
         obj.value = dict_obj['value']
     if  'method' in dict_obj:
         obj.method = Method.fromDict(dict_obj['method'])
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Pvalue - invalid field - {0} found".format(key))
         return
@@ -439,11 +439,11 @@ class Rank(object):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['type','position','sample_size','method']
     obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("Rank - DictType expected - {0} found\n".format(type(map)))
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Rank - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
         obj.type = dict_obj['type']
@@ -552,11 +552,11 @@ class Summed_Total(Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['type','value','method']
-    obj = super(Summed_Total, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Summed_Total - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Summed_Total, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Summed_Total - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
         obj.type = dict_obj['type']
@@ -564,7 +564,7 @@ class Summed_Total(Base):
         obj.value = dict_obj['value']
     if  'method' in dict_obj:
         obj.method = Method.fromDict(dict_obj['method'])
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Summed_Total - invalid field - {0} found".format(key))
         return

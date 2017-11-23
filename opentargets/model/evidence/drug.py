@@ -107,11 +107,11 @@ class Target2Drug(evidence_core.Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['evidence_codes','mechanism_of_action','action_type','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Target2Drug, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Target2Drug - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Target2Drug, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Target2Drug - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'evidence_codes' in dict_obj:
         obj.evidence_codes = dict_obj['evidence_codes']
@@ -123,7 +123,7 @@ class Target2Drug(evidence_core.Base):
         obj.urls = list()
         for item in dict_obj['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromDict(item))
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Target2Drug - invalid field - {0} found".format(key))
         return
@@ -260,11 +260,11 @@ class Drug2Clinic(evidence_core.Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['evidence_codes','max_phase_for_disease','urls','status','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Drug2Clinic, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Drug2Clinic - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Drug2Clinic, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Drug2Clinic - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'evidence_codes' in dict_obj:
         obj.evidence_codes = dict_obj['evidence_codes']
@@ -276,7 +276,7 @@ class Drug2Clinic(evidence_core.Base):
             obj.urls.append(evidence_linkout.Linkout.fromDict(item))
     if  'status' in dict_obj:
         obj.status = dict_obj['status']
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Drug2Clinic - invalid field - {0} found".format(key))
         return
@@ -386,11 +386,11 @@ class Diseasephase(object):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['numeric_index','label']
     obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("Diseasephase - DictType expected - {0} found\n".format(type(map)))
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Diseasephase - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'numeric_index' in dict_obj:
         obj.numeric_index = dict_obj['numeric_index']

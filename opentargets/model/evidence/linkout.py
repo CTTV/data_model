@@ -75,11 +75,11 @@ class Linkout(object):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['nice_name','url']
     obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("Linkout - DictType expected - {0} found\n".format(type(map)))
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Linkout - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'nice_name' in dict_obj:
         obj.nice_name = dict_obj['nice_name']

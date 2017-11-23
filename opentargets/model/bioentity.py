@@ -64,11 +64,11 @@ class Base(object):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['id']
     obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("Base - DictType expected - {0} found\n".format(type(map)))
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Base - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'id' in dict_obj:
         obj.id = dict_obj['id']
@@ -156,11 +156,11 @@ class Disease(Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['id','name','source_name','biosample','id']
-    obj = super(Disease, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Disease - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Disease, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Disease - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'id' in dict_obj:
         obj.id = dict_obj['id']
@@ -170,7 +170,7 @@ class Disease(Base):
         obj.source_name = dict_obj['source_name']
     if  'biosample' in dict_obj:
         obj.biosample = DiseaseBiosample.fromDict(dict_obj['biosample'])
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Disease - invalid field - {0} found".format(key))
         return
@@ -265,11 +265,11 @@ class DiseaseBiosample(object):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['name','id']
     obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("DiseaseBiosample - DictType expected - {0} found\n".format(type(map)))
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("DiseaseBiosample - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'name' in dict_obj:
         obj.name = dict_obj['name']
@@ -420,11 +420,11 @@ class Target(Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['id','tier','complex_id','complex_members','complex_type','target_type','activity','target_name','target_class','id']
-    obj = super(Target, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Target - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Target, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Target - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'id' in dict_obj:
         obj.id = dict_obj['id']
@@ -444,7 +444,7 @@ class Target(Base):
         obj.target_name = dict_obj['target_name']
     if  'target_class' in dict_obj:
         obj.target_class = dict_obj['target_class']
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Target - invalid field - {0} found".format(key))
         return
@@ -605,11 +605,11 @@ class Phenotype(Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['term_id','label','species','id']
-    obj = super(Phenotype, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Phenotype - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Phenotype, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Phenotype - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'term_id' in dict_obj:
         obj.term_id = dict_obj['term_id']
@@ -617,7 +617,7 @@ class Phenotype(Base):
         obj.label = dict_obj['label']
     if  'species' in dict_obj:
         obj.species = dict_obj['species']
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Phenotype - invalid field - {0} found".format(key))
         return
@@ -737,11 +737,11 @@ class Drug(Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['id','molecule_name','molecule_type','max_phase_for_all_diseases','id']
-    obj = super(Drug, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Drug - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Drug, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Drug - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'id' in dict_obj:
         obj.id = dict_obj['id']
@@ -751,7 +751,7 @@ class Drug(Base):
         obj.molecule_type = dict_obj['molecule_type']
     if  'max_phase_for_all_diseases' in dict_obj:
         obj.max_phase_for_all_diseases = evidence_drug.Diseasephase.fromDict(dict_obj['max_phase_for_all_diseases'])
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Drug - invalid field - {0} found".format(key))
         return
@@ -859,17 +859,17 @@ class Variant(Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['id','type','id']
-    obj = super(Variant, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Variant - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Variant, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Variant - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'id' in dict_obj:
         obj.id = dict_obj['id']
     if  'type' in dict_obj:
         obj.type = dict_obj['type']
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Variant - invalid field - {0} found".format(key))
         return

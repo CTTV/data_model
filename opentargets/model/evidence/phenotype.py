@@ -120,11 +120,11 @@ class Orthologs(evidence_core.Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['evidence_codes','human_gene_id','model_gene_id','species','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Orthologs, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Orthologs - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Orthologs, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Orthologs - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'evidence_codes' in dict_obj:
         obj.evidence_codes = dict_obj['evidence_codes']
@@ -138,7 +138,7 @@ class Orthologs(evidence_core.Base):
         obj.urls = list()
         for item in dict_obj['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromDict(item))
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Orthologs - invalid field - {0} found".format(key))
         return
@@ -365,11 +365,11 @@ class Biological_Model(evidence_core.Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['evidence_codes','model_gene_id','model_id','allelic_composition','genetic_background','allele_ids','zygosity','species','phenotypes','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Biological_Model, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Biological_Model - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Biological_Model, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Biological_Model - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'evidence_codes' in dict_obj:
         obj.evidence_codes = dict_obj['evidence_codes']
@@ -395,7 +395,7 @@ class Biological_Model(evidence_core.Base):
         obj.urls = list()
         for item in dict_obj['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromDict(item))
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Biological_Model - invalid field - {0} found".format(key))
         return
@@ -622,11 +622,11 @@ class Disease_Model_Association(evidence_core.Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['evidence_codes','model_id','disease_id','human_phenotypes','model_phenotypes','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Disease_Model_Association, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Disease_Model_Association - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Disease_Model_Association, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Disease_Model_Association - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'evidence_codes' in dict_obj:
         obj.evidence_codes = dict_obj['evidence_codes']
@@ -646,7 +646,7 @@ class Disease_Model_Association(evidence_core.Base):
         obj.urls = list()
         for item in dict_obj['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromDict(item))
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Disease_Model_Association - invalid field - {0} found".format(key))
         return

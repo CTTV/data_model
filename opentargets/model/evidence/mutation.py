@@ -136,11 +136,11 @@ class Mutation(object):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['role_in_cancer','preferred_name','alternative_names','functional_consequence','number_samples_tested','number_samples_with_mutation_type','number_mutated_samples','inheritance_pattern']
     obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("Mutation - DictType expected - {0} found\n".format(type(map)))
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Mutation - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'role_in_cancer' in dict_obj:
         obj.role_in_cancer = dict_obj['role_in_cancer']

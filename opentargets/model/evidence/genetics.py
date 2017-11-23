@@ -97,11 +97,11 @@ class Gene2Variant(evidence_core.Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['evidence_codes','functional_consequence','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Gene2Variant, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Gene2Variant - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Gene2Variant, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Gene2Variant - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'evidence_codes' in dict_obj:
         obj.evidence_codes = dict_obj['evidence_codes']
@@ -111,7 +111,7 @@ class Gene2Variant(evidence_core.Base):
         obj.urls = list()
         for item in dict_obj['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromDict(item))
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Gene2Variant - invalid field - {0} found".format(key))
         return
@@ -254,11 +254,11 @@ class Variant2Disease(evidence_core.Base):
     return obj
   
   @classmethod
-  def fromDict(cls, map):
+  def fromDict(cls, dict_obj):
     cls_keys = ['clinical_significance','gwas_panel_resolution','gwas_sample_size','evidence_codes','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
-    obj = super(Variant2Disease, cls).fromDict(map)
-    if not isinstance(map, types.DictType):
-      logger.warn("Variant2Disease - DictType expected - {0} found\n".format(type(map)))
+    obj = super(Variant2Disease, cls).fromDict(dict_obj)
+    if not isinstance(dict_obj, types.DictType):
+      logger.warn("Variant2Disease - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'clinical_significance' in dict_obj:
         obj.clinical_significance = dict_obj['clinical_significance']
@@ -272,7 +272,7 @@ class Variant2Disease(evidence_core.Base):
         obj.urls = list()
         for item in dict_obj['urls']:
             obj.urls.append(evidence_linkout.Linkout.fromDict(item))
-    for key in map:
+    for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Variant2Disease - invalid field - {0} found".format(key))
         return
