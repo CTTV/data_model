@@ -210,7 +210,7 @@ class Mutation(object):
     return error
   
   def serialize(self):
-    classDict = OrderedDict()
+    classDict = collections.OrderedDict()
     if not self.role_in_cancer is None: classDict['role_in_cancer'] = self.role_in_cancer
     if not self.preferred_name is None: classDict['preferred_name'] = self.preferred_name
     if not self.alternative_names is None: classDict['alternative_names'] = self.alternative_names

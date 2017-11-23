@@ -195,7 +195,7 @@ class Base(object):
     return error
   
   def serialize(self):
-    classDict = OrderedDict()
+    classDict = collections.OrderedDict()
     if not self.sourceID is None: classDict['sourceID'] = self.sourceID
     if not self.access_level is None: classDict['access_level'] = self.access_level
     if not self.validated_against_schema_version is None: classDict['validated_against_schema_version'] = self.validated_against_schema_version
@@ -266,7 +266,7 @@ class BaseLiterature(object):
     return error
   
   def serialize(self):
-    classDict = OrderedDict()
+    classDict = collections.OrderedDict()
     if not self.references is None: classDict['references'] = map(lambda x: x.serialize(), self.references)
     return classDict
   
@@ -480,7 +480,7 @@ class Animal_ModelsEvidence(object):
     return error
   
   def serialize(self):
-    classDict = OrderedDict()
+    classDict = collections.OrderedDict()
     if not self.orthologs is None: classDict['orthologs'] = self.orthologs.serialize()
     if not self.biological_model is None: classDict['biological_model'] = self.biological_model.serialize()
     if not self.disease_model_association is None: classDict['disease_model_association'] = self.disease_model_association.serialize()
@@ -697,7 +697,7 @@ class DrugEvidence(object):
     return error
   
   def serialize(self):
-    classDict = OrderedDict()
+    classDict = collections.OrderedDict()
     if not self.target2drug is None: classDict['target2drug'] = self.target2drug.serialize()
     if not self.drug2clinic is None: classDict['drug2clinic'] = self.drug2clinic.serialize()
     return classDict
@@ -1033,7 +1033,7 @@ class GeneticsEvidence(object):
     return error
   
   def serialize(self):
-    classDict = OrderedDict()
+    classDict = collections.OrderedDict()
     if not self.gene2variant is None: classDict['gene2variant'] = self.gene2variant.serialize()
     if not self.variant2disease is None: classDict['variant2disease'] = self.variant2disease.serialize()
     return classDict

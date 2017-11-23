@@ -66,7 +66,7 @@ class Base(object):
     return error
   
   def serialize(self):
-    classDict = OrderedDict()
+    classDict = collections.OrderedDict()
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -156,7 +156,7 @@ class Method(object):
     return error
   
   def serialize(self):
-    classDict = OrderedDict()
+    classDict = collections.OrderedDict()
     if not self.description is None: classDict['description'] = self.description
     if not self.reference is None: classDict['reference'] = self.reference
     if not self.url is None: classDict['url'] = self.url
@@ -495,7 +495,7 @@ class Rank(object):
     return error
   
   def serialize(self):
-    classDict = OrderedDict()
+    classDict = collections.OrderedDict()
     if not self.type is None: classDict['type'] = self.type
     if not self.position is None: classDict['position'] = self.position
     if not self.sample_size is None: classDict['sample_size'] = self.sample_size

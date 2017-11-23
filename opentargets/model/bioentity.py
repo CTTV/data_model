@@ -86,7 +86,7 @@ class Base(object):
     return error
   
   def serialize(self):
-    classDict = OrderedDict()
+    classDict = collections.OrderedDict()
     if not self.id is None: classDict['id'] = self.id
     return classDict
   
@@ -296,7 +296,7 @@ class DiseaseBiosample(object):
     return error
   
   def serialize(self):
-    classDict = OrderedDict()
+    classDict = collections.OrderedDict()
     if not self.name is None: classDict['name'] = self.name
     if not self.id is None: classDict['id'] = self.id
     return classDict

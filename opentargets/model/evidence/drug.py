@@ -418,7 +418,7 @@ class Diseasephase(object):
     return error
   
   def serialize(self):
-    classDict = OrderedDict()
+    classDict = collections.OrderedDict()
     if not self.numeric_index is None: classDict['numeric_index'] = self.numeric_index
     if not self.label is None: classDict['label'] = self.label
     return classDict

@@ -110,7 +110,7 @@ class Linkout(object):
     return error
   
   def serialize(self):
-    classDict = OrderedDict()
+    classDict = collections.OrderedDict()
     if not self.nice_name is None: classDict['nice_name'] = self.nice_name
     if not self.url is None: classDict['url'] = self.url
     return classDict
