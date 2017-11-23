@@ -206,7 +206,7 @@ class Base(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -271,7 +271,7 @@ class BaseLiterature(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -391,7 +391,7 @@ class Animal_Models(Base):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -487,7 +487,7 @@ class Animal_ModelsEvidence(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -625,7 +625,7 @@ class Drug(Base):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -703,7 +703,7 @@ class DrugEvidence(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -823,7 +823,7 @@ class Expression(Base):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -961,7 +961,7 @@ class Genetics(Base):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -1039,7 +1039,7 @@ class GeneticsEvidence(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -1159,7 +1159,7 @@ class Literature_Curated(Base):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -1279,6 +1279,6 @@ class Literature_Mining(Base):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)

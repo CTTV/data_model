@@ -70,7 +70,7 @@ class Base(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -163,7 +163,7 @@ class Method(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -272,7 +272,7 @@ class Probability(Base):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -381,7 +381,7 @@ class Pvalue(Base):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -503,7 +503,7 @@ class Rank(object):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
 
@@ -612,6 +612,6 @@ class Summed_Total(Base):
   
   def to_JSON(self, indentation=4):
     if sys.version_info[0] == 3:
-      return json.dumps(self, sort_keys=True, check_circular=False, indent=indentation)
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
     elif sys.version_info[0] == 2:
       return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
