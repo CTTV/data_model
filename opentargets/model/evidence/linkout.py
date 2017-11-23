@@ -25,6 +25,7 @@ import types
 import json
 import logging
 import six
+import collections
 
 __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
@@ -109,7 +110,7 @@ class Linkout(object):
     return error
   
   def serialize(self):
-    classDict = dict()
+    classDict = OrderedDict()
     if not self.nice_name is None: classDict['nice_name'] = self.nice_name
     if not self.url is None: classDict['url'] = self.url
     return classDict

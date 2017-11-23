@@ -25,6 +25,7 @@ import types
 import json
 import logging
 import six
+import collections
 import opentargets.model.evidence.drug as evidence_drug
 
 __author__ = "Gautier Koscielny"
@@ -85,7 +86,7 @@ class Base(object):
     return error
   
   def serialize(self):
-    classDict = dict()
+    classDict = OrderedDict()
     if not self.id is None: classDict['id'] = self.id
     return classDict
   
@@ -295,7 +296,7 @@ class DiseaseBiosample(object):
     return error
   
   def serialize(self):
-    classDict = dict()
+    classDict = OrderedDict()
     if not self.name is None: classDict['name'] = self.name
     if not self.id is None: classDict['id'] = self.id
     return classDict

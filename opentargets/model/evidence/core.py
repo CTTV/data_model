@@ -25,6 +25,7 @@ import types
 import json
 import logging
 import six
+import collections
 import opentargets.model.evidence.association_score as evidence_association_score
 import opentargets.model.evidence.linkout as evidence_linkout
 import opentargets.model.evidence.mutation as evidence_mutation
@@ -170,7 +171,7 @@ class Base(object):
     iso8601.parse_date(self.date_asserted).isoformat()
   
   def serialize(self):
-    classDict = dict()
+    classDict = OrderedDict()
     if not self.unique_experiment_reference is None: classDict['unique_experiment_reference'] = self.unique_experiment_reference
     if not self.is_associated is None: classDict['is_associated'] = self.is_associated
     if not self.date_asserted is None: classDict['date_asserted'] = self.date_asserted
@@ -276,7 +277,7 @@ class Single_Lit_Reference(object):
     return error
   
   def serialize(self):
-    classDict = dict()
+    classDict = OrderedDict()
     if not self.lit_id is None: classDict['lit_id'] = self.lit_id
     if not self.rank is None: classDict['rank'] = self.rank.serialize()
     if not self.mined_sentences is None: classDict['mined_sentences'] = map(lambda x: x.serialize(), self.mined_sentences)
@@ -423,7 +424,7 @@ class Base_Mined_Sentences_Item(object):
     return error
   
   def serialize(self):
-    classDict = dict()
+    classDict = OrderedDict()
     if not self.text is None: classDict['text'] = self.text
     if not self.section is None: classDict['section'] = self.section
     if not self.t_start is None: classDict['t_start'] = self.t_start
@@ -519,7 +520,7 @@ class BaseProvenance_Type(object):
     return error
   
   def serialize(self):
-    classDict = dict()
+    classDict = OrderedDict()
     if not self.expert is None: classDict['expert'] = self.expert.serialize()
     if not self.literature is None: classDict['literature'] = self.literature.serialize()
     if not self.database is None: classDict['database'] = self.database.serialize()
@@ -613,7 +614,7 @@ class BaseExpert(object):
     return error
   
   def serialize(self):
-    classDict = dict()
+    classDict = OrderedDict()
     if not self.statement is None: classDict['statement'] = self.statement
     if not self.author is None: classDict['author'] = self.author.serialize()
     if not self.status is None: classDict['status'] = self.status
@@ -705,7 +706,7 @@ class BaseAuthor(object):
     return error
   
   def serialize(self):
-    classDict = dict()
+    classDict = OrderedDict()
     if not self.organization is None: classDict['organization'] = self.organization
     if not self.email is None: classDict['email'] = self.email
     if not self.name is None: classDict['name'] = self.name
@@ -777,7 +778,7 @@ class BaseLiterature(object):
     return error
   
   def serialize(self):
-    classDict = dict()
+    classDict = OrderedDict()
     if not self.references is None: classDict['references'] = map(lambda x: x.serialize(), self.references)
     return classDict
   
@@ -874,7 +875,7 @@ class BaseDatabase(object):
     return error
   
   def serialize(self):
-    classDict = dict()
+    classDict = OrderedDict()
     if not self.dbxref is None: classDict['dbxref'] = self.dbxref.serialize()
     if not self.id is None: classDict['id'] = self.id
     if not self.version is None: classDict['version'] = self.version
@@ -974,7 +975,7 @@ class BaseDbxref(object):
     return error
   
   def serialize(self):
-    classDict = dict()
+    classDict = OrderedDict()
     if not self.id is None: classDict['id'] = self.id
     if not self.url is None: classDict['url'] = self.url
     if not self.version is None: classDict['version'] = self.version
@@ -1353,7 +1354,7 @@ class ExpressionLog2_Fold_Change(object):
     return error
   
   def serialize(self):
-    classDict = dict()
+    classDict = OrderedDict()
     if not self.value is None: classDict['value'] = self.value
     if not self.percentile_rank is None: classDict['percentile_rank'] = self.percentile_rank
     return classDict

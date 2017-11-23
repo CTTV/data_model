@@ -33,6 +33,7 @@ import opentargets.model.evidence.core as evidence_core
 import opentargets.model.evidence.genetics as evidence_genetics
 import opentargets.model.evidence.association_score as evidence_score
 import opentargets.model.evidence.phenotype as evidence_phenotype
+import opentargets.model.evidence.linkout as evidence_linkout
 
 __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, The Centre for Therapeutic Target Validation (CTTV)"
@@ -109,7 +110,85 @@ def test_base_create_and_clone():
     # try to serialize
     obj.serialize()
     str = obj.to_JSON(indentation=None)
-    
+
+
+@with_setup(my_setup_function, my_teardown_function)
+def test_genomics_englad_create_and_clone():
+    obj = opentargets.Literature_Curated(type='genetic_literature')
+    obj.access_level = "public"
+    obj.sourceID = "genomics_england"
+    obj.validated_against_schema_version = "1.2.7"
+    obj.unique_association_fields = {
+        "target": "http://identifiers.org/ensembl/ENSG00000213724",
+        "object": "http://www.ebi.ac.uk/efo/EFO_0003767",
+        "variant": "http://identifiers.org/dbsnp/rs11010067",
+        "study_name": "cttv009_gwas_catalog",
+        "pvalue": "2.000000039082963e-25",
+        "pubmed_refs": "http://europepmc.org/abstract/MED/23128233"}
+
+    # create target, disease and variant
+    obj.target = bioentity.Target(
+        id="http://identifiers.org/ensembl/ENSG00000213724",
+        activity="http://identifiers.org/cttv.activity/predicted_damaging",
+        target_type="http://identifiers.org/cttv.target/gene_evidence")
+    obj.disease = bioentity.Disease(id="http://www.ebi.ac.uk/efo/EFO_0003767")
+
+    publications = None
+    single_lit_ref_list = []
+    if publications is not None:
+        publications = re.findall(r"\'(.+?)\'", str(publications))
+        if len(publications) > 0:
+            for paper_set in publications:
+                paper_set = re.findall(r"\d{7,12}", paper_set)
+                for paper in paper_set:
+                    lit_url = "http://europepmc.org/abstract/MED/" + paper
+                    single_lit_ref_list.append(evidence_core.Single_Lit_Reference(lit_id=lit_url))
+        else:
+            print("no publication found for %s %s %s" % (panel_name, panel_id, publications))
+            lit_url = "http://europepmc.org/abstract/MED/00000000"
+            single_lit_ref_list.append(evidence_core.Single_Lit_Reference(lit_id=lit_url))
+
+    provenance_type = evidence_core.BaseProvenance_Type(
+        database=evidence_core.BaseDatabase(
+            id="Genomics England PanelApp",
+            version='v4.1',
+            dbxref=evidence_core.BaseDbxref(
+                url="https://panelapp.genomicsengland.co.uk/",
+                id="Genomics England PanelApp", version="v5.7")),
+        literature=evidence_core.BaseLiterature(
+            references=single_lit_ref_list
+        )
+    )
+
+    level_of_confidence = 'HighEvidence'
+    resource_score = evidence_score.Probability(
+        type="probability",
+        method=evidence_score.Method(
+            description="Further details in the Genomics England PanelApp.",
+            reference="NA",
+            url="https://panelapp.genomicsengland.co.uk"),
+        value=0.5)
+
+    now = datetime.datetime.now()
+
+    obj.evidence = evidence_core.Literature_Curated()
+    obj.evidence.is_associated = True
+    obj.evidence.evidence_codes = ["http://purl.obolibrary.org/obo/ECO_0000205"]
+    obj.evidence.provenance_type = provenance_type
+    obj.evidence.date_asserted = now.isoformat()
+    obj.evidence.provenance_type = provenance_type
+    obj.evidence.resource_score = resource_score
+    # specific
+    linkout = evidence_linkout.Linkout(
+        url="http://www.genomicsengland.co.uk/dummy",
+        nice_name='Further details in the Genomics England PanelApp')
+
+    obj.evidence.urls = [linkout]
+
+    errors = obj.validate(logger)
+    assert not obj == None and errors == 0
+
+
 @with_setup(my_setup_function, my_teardown_function)
 def test_genetics_create_and_clone():
     obj = opentargets.Genetics(type="genetic_association")

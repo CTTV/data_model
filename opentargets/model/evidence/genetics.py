@@ -25,6 +25,7 @@ import types
 import json
 import logging
 import six
+import collections
 import opentargets.model.evidence.core
 import opentargets.model.evidence.linkout as evidence_linkout
 

@@ -25,6 +25,7 @@ import types
 import json
 import logging
 import six
+import collections
 import opentargets.model.evidence.core
 import opentargets.model.evidence.linkout as evidence_linkout
 
@@ -417,7 +418,7 @@ class Diseasephase(object):
     return error
   
   def serialize(self):
-    classDict = dict()
+    classDict = OrderedDict()
     if not self.numeric_index is None: classDict['numeric_index'] = self.numeric_index
     if not self.label is None: classDict['label'] = self.label
     return classDict

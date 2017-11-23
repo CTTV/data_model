@@ -25,6 +25,7 @@ import types
 import json
 import logging
 import six
+import collections
 
 __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
