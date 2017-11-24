@@ -80,7 +80,7 @@ class Base(object):
     :returns: number of errors found during validation
     """
     error = 0
-    if self.id and not isinstance(self.id, six.string_types):
+    if self.id is not None and not isinstance(self.id, six.string_types):
         logger.error("Base - {0}.id type should be a string".format(path))
         error = error + 1
     return error
@@ -192,16 +192,16 @@ class Disease(Base):
         logger.error("Disease - {0}.id is required".format(path))
         error = error + 1
     """ Check regex: ^http://purl.bioontology.org/omim/OMIM_[0-9]{1,}|http://www.orpha.net/ORDO/Orphanet_[0-9]{1,}|http://purl.obolibrary.org/obo/DOID_[0-9]{2,}|http://www.ebi.ac.uk/efo/EFO_[0-9]{7,}|http://purl.obolibrary.org/obo/HP_[0-9]{4,}|http://purl.obolibrary.org/obo/GO_[0-9]{4,}|http://purl.obolibrary.org/obo/MP_[0-9]{3,}|http://purl.obolibrary.org/obo/MPATH_[0-9]{3,}$ for validation"""
-    if self.id and not re.match('^http://purl.bioontology.org/omim/OMIM_[0-9]{1,}|http://www.orpha.net/ORDO/Orphanet_[0-9]{1,}|http://purl.obolibrary.org/obo/DOID_[0-9]{2,}|http://www.ebi.ac.uk/efo/EFO_[0-9]{7,}|http://purl.obolibrary.org/obo/HP_[0-9]{4,}|http://purl.obolibrary.org/obo/GO_[0-9]{4,}|http://purl.obolibrary.org/obo/MP_[0-9]{3,}|http://purl.obolibrary.org/obo/MPATH_[0-9]{3,}$', self.id):
+    if self.id is not None and not re.match('^http://purl.bioontology.org/omim/OMIM_[0-9]{1,}|http://www.orpha.net/ORDO/Orphanet_[0-9]{1,}|http://purl.obolibrary.org/obo/DOID_[0-9]{2,}|http://www.ebi.ac.uk/efo/EFO_[0-9]{7,}|http://purl.obolibrary.org/obo/HP_[0-9]{4,}|http://purl.obolibrary.org/obo/GO_[0-9]{4,}|http://purl.obolibrary.org/obo/MP_[0-9]{3,}|http://purl.obolibrary.org/obo/MPATH_[0-9]{3,}$', self.id):
         logger.error("Disease - {0}.id '{1}'".format(path,self.id) + " does not match pattern '^http://purl.bioontology.org/omim/OMIM_[0-9]{1,}|http://www.orpha.net/ORDO/Orphanet_[0-9]{1,}|http://purl.obolibrary.org/obo/DOID_[0-9]{2,}|http://www.ebi.ac.uk/efo/EFO_[0-9]{7,}|http://purl.obolibrary.org/obo/HP_[0-9]{4,}|http://purl.obolibrary.org/obo/GO_[0-9]{4,}|http://purl.obolibrary.org/obo/MP_[0-9]{3,}|http://purl.obolibrary.org/obo/MPATH_[0-9]{3,}$'")
         logger.warn(json.dumps(self.id, sort_keys=True, indent=2))
-    if self.id and not isinstance(self.id, six.string_types):
+    if self.id is not None and not isinstance(self.id, six.string_types):
         logger.error("Disease - {0}.id type should be a string".format(path))
         error = error + 1
-    if self.name and not isinstance(self.name, six.string_types):
+    if self.name is not None and not isinstance(self.name, six.string_types):
         logger.error("Disease - {0}.name type should be a string".format(path))
         error = error + 1
-    if self.source_name and not isinstance(self.source_name, six.string_types):
+    if self.source_name is not None and not isinstance(self.source_name, six.string_types):
         logger.error("Disease - {0}.source_name type should be a string".format(path))
         error = error + 1
     if self.biosample:
@@ -287,10 +287,10 @@ class DiseaseBiosample(object):
     if self.name is None :
         logger.error("DiseaseBiosample - {0}.name is required".format(path))
         error = error + 1
-    if self.name and not isinstance(self.name, six.string_types):
+    if self.name is not None and not isinstance(self.name, six.string_types):
         logger.error("DiseaseBiosample - {0}.name type should be a string".format(path))
         error = error + 1
-    if self.id and not isinstance(self.id, six.string_types):
+    if self.id is not None and not isinstance(self.id, six.string_types):
         logger.error("DiseaseBiosample - {0}.id type should be a string".format(path))
         error = error + 1
     return error
@@ -466,41 +466,41 @@ class Target(Base):
         logger.error("Target - {0}.id is required".format(path))
         error = error + 1
     """ Check regex: ^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$ for validation"""
-    if self.id and not re.match('^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$', self.id):
+    if self.id is not None and not re.match('^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$', self.id):
         logger.error("Target - {0}.id '{1}'".format(path,self.id) + " does not match pattern '^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$'")
         logger.warn(json.dumps(self.id, sort_keys=True, indent=2))
-    if self.id and not isinstance(self.id, six.string_types):
+    if self.id is not None and not isinstance(self.id, six.string_types):
         logger.error("Target - {0}.id type should be a string".format(path))
         error = error + 1
     if not self.tier is None and not self.tier in ['tier 1','tier 2']:
         logger.error("Target - {0}.tier value is restricted to the fixed set of values 'tier 1','tier 2' ('{1}' given)".format(path, self.tier))
         error = error + 1
-    if self.tier and not isinstance(self.tier, six.string_types):
+    if self.tier is not None and not isinstance(self.tier, six.string_types):
         logger.error("Target - {0}.tier type should be a string".format(path))
         error = error + 1
     """ Check regex: ^CHEMBL[0-9]+$ for validation"""
-    if self.complex_id and not re.match('^CHEMBL[0-9]+$', self.complex_id):
+    if self.complex_id is not None and not re.match('^CHEMBL[0-9]+$', self.complex_id):
         logger.error("Target - {0}.complex_id '{1}'".format(path,self.complex_id) + " does not match pattern '^CHEMBL[0-9]+$'")
         logger.warn(json.dumps(self.complex_id, sort_keys=True, indent=2))
-    if self.complex_id and not isinstance(self.complex_id, six.string_types):
+    if self.complex_id is not None and not isinstance(self.complex_id, six.string_types):
         logger.error("Target - {0}.complex_id type should be a string".format(path))
         error = error + 1
-    if not self.complex_members is None and len(self.complex_members) > 0 and not all(isinstance(n, six.string_types) for n in self.complex_members):
+    if self.complex_members is not None and len(self.complex_members) > 0 and not all(isinstance(n, six.string_types) for n in self.complex_members):
         logger.error("Target - {0}.complex_members array should have elements of type 'six.string_types'".format(path))
         error = error+1
-    if self.complex_members and len(self.complex_members) < 1:
+    if self.complex_members is not None and len(self.complex_members) < 1:
         logger.error("Target - {0}.complex_members array should have at least 1 elements".format(path))
         error = error + 1
-    if self.complex_members and len(set(self.complex_members)) != len(self.complex_members):
+    if self.complex_members is not None and len(set(self.complex_members)) != len(self.complex_members):
         logger.error("Target - {0}.complex_members array have duplicated elements".format(path))
         error = error + 1
     """ Check regex: ^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$ for validation of array item"""
-    if self.complex_members and len(self.complex_members) > 0 and not all(re.match('^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$', n) for n in self.complex_members):
+    if self.complex_members is not None and len(self.complex_members) > 0 and not all(re.match('^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$', n) for n in self.complex_members):
         logger.error("Target - {0}.complex_members items".format(path) + " do not match pattern '^http://identifiers.org/ensembl/ENSG[0-9]{4,}$|^http://identifiers.org/uniprot/.{4,}$'")
     if not self.complex_type is None and not self.complex_type in ['http://identifiers.org/cttv.target/chimeric_protein','http://identifiers.org/cttv.target/protein_complex','http://identifiers.org/cttv.target/protein_complex_group','http://identifiers.org/cttv.target/protein_complex_heteropolymer','http://identifiers.org/cttv.target/protein_complex_homopolymer','http://identifiers.org/cttv.target/protein_family','http://identifiers.org/cttv.target/selectivity_group']:
         logger.error("Target - {0}.complex_type value is restricted to the fixed set of values 'http://identifiers.org/cttv.target/chimeric_protein','http://identifiers.org/cttv.target/protein_complex','http://identifiers.org/cttv.target/protein_complex_group','http://identifiers.org/cttv.target/protein_complex_heteropolymer','http://identifiers.org/cttv.target/protein_complex_homopolymer','http://identifiers.org/cttv.target/protein_family','http://identifiers.org/cttv.target/selectivity_group' ('{1}' given)".format(path, self.complex_type))
         error = error + 1
-    if self.complex_type and not isinstance(self.complex_type, six.string_types):
+    if self.complex_type is not None and not isinstance(self.complex_type, six.string_types):
         logger.error("Target - {0}.complex_type type should be a string".format(path))
         error = error + 1
     # target_type is mandatory
@@ -510,7 +510,7 @@ class Target(Base):
     if not self.target_type is None and not self.target_type in ['http://identifiers.org/cttv.target/gene_allele','http://identifiers.org/cttv.target/gene_evidence','http://identifiers.org/cttv.target/gene_in_LD_region','http://identifiers.org/cttv.target/gene_in_epigenetic_regulation_complex','http://identifiers.org/cttv.target/gene_variant','http://identifiers.org/cttv.target/pro_protein','http://identifiers.org/cttv.target/protein_evidence','http://identifiers.org/cttv.target/transcript_evidence','http://identifiers.org/cttv.target/transcript_isoform','http://identifiers.org/cttv.target/protein_isoform','http://identifiers.org/cttv.target/gene_or_protein_or_transcript']:
         logger.error("Target - {0}.target_type value is restricted to the fixed set of values 'http://identifiers.org/cttv.target/gene_allele','http://identifiers.org/cttv.target/gene_evidence','http://identifiers.org/cttv.target/gene_in_LD_region','http://identifiers.org/cttv.target/gene_in_epigenetic_regulation_complex','http://identifiers.org/cttv.target/gene_variant','http://identifiers.org/cttv.target/pro_protein','http://identifiers.org/cttv.target/protein_evidence','http://identifiers.org/cttv.target/transcript_evidence','http://identifiers.org/cttv.target/transcript_isoform','http://identifiers.org/cttv.target/protein_isoform','http://identifiers.org/cttv.target/gene_or_protein_or_transcript' ('{1}' given)".format(path, self.target_type))
         error = error + 1
-    if self.target_type and not isinstance(self.target_type, six.string_types):
+    if self.target_type is not None and not isinstance(self.target_type, six.string_types):
         logger.error("Target - {0}.target_type type should be a string".format(path))
         error = error + 1
     # activity is mandatory
@@ -520,13 +520,13 @@ class Target(Base):
     if not self.activity is None and not self.activity in ['http://identifiers.org/cttv.activity/decreased_transcript_level','http://identifiers.org/cttv.activity/decreased_translational_product_level','http://identifiers.org/cttv.activity/drug_negative_modulator','http://identifiers.org/cttv.activity/drug_positive_modulator','http://identifiers.org/cttv.activity/gain_of_function','http://identifiers.org/cttv.activity/increased_transcript_level','http://identifiers.org/cttv.activity/increased_translational_product_level','http://identifiers.org/cttv.activity/loss_of_function','http://identifiers.org/cttv.activity/partial_loss_of_function','http://identifiers.org/cttv.activity/up_or_down','http://identifiers.org/cttv.activity/up','http://identifiers.org/cttv.activity/down','http://identifiers.org/cttv.activity/tolerated','http://identifiers.org/cttv.activity/predicted','http://identifiers.org/cttv.activity/damaging','http://identifiers.org/cttv.activity/damaging_to_target','http://identifiers.org/cttv.activity/predicted_tolerated','http://identifiers.org/cttv.activity/predicted_damaging','http://identifiers.org/cttv.activity/tolerated_by_target','http://identifiers.org/cttv.activity/unknown']:
         logger.error("Target - {0}.activity value is restricted to the fixed set of values 'http://identifiers.org/cttv.activity/decreased_transcript_level','http://identifiers.org/cttv.activity/decreased_translational_product_level','http://identifiers.org/cttv.activity/drug_negative_modulator','http://identifiers.org/cttv.activity/drug_positive_modulator','http://identifiers.org/cttv.activity/gain_of_function','http://identifiers.org/cttv.activity/increased_transcript_level','http://identifiers.org/cttv.activity/increased_translational_product_level','http://identifiers.org/cttv.activity/loss_of_function','http://identifiers.org/cttv.activity/partial_loss_of_function','http://identifiers.org/cttv.activity/up_or_down','http://identifiers.org/cttv.activity/up','http://identifiers.org/cttv.activity/down','http://identifiers.org/cttv.activity/tolerated','http://identifiers.org/cttv.activity/predicted','http://identifiers.org/cttv.activity/damaging','http://identifiers.org/cttv.activity/damaging_to_target','http://identifiers.org/cttv.activity/predicted_tolerated','http://identifiers.org/cttv.activity/predicted_damaging','http://identifiers.org/cttv.activity/tolerated_by_target','http://identifiers.org/cttv.activity/unknown' ('{1}' given)".format(path, self.activity))
         error = error + 1
-    if self.activity and not isinstance(self.activity, six.string_types):
+    if self.activity is not None and not isinstance(self.activity, six.string_types):
         logger.error("Target - {0}.activity type should be a string".format(path))
         error = error + 1
-    if self.target_name and not isinstance(self.target_name, six.string_types):
+    if self.target_name is not None and not isinstance(self.target_name, six.string_types):
         logger.error("Target - {0}.target_name type should be a string".format(path))
         error = error + 1
-    if not self.target_class is None and len(self.target_class) > 0 and not all(isinstance(n, six.string_types) for n in self.target_class):
+    if self.target_class is not None and len(self.target_class) > 0 and not all(isinstance(n, six.string_types) for n in self.target_class):
         logger.error("Target - {0}.target_class array should have elements of type 'six.string_types'".format(path))
         error = error+1
     return error
@@ -639,17 +639,17 @@ class Phenotype(Base):
         logger.error("Phenotype - {0}.term_id is required".format(path))
         error = error + 1
     """ Check regex: ^http://purl.obolibrary.org/obo/HP_[0-9]{4,}||http://purl.obolibrary.org/obo/MP_[0-9]{4,}$ for validation"""
-    if self.term_id and not re.match('^http://purl.obolibrary.org/obo/HP_[0-9]{4,}||http://purl.obolibrary.org/obo/MP_[0-9]{4,}$', self.term_id):
+    if self.term_id is not None and not re.match('^http://purl.obolibrary.org/obo/HP_[0-9]{4,}||http://purl.obolibrary.org/obo/MP_[0-9]{4,}$', self.term_id):
         logger.error("Phenotype - {0}.term_id '{1}'".format(path,self.term_id) + " does not match pattern '^http://purl.obolibrary.org/obo/HP_[0-9]{4,}||http://purl.obolibrary.org/obo/MP_[0-9]{4,}$'")
         logger.warn(json.dumps(self.term_id, sort_keys=True, indent=2))
-    if self.term_id and not isinstance(self.term_id, six.string_types):
+    if self.term_id is not None and not isinstance(self.term_id, six.string_types):
         logger.error("Phenotype - {0}.term_id type should be a string".format(path))
         error = error + 1
     # label is mandatory
     if self.label is None :
         logger.error("Phenotype - {0}.label is required".format(path))
         error = error + 1
-    if self.label and not isinstance(self.label, six.string_types):
+    if self.label is not None and not isinstance(self.label, six.string_types):
         logger.error("Phenotype - {0}.label type should be a string".format(path))
         error = error + 1
     # species is mandatory
@@ -659,7 +659,7 @@ class Phenotype(Base):
     if not self.species is None and not self.species in ['mouse','human','rat','zebrafish','dog']:
         logger.error("Phenotype - {0}.species value is restricted to the fixed set of values 'mouse','human','rat','zebrafish','dog' ('{1}' given)".format(path, self.species))
         error = error + 1
-    if self.species and not isinstance(self.species, six.string_types):
+    if self.species is not None and not isinstance(self.species, six.string_types):
         logger.error("Phenotype - {0}.species type should be a string".format(path))
         error = error + 1
     return error
@@ -773,24 +773,24 @@ class Drug(Base):
         logger.error("Drug - {0}.id is required".format(path))
         error = error + 1
     """ Check regex: ^http://identifiers.org/chembl.compound/CHEMBL[0-9]+$|^http://private/.+$ for validation"""
-    if self.id and not re.match('^http://identifiers.org/chembl.compound/CHEMBL[0-9]+$|^http://private/.+$', self.id):
+    if self.id is not None and not re.match('^http://identifiers.org/chembl.compound/CHEMBL[0-9]+$|^http://private/.+$', self.id):
         logger.error("Drug - {0}.id '{1}'".format(path,self.id) + " does not match pattern '^http://identifiers.org/chembl.compound/CHEMBL[0-9]+$|^http://private/.+$'")
         logger.warn(json.dumps(self.id, sort_keys=True, indent=2))
-    if self.id and not isinstance(self.id, six.string_types):
+    if self.id is not None and not isinstance(self.id, six.string_types):
         logger.error("Drug - {0}.id type should be a string".format(path))
         error = error + 1
     # molecule_name is mandatory
     if self.molecule_name is None :
         logger.error("Drug - {0}.molecule_name is required".format(path))
         error = error + 1
-    if self.molecule_name and not isinstance(self.molecule_name, six.string_types):
+    if self.molecule_name is not None and not isinstance(self.molecule_name, six.string_types):
         logger.error("Drug - {0}.molecule_name type should be a string".format(path))
         error = error + 1
     # molecule_type is mandatory
     if self.molecule_type is None :
         logger.error("Drug - {0}.molecule_type is required".format(path))
         error = error + 1
-    if self.molecule_type and not isinstance(self.molecule_type, six.string_types):
+    if self.molecule_type is not None and not isinstance(self.molecule_type, six.string_types):
         logger.error("Drug - {0}.molecule_type type should be a string".format(path))
         error = error + 1
     if self.max_phase_for_all_diseases:
@@ -891,10 +891,10 @@ class Variant(Base):
         logger.error("Variant - {0}.id is required".format(path))
         error = error + 1
     """ Check regex: ^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}|http://identifiers.org/dbsnp/rs[0-9]{1,}|http://identifiers.org/dbsnp/esv[0-9]{1,}|http://identifiers.org/dbsnp/nsv[0-9]{1,}$ for validation"""
-    if self.id and not re.match('^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}|http://identifiers.org/dbsnp/rs[0-9]{1,}|http://identifiers.org/dbsnp/esv[0-9]{1,}|http://identifiers.org/dbsnp/nsv[0-9]{1,}$', self.id):
+    if self.id is not None and not re.match('^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}|http://identifiers.org/dbsnp/rs[0-9]{1,}|http://identifiers.org/dbsnp/esv[0-9]{1,}|http://identifiers.org/dbsnp/nsv[0-9]{1,}$', self.id):
         logger.error("Variant - {0}.id '{1}'".format(path,self.id) + " does not match pattern '^http://www.ncbi.nlm.nih.gov/clinvar/RCV[0-9]{9}|http://identifiers.org/dbsnp/rs[0-9]{1,}|http://identifiers.org/dbsnp/esv[0-9]{1,}|http://identifiers.org/dbsnp/nsv[0-9]{1,}$'")
         logger.warn(json.dumps(self.id, sort_keys=True, indent=2))
-    if self.id and not isinstance(self.id, six.string_types):
+    if self.id is not None and not isinstance(self.id, six.string_types):
         logger.error("Variant - {0}.id type should be a string".format(path))
         error = error + 1
     # type is mandatory
@@ -904,7 +904,7 @@ class Variant(Base):
     if not self.type is None and not self.type in ['snp single','snp snp interaction','structural variant']:
         logger.error("Variant - {0}.type value is restricted to the fixed set of values 'snp single','snp snp interaction','structural variant' ('{1}' given)".format(path, self.type))
         error = error + 1
-    if self.type and not isinstance(self.type, six.string_types):
+    if self.type is not None and not isinstance(self.type, six.string_types):
         logger.error("Variant - {0}.type type should be a string".format(path))
         error = error + 1
     return error

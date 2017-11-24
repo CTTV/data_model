@@ -97,14 +97,14 @@ class Linkout(object):
     if self.nice_name is None :
         logger.error("Linkout - {0}.nice_name is required".format(path))
         error = error + 1
-    if self.nice_name and not isinstance(self.nice_name, six.string_types):
+    if self.nice_name is not None and not isinstance(self.nice_name, six.string_types):
         logger.error("Linkout - {0}.nice_name type should be a string".format(path))
         error = error + 1
     # url is mandatory
     if self.url is None :
         logger.error("Linkout - {0}.url is required".format(path))
         error = error + 1
-    if self.url and not isinstance(self.url, six.string_types):
+    if self.url is not None and not isinstance(self.url, six.string_types):
         logger.error("Linkout - {0}.url type should be a string".format(path))
         error = error + 1
     return error

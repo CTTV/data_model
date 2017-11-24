@@ -135,13 +135,13 @@ class Base(object):
     """
     error = 0
     """ Check regex: http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}|[doi|DOI|https://dx.doi.org/]*[\s\.\:]{0,2}(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'])\S)+)|STUDYID_.+$ for validation"""
-    if self.unique_experiment_reference and not re.match('http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}|[doi|DOI|https://dx.doi.org/]*[\s\.\:]{0,2}(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'])\S)+)|STUDYID_.+$', self.unique_experiment_reference):
+    if self.unique_experiment_reference is not None and not re.match('http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}|[doi|DOI|https://dx.doi.org/]*[\s\.\:]{0,2}(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'])\S)+)|STUDYID_.+$', self.unique_experiment_reference):
         logger.error("Base - {0}.unique_experiment_reference '{1}'".format(path,self.unique_experiment_reference) + " does not match pattern 'http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}|[doi|DOI|https://dx.doi.org/]*[\s\.\:]{0,2}(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'])\S)+)|STUDYID_.+$'")
         logger.warn(json.dumps(self.unique_experiment_reference, sort_keys=True, indent=2))
-    if self.unique_experiment_reference and not isinstance(self.unique_experiment_reference, six.string_types):
+    if self.unique_experiment_reference is not None and not isinstance(self.unique_experiment_reference, six.string_types):
         logger.error("Base - {0}.unique_experiment_reference type should be a string".format(path))
         error = error + 1
-    if self.is_associated and not type(self.is_associated) is bool:
+    if self.is_associated is not None and not type(self.is_associated) is bool:
         logger.error("Base - {0}.is_associated type should be a boolean".format(path))
         error = error + 1
     if not self.date_asserted is None:
@@ -150,7 +150,7 @@ class Base(object):
         except iso8601.ParseError as e:
             logger.error("Base - {0}.date_asserted '{1}' invalid ISO 8601 date (YYYY-MM-DDThh:mm:ss.sTZD expected)".format(path, self.date_asserted))
             error = error+1
-    if self.date_asserted and not isinstance(self.date_asserted, six.string_types):
+    if self.date_asserted is not None and not isinstance(self.date_asserted, six.string_types):
         logger.error("Base - {0}.date_asserted type should be a string".format(path))
         error = error + 1
         if not ( isinstance(self.resource_score, evidence_association_score.Pvalue) or isinstance(self.resource_score, evidence_association_score.Probability) or isinstance(self.resource_score, evidence_association_score.Rank) or isinstance(self.resource_score, evidence_association_score.Summed_Total)):
@@ -255,10 +255,10 @@ class Single_Lit_Reference(object):
         logger.error("Single_Lit_Reference - {0}.lit_id is required".format(path))
         error = error + 1
     """ Check regex: http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}|[doi|DOI|https://dx.doi.org/]*[\s\.\:]{0,2}(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'])\S)+)$ for validation"""
-    if self.lit_id and not re.match('http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}|[doi|DOI|https://dx.doi.org/]*[\s\.\:]{0,2}(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'])\S)+)$', self.lit_id):
+    if self.lit_id is not None and not re.match('http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}|[doi|DOI|https://dx.doi.org/]*[\s\.\:]{0,2}(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'])\S)+)$', self.lit_id):
         logger.error("Single_Lit_Reference - {0}.lit_id '{1}'".format(path,self.lit_id) + " does not match pattern 'http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}|[doi|DOI|https://dx.doi.org/]*[\s\.\:]{0,2}(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'])\S)+)$'")
         logger.warn(json.dumps(self.lit_id, sort_keys=True, indent=2))
-    if self.lit_id and not isinstance(self.lit_id, six.string_types):
+    if self.lit_id is not None and not isinstance(self.lit_id, six.string_types):
         logger.error("Single_Lit_Reference - {0}.lit_id type should be a string".format(path))
         error = error + 1
     if self.rank:
@@ -268,10 +268,10 @@ class Single_Lit_Reference(object):
         else:
             rank_error = self.rank.validate(logger, path = '.'.join([path, 'rank']))
             error = error + rank_error
-    if not self.mined_sentences is None and len(self.mined_sentences) > 0 and not all(isinstance(n, Base_Mined_Sentences_Item) for n in self.mined_sentences):
+    if self.mined_sentences is not None and len(self.mined_sentences) > 0 and not all(isinstance(n, Base_Mined_Sentences_Item) for n in self.mined_sentences):
         logger.error("Single_Lit_Reference - {0}.mined_sentences array should have elements of type 'Base_Mined_Sentences_Item'".format(path))
         error = error+1
-    if self.mined_sentences and len(self.mined_sentences) < 1:
+    if self.mined_sentences is not None and len(self.mined_sentences) < 1:
         logger.error("Single_Lit_Reference - {0}.mined_sentences array should have at least 1 elements".format(path))
         error = error + 1
     return error
@@ -396,7 +396,7 @@ class Base_Mined_Sentences_Item(object):
     if self.text is None :
         logger.error("Base_Mined_Sentences_Item - {0}.text is required".format(path))
         error = error + 1
-    if self.text and not isinstance(self.text, six.string_types):
+    if self.text is not None and not isinstance(self.text, six.string_types):
         logger.error("Base_Mined_Sentences_Item - {0}.text type should be a string".format(path))
         error = error + 1
     # section is mandatory
@@ -406,7 +406,7 @@ class Base_Mined_Sentences_Item(object):
     if not self.section is None and not self.section in ['title','abstract','introduction_and_background','results','discussion','case_study','conclusion_and_future_work','appendix','figure','table','other']:
         logger.error("Base_Mined_Sentences_Item - {0}.section value is restricted to the fixed set of values 'title','abstract','introduction_and_background','results','discussion','case_study','conclusion_and_future_work','appendix','figure','table','other' ('{1}' given)".format(path, self.section))
         error = error + 1
-    if self.section and not isinstance(self.section, six.string_types):
+    if self.section is not None and not isinstance(self.section, six.string_types):
         logger.error("Base_Mined_Sentences_Item - {0}.section type should be a string".format(path))
         error = error + 1
     if self.t_start is not None and (self.t_start < 0):
@@ -594,7 +594,7 @@ class BaseExpert(object):
     :returns: number of errors found during validation
     """
     error = 0
-    if self.statement and not isinstance(self.statement, six.string_types):
+    if self.statement is not None and not isinstance(self.statement, six.string_types):
         logger.error("BaseExpert - {0}.statement type should be a string".format(path))
         error = error + 1
     if self.author:
@@ -608,7 +608,7 @@ class BaseExpert(object):
     if self.status is None :
         logger.error("BaseExpert - {0}.status is required".format(path))
         error = error + 1
-    if self.status and not type(self.status) is bool:
+    if self.status is not None and not type(self.status) is bool:
         logger.error("BaseExpert - {0}.status type should be a boolean".format(path))
         error = error + 1
     return error
@@ -690,17 +690,17 @@ class BaseAuthor(object):
     :returns: number of errors found during validation
     """
     error = 0
-    if self.organization and not isinstance(self.organization, six.string_types):
+    if self.organization is not None and not isinstance(self.organization, six.string_types):
         logger.error("BaseAuthor - {0}.organization type should be a string".format(path))
         error = error + 1
     if not self.email is None and not re.match('[\w.-]+@[\w.-]+.\w+', self.email):
         logger.error("BaseAuthor - {0}.email '{1}' is not a valid email address".format(path, self.email))
         logger.error(self.to_JSON)
         error = error + 1
-    if self.email and not isinstance(self.email, six.string_types):
+    if self.email is not None and not isinstance(self.email, six.string_types):
         logger.error("BaseAuthor - {0}.email type should be a string".format(path))
         error = error + 1
-    if self.name and not isinstance(self.name, six.string_types):
+    if self.name is not None and not isinstance(self.name, six.string_types):
         logger.error("BaseAuthor - {0}.name type should be a string".format(path))
         error = error + 1
     return error
@@ -766,13 +766,13 @@ class BaseLiterature(object):
     if self.references is None :
         logger.error("BaseLiterature - {0}.references is required".format(path))
         error = error + 1
-    if not self.references is None and len(self.references) > 0 and not all(isinstance(n, Single_Lit_Reference) for n in self.references):
+    if self.references is not None and len(self.references) > 0 and not all(isinstance(n, Single_Lit_Reference) for n in self.references):
         logger.error("BaseLiterature - {0}.references array should have elements of type 'Single_Lit_Reference'".format(path))
         error = error+1
-    if self.references and len(self.references) < 1:
+    if self.references is not None and len(self.references) < 1:
         logger.error("BaseLiterature - {0}.references array should have at least 1 elements".format(path))
         error = error + 1
-    if self.references and len(set(self.references)) != len(self.references):
+    if self.references is not None and len(set(self.references)) != len(self.references):
         logger.error("BaseLiterature - {0}.references array have duplicated elements".format(path))
         error = error + 1
     return error
@@ -862,14 +862,14 @@ class BaseDatabase(object):
     if self.id is None :
         logger.error("BaseDatabase - {0}.id is required".format(path))
         error = error + 1
-    if self.id and not isinstance(self.id, six.string_types):
+    if self.id is not None and not isinstance(self.id, six.string_types):
         logger.error("BaseDatabase - {0}.id type should be a string".format(path))
         error = error + 1
     # version is mandatory
     if self.version is None :
         logger.error("BaseDatabase - {0}.version is required".format(path))
         error = error + 1
-    if self.version and not isinstance(self.version, six.string_types):
+    if self.version is not None and not isinstance(self.version, six.string_types):
         logger.error("BaseDatabase - {0}.version type should be a string".format(path))
         error = error + 1
     return error
@@ -959,17 +959,17 @@ class BaseDbxref(object):
     if self.id is None :
         logger.error("BaseDbxref - {0}.id is required".format(path))
         error = error + 1
-    if self.id and not isinstance(self.id, six.string_types):
+    if self.id is not None and not isinstance(self.id, six.string_types):
         logger.error("BaseDbxref - {0}.id type should be a string".format(path))
         error = error + 1
-    if self.url and not isinstance(self.url, six.string_types):
+    if self.url is not None and not isinstance(self.url, six.string_types):
         logger.error("BaseDbxref - {0}.url type should be a string".format(path))
         error = error + 1
     # version is mandatory
     if self.version is None :
         logger.error("BaseDbxref - {0}.version is required".format(path))
         error = error + 1
-    if self.version and not isinstance(self.version, six.string_types):
+    if self.version is not None and not isinstance(self.version, six.string_types):
         logger.error("BaseDbxref - {0}.version type should be a string".format(path))
         error = error + 1
     return error
@@ -1183,14 +1183,14 @@ class Expression(Base):
     if self.provenance_type is None:
       logger.error("Expression - {0}.provenance_type is required".format(path))
       error = error + 1
-    if self.organism_part and not isinstance(self.organism_part, six.string_types):
+    if self.organism_part is not None and not isinstance(self.organism_part, six.string_types):
         logger.error("Expression - {0}.organism_part type should be a string".format(path))
         error = error + 1
     # comparison_name is mandatory
     if self.comparison_name is None :
         logger.error("Expression - {0}.comparison_name is required".format(path))
         error = error + 1
-    if self.comparison_name and not isinstance(self.comparison_name, six.string_types):
+    if self.comparison_name is not None and not isinstance(self.comparison_name, six.string_types):
         logger.error("Expression - {0}.comparison_name type should be a string".format(path))
         error = error + 1
     if self.log2_fold_change is None:
@@ -1206,14 +1206,14 @@ class Expression(Base):
     if self.test_sample is None :
         logger.error("Expression - {0}.test_sample is required".format(path))
         error = error + 1
-    if self.test_sample and not isinstance(self.test_sample, six.string_types):
+    if self.test_sample is not None and not isinstance(self.test_sample, six.string_types):
         logger.error("Expression - {0}.test_sample type should be a string".format(path))
         error = error + 1
     # reference_sample is mandatory
     if self.reference_sample is None :
         logger.error("Expression - {0}.reference_sample is required".format(path))
         error = error + 1
-    if self.reference_sample and not isinstance(self.reference_sample, six.string_types):
+    if self.reference_sample is not None and not isinstance(self.reference_sample, six.string_types):
         logger.error("Expression - {0}.reference_sample type should be a string".format(path))
         error = error + 1
     # test_replicates_n is mandatory
@@ -1237,33 +1237,33 @@ class Expression(Base):
     if not self.confidence_level is None and not self.confidence_level in ['high','medium','low']:
         logger.error("Expression - {0}.confidence_level value is restricted to the fixed set of values 'high','medium','low' ('{1}' given)".format(path, self.confidence_level))
         error = error + 1
-    if self.confidence_level and not isinstance(self.confidence_level, six.string_types):
+    if self.confidence_level is not None and not isinstance(self.confidence_level, six.string_types):
         logger.error("Expression - {0}.confidence_level type should be a string".format(path))
         error = error + 1
     # experiment_overview is mandatory
     if self.experiment_overview is None :
         logger.error("Expression - {0}.experiment_overview is required".format(path))
         error = error + 1
-    if self.experiment_overview and not isinstance(self.experiment_overview, six.string_types):
+    if self.experiment_overview is not None and not isinstance(self.experiment_overview, six.string_types):
         logger.error("Expression - {0}.experiment_overview type should be a string".format(path))
         error = error + 1
     # evidence_codes is mandatory
     if self.evidence_codes is None :
         logger.error("Expression - {0}.evidence_codes is required".format(path))
         error = error + 1
-    if not self.evidence_codes is None:
+    if self.evidence_codes is not None:
         validValues = ['http://purl.obolibrary.org/obo/ECO_0000356','http://purl.obolibrary.org/obo/ECO_0000357','http://purl.obolibrary.org/obo/ECO_0000358','http://purl.obolibrary.org/obo/ECO_0000359','http://purl.obolibrary.org/obo/ECO_0000205']
         for item in self.evidence_codes:
             if item not in validValues:
                 logger.error("Expression - {0}.evidence_codes value is restricted to the fixed set of values 'http://purl.obolibrary.org/obo/ECO_0000356','http://purl.obolibrary.org/obo/ECO_0000357','http://purl.obolibrary.org/obo/ECO_0000358','http://purl.obolibrary.org/obo/ECO_0000359','http://purl.obolibrary.org/obo/ECO_0000205' ('{1}' given)".format(path, item))
                 error = error + 1
-    if not self.evidence_codes is None and len(self.evidence_codes) > 0 and not all(isinstance(n, six.string_types) for n in self.evidence_codes):
+    if self.evidence_codes is not None and len(self.evidence_codes) > 0 and not all(isinstance(n, six.string_types) for n in self.evidence_codes):
         logger.error("Expression - {0}.evidence_codes array should have elements of type 'six.string_types'".format(path))
         error = error+1
-    if self.evidence_codes and len(self.evidence_codes) < 1:
+    if self.evidence_codes is not None and len(self.evidence_codes) < 1:
         logger.error("Expression - {0}.evidence_codes array should have at least 1 elements".format(path))
         error = error + 1
-    if not self.urls is None and len(self.urls) > 0 and not all(isinstance(n, evidence_linkout.Linkout) for n in self.urls):
+    if self.urls is not None and len(self.urls) > 0 and not all(isinstance(n, evidence_linkout.Linkout) for n in self.urls):
         logger.error("Expression - {0}.urls array should have elements of type 'evidence_linkout.Linkout'".format(path))
         error = error+1
     return error
@@ -1478,32 +1478,32 @@ class Literature_Curated(Base):
     if not self.clinical_significance is None and not self.clinical_significance in ['Pathogenic','Likely pathogenic','protective','association','risk_factor','Affects','drug response']:
         logger.error("Literature_Curated - {0}.clinical_significance value is restricted to the fixed set of values 'Pathogenic','Likely pathogenic','protective','association','risk_factor','Affects','drug response' ('{1}' given)".format(path, self.clinical_significance))
         error = error + 1
-    if self.clinical_significance and not isinstance(self.clinical_significance, six.string_types):
+    if self.clinical_significance is not None and not isinstance(self.clinical_significance, six.string_types):
         logger.error("Literature_Curated - {0}.clinical_significance type should be a string".format(path))
         error = error + 1
     # evidence_codes is mandatory
     if self.evidence_codes is None :
         logger.error("Literature_Curated - {0}.evidence_codes is required".format(path))
         error = error + 1
-    if not self.evidence_codes is None:
+    if self.evidence_codes is not None:
         validValues = ['http://purl.obolibrary.org/obo/ECO_0000213','http://purl.obolibrary.org/obo/ECO_0000305','http://www.targetvalidation.org/evidence/literature_mining','http://purl.obolibrary.org/obo/ECO_0000204','http://purl.obolibrary.org/obo/ECO_0000205','http://purl.obolibrary.org/obo/ECO_0000053']
         for item in self.evidence_codes:
             if item not in validValues:
                 logger.error("Literature_Curated - {0}.evidence_codes value is restricted to the fixed set of values 'http://purl.obolibrary.org/obo/ECO_0000213','http://purl.obolibrary.org/obo/ECO_0000305','http://www.targetvalidation.org/evidence/literature_mining','http://purl.obolibrary.org/obo/ECO_0000204','http://purl.obolibrary.org/obo/ECO_0000205','http://purl.obolibrary.org/obo/ECO_0000053' ('{1}' given)".format(path, item))
                 error = error + 1
-    if not self.evidence_codes is None and len(self.evidence_codes) > 0 and not all(isinstance(n, six.string_types) for n in self.evidence_codes):
+    if self.evidence_codes is not None and len(self.evidence_codes) > 0 and not all(isinstance(n, six.string_types) for n in self.evidence_codes):
         logger.error("Literature_Curated - {0}.evidence_codes array should have elements of type 'six.string_types'".format(path))
         error = error+1
-    if self.evidence_codes and len(self.evidence_codes) < 1:
+    if self.evidence_codes is not None and len(self.evidence_codes) < 1:
         logger.error("Literature_Curated - {0}.evidence_codes array should have at least 1 elements".format(path))
         error = error + 1
-    if not self.known_mutations is None and len(self.known_mutations) > 0 and not all(isinstance(n, evidence_mutation.Mutation) for n in self.known_mutations):
+    if self.known_mutations is not None and len(self.known_mutations) > 0 and not all(isinstance(n, evidence_mutation.Mutation) for n in self.known_mutations):
         logger.error("Literature_Curated - {0}.known_mutations array should have elements of type 'evidence_mutation.Mutation'".format(path))
         error = error+1
-    if self.known_mutations and len(self.known_mutations) < 0:
+    if self.known_mutations is not None and len(self.known_mutations) < 0:
         logger.error("Literature_Curated - {0}.known_mutations array should have at least 0 elements".format(path))
         error = error + 1
-    if not self.urls is None and len(self.urls) > 0 and not all(isinstance(n, evidence_linkout.Linkout) for n in self.urls):
+    if self.urls is not None and len(self.urls) > 0 and not all(isinstance(n, evidence_linkout.Linkout) for n in self.urls):
         logger.error("Literature_Curated - {0}.urls array should have elements of type 'evidence_linkout.Linkout'".format(path))
         error = error+1
     return error
@@ -1609,16 +1609,16 @@ class Literature_Mining(Base):
     if self.evidence_codes is None :
         logger.error("Literature_Mining - {0}.evidence_codes is required".format(path))
         error = error + 1
-    if not self.evidence_codes is None:
+    if self.evidence_codes is not None:
         validValues = ['http://www.targetvalidation.org/evidence/literature_mining','http://purl.obolibrary.org/obo/ECO_0000213']
         for item in self.evidence_codes:
             if item not in validValues:
                 logger.error("Literature_Mining - {0}.evidence_codes value is restricted to the fixed set of values 'http://www.targetvalidation.org/evidence/literature_mining','http://purl.obolibrary.org/obo/ECO_0000213' ('{1}' given)".format(path, item))
                 error = error + 1
-    if not self.evidence_codes is None and len(self.evidence_codes) > 0 and not all(isinstance(n, six.string_types) for n in self.evidence_codes):
+    if self.evidence_codes is not None and len(self.evidence_codes) > 0 and not all(isinstance(n, six.string_types) for n in self.evidence_codes):
         logger.error("Literature_Mining - {0}.evidence_codes array should have elements of type 'six.string_types'".format(path))
         error = error+1
-    if self.evidence_codes and len(self.evidence_codes) < 1:
+    if self.evidence_codes is not None and len(self.evidence_codes) < 1:
         logger.error("Literature_Mining - {0}.evidence_codes array should have at least 1 elements".format(path))
         error = error + 1
     if self.literature_ref is None:

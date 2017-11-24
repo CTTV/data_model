@@ -140,17 +140,17 @@ class Method(object):
     :returns: number of errors found during validation
     """
     error = 0
-    if self.description and not isinstance(self.description, six.string_types):
+    if self.description is not None and not isinstance(self.description, six.string_types):
         logger.error("Method - {0}.description type should be a string".format(path))
         error = error + 1
     """ Check regex: http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}$ for validation"""
-    if self.reference and not re.match('http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}$', self.reference):
+    if self.reference is not None and not re.match('http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}$', self.reference):
         logger.error("Method - {0}.reference '{1}'".format(path,self.reference) + " does not match pattern 'http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}$'")
         logger.warn(json.dumps(self.reference, sort_keys=True, indent=2))
-    if self.reference and not isinstance(self.reference, six.string_types):
+    if self.reference is not None and not isinstance(self.reference, six.string_types):
         logger.error("Method - {0}.reference type should be a string".format(path))
         error = error + 1
-    if self.url and not isinstance(self.url, six.string_types):
+    if self.url is not None and not isinstance(self.url, six.string_types):
         logger.error("Method - {0}.url type should be a string".format(path))
         error = error + 1
     return error
@@ -245,7 +245,7 @@ class Probability(Base):
     if not self.type is None and not self.type in ['probability']:
         logger.error("Probability - {0}.type value is restricted to the fixed set of values 'probability' ('{1}' given)".format(path, self.type))
         error = error + 1
-    if self.type and not isinstance(self.type, six.string_types):
+    if self.type is not None and not isinstance(self.type, six.string_types):
         logger.error("Probability - {0}.type type should be a string".format(path))
         error = error + 1
     # value is mandatory
@@ -354,7 +354,7 @@ class Pvalue(Base):
     if not self.type is None and not self.type in ['pvalue']:
         logger.error("Pvalue - {0}.type value is restricted to the fixed set of values 'pvalue' ('{1}' given)".format(path, self.type))
         error = error + 1
-    if self.type and not isinstance(self.type, six.string_types):
+    if self.type is not None and not isinstance(self.type, six.string_types):
         logger.error("Pvalue - {0}.type type should be a string".format(path))
         error = error + 1
     # value is mandatory
@@ -468,7 +468,7 @@ class Rank(object):
     if not self.type is None and not self.type in ['rank']:
         logger.error("Rank - {0}.type value is restricted to the fixed set of values 'rank' ('{1}' given)".format(path, self.type))
         error = error + 1
-    if self.type and not isinstance(self.type, six.string_types):
+    if self.type is not None and not isinstance(self.type, six.string_types):
         logger.error("Rank - {0}.type type should be a string".format(path))
         error = error + 1
     # position is mandatory
@@ -585,7 +585,7 @@ class Summed_Total(Base):
     if not self.type is None and not self.type in ['summed_total']:
         logger.error("Summed_Total - {0}.type value is restricted to the fixed set of values 'summed_total' ('{1}' given)".format(path, self.type))
         error = error + 1
-    if self.type and not isinstance(self.type, six.string_types):
+    if self.type is not None and not isinstance(self.type, six.string_types):
         logger.error("Summed_Total - {0}.type type should be a string".format(path))
         error = error + 1
     # value is mandatory

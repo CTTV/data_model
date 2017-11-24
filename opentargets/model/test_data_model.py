@@ -150,6 +150,18 @@ def test_genomics_englad_create_and_clone():
             lit_url = "http://europepmc.org/abstract/MED/00000000"
             single_lit_ref_list.append(evidence_core.Single_Lit_Reference(lit_id=lit_url))
 
+    if True == False:
+        print("sdasdasd")
+        sys.exit(1)
+    bl = evidence_core.BaseLiterature(
+        references=list())
+    er = bl.validate(logger)
+    assert bl.references is not None
+    assert not len(bl.references) < 1
+    print(json.dumps(bl.serialize()))
+    print(er)
+    assert er == 0
+
     provenance_type = evidence_core.BaseProvenance_Type(
         database=evidence_core.BaseDatabase(
             id="Genomics England PanelApp",

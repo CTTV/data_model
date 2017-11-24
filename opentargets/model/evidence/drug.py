@@ -153,33 +153,33 @@ class Target2Drug(evidence_core.Base):
     if self.evidence_codes is None :
         logger.error("Target2Drug - {0}.evidence_codes is required".format(path))
         error = error + 1
-    if not self.evidence_codes is None:
+    if self.evidence_codes is not None:
         validValues = ['http://identifiers.org/eco/target_drug','http://purl.obolibrary.org/obo/ECO_0000205']
         for item in self.evidence_codes:
             if item not in validValues:
                 logger.error("Target2Drug - {0}.evidence_codes value is restricted to the fixed set of values 'http://identifiers.org/eco/target_drug','http://purl.obolibrary.org/obo/ECO_0000205' ('{1}' given)".format(path, item))
                 error = error + 1
-    if not self.evidence_codes is None and len(self.evidence_codes) > 0 and not all(isinstance(n, six.string_types) for n in self.evidence_codes):
+    if self.evidence_codes is not None and len(self.evidence_codes) > 0 and not all(isinstance(n, six.string_types) for n in self.evidence_codes):
         logger.error("Target2Drug - {0}.evidence_codes array should have elements of type 'six.string_types'".format(path))
         error = error+1
-    if self.evidence_codes and len(self.evidence_codes) < 1:
+    if self.evidence_codes is not None and len(self.evidence_codes) < 1:
         logger.error("Target2Drug - {0}.evidence_codes array should have at least 1 elements".format(path))
         error = error + 1
     # mechanism_of_action is mandatory
     if self.mechanism_of_action is None :
         logger.error("Target2Drug - {0}.mechanism_of_action is required".format(path))
         error = error + 1
-    if self.mechanism_of_action and not isinstance(self.mechanism_of_action, six.string_types):
+    if self.mechanism_of_action is not None and not isinstance(self.mechanism_of_action, six.string_types):
         logger.error("Target2Drug - {0}.mechanism_of_action type should be a string".format(path))
         error = error + 1
     # action_type is mandatory
     if self.action_type is None :
         logger.error("Target2Drug - {0}.action_type is required".format(path))
         error = error + 1
-    if self.action_type and not isinstance(self.action_type, six.string_types):
+    if self.action_type is not None and not isinstance(self.action_type, six.string_types):
         logger.error("Target2Drug - {0}.action_type type should be a string".format(path))
         error = error + 1
-    if not self.urls is None and len(self.urls) > 0 and not all(isinstance(n, evidence_linkout.Linkout) for n in self.urls):
+    if self.urls is not None and len(self.urls) > 0 and not all(isinstance(n, evidence_linkout.Linkout) for n in self.urls):
         logger.error("Target2Drug - {0}.urls array should have elements of type 'evidence_linkout.Linkout'".format(path))
         error = error+1
     return error
@@ -306,16 +306,16 @@ class Drug2Clinic(evidence_core.Base):
     if self.evidence_codes is None :
         logger.error("Drug2Clinic - {0}.evidence_codes is required".format(path))
         error = error + 1
-    if not self.evidence_codes is None:
+    if self.evidence_codes is not None:
         validValues = ['http://identifiers.org/eco/drug_disease','http://purl.obolibrary.org/obo/ECO_0000205']
         for item in self.evidence_codes:
             if item not in validValues:
                 logger.error("Drug2Clinic - {0}.evidence_codes value is restricted to the fixed set of values 'http://identifiers.org/eco/drug_disease','http://purl.obolibrary.org/obo/ECO_0000205' ('{1}' given)".format(path, item))
                 error = error + 1
-    if not self.evidence_codes is None and len(self.evidence_codes) > 0 and not all(isinstance(n, six.string_types) for n in self.evidence_codes):
+    if self.evidence_codes is not None and len(self.evidence_codes) > 0 and not all(isinstance(n, six.string_types) for n in self.evidence_codes):
         logger.error("Drug2Clinic - {0}.evidence_codes array should have elements of type 'six.string_types'".format(path))
         error = error+1
-    if self.evidence_codes and len(self.evidence_codes) < 1:
+    if self.evidence_codes is not None and len(self.evidence_codes) < 1:
         logger.error("Drug2Clinic - {0}.evidence_codes array should have at least 1 elements".format(path))
         error = error + 1
     if self.max_phase_for_disease is None:
@@ -327,10 +327,10 @@ class Drug2Clinic(evidence_core.Base):
     else:
         max_phase_for_disease_error = self.max_phase_for_disease.validate(logger, path = '.'.join([path, 'max_phase_for_disease']))
         error = error + max_phase_for_disease_error
-    if not self.urls is None and len(self.urls) > 0 and not all(isinstance(n, evidence_linkout.Linkout) for n in self.urls):
+    if self.urls is not None and len(self.urls) > 0 and not all(isinstance(n, evidence_linkout.Linkout) for n in self.urls):
         logger.error("Drug2Clinic - {0}.urls array should have elements of type 'evidence_linkout.Linkout'".format(path))
         error = error+1
-    if self.status and not isinstance(self.status, six.string_types):
+    if self.status is not None and not isinstance(self.status, six.string_types):
         logger.error("Drug2Clinic - {0}.status type should be a string".format(path))
         error = error + 1
     return error
@@ -412,7 +412,7 @@ class Diseasephase(object):
     if self.label is None :
         logger.error("Diseasephase - {0}.label is required".format(path))
         error = error + 1
-    if self.label and not isinstance(self.label, six.string_types):
+    if self.label is not None and not isinstance(self.label, six.string_types):
         logger.error("Diseasephase - {0}.label type should be a string".format(path))
         error = error + 1
     return error
