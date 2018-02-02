@@ -34,7 +34,7 @@ __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.8"
+__version__ = "1.2.7"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -184,8 +184,8 @@ class Base(object):
     if self.unique_association_fields and not isinstance(self.unique_association_fields, dict):
         logger.error("Basedictionary expected for attribute - {0}.unique_association_fields".format(path))
         error = error + 1
-    if not self.validated_against_schema_version is None and not self.validated_against_schema_version in ['1.2.8']:
-        logger.error("Base - {0}.validated_against_schema_version value is restricted to the fixed set of values '1.2.8' ('{1}' given)".format(path, self.validated_against_schema_version))
+    if not self.validated_against_schema_version is None and not self.validated_against_schema_version in ['1.2.7']:
+        logger.error("Base - {0}.validated_against_schema_version value is restricted to the fixed set of values '1.2.7' ('{1}' given)".format(path, self.validated_against_schema_version))
         error = error + 1
     if self.validated_against_schema_version and not isinstance(self.validated_against_schema_version, basestring):
         logger.error("Base - {0}.validated_against_schema_version type should be a string".format(path))
