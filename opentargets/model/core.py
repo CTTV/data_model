@@ -162,8 +162,8 @@ class Base(object):
     if self.access_level is not None and not isinstance(self.access_level, six.string_types):
         logger.error("Base - {0}.access_level type should be a string".format(path))
         error = error + 1
-    if not self.validated_against_schema_version is None and not self.validated_against_schema_version in ['1.2.7']:
-        logger.error("Base - {0}.validated_against_schema_version value is restricted to the fixed set of values '1.2.7' ('{1}' given)".format(path, self.validated_against_schema_version))
+    if not self.validated_against_schema_version is None and not self.validated_against_schema_version in ['1.2.8']:
+        logger.error("Base - {0}.validated_against_schema_version value is restricted to the fixed set of values '1.2.8' ('{1}' given)".format(path, self.validated_against_schema_version))
         error = error + 1
     if self.validated_against_schema_version is not None and not isinstance(self.validated_against_schema_version, six.string_types):
         logger.error("Base - {0}.validated_against_schema_version type should be a string".format(path))
