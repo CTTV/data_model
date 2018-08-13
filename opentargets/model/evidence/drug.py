@@ -30,10 +30,10 @@ import opentargets.model.evidence.core
 import opentargets.model.evidence.linkout as evidence_linkout
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2017, Open Targets"
+__copyright__ = "Copyright 2014-2018, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.7"
+__version__ = "1.2.8"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -68,6 +68,7 @@ class Target2Drug(evidence_core.Base):
     Name: evidence_codes
     Type: array
     Description: An array of evidence codes
+    Can be null: False
     Required: {True}
     """
     self.evidence_codes = evidence_codes
@@ -75,6 +76,7 @@ class Target2Drug(evidence_core.Base):
     """
     Name: mechanism_of_action
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.mechanism_of_action = mechanism_of_action
@@ -82,6 +84,7 @@ class Target2Drug(evidence_core.Base):
     """
     Name: action_type
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.action_type = action_type
@@ -89,6 +92,7 @@ class Target2Drug(evidence_core.Base):
     """
     Name: urls
     Type: array
+    Can be null: False
     """
     self.urls = urls
   
@@ -110,7 +114,7 @@ class Target2Drug(evidence_core.Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['evidence_codes','mechanism_of_action','action_type','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = super(Target2Drug, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Target2Drug - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'evidence_codes' in dict_obj:
@@ -226,6 +230,7 @@ class Drug2Clinic(evidence_core.Base):
     Name: evidence_codes
     Type: array
     Description: An array of evidence codes
+    Can be null: False
     Required: {True}
     """
     self.evidence_codes = evidence_codes
@@ -237,12 +242,14 @@ class Drug2Clinic(evidence_core.Base):
     """
     Name: urls
     Type: array
+    Can be null: False
     """
     self.urls = urls
     
     """
     Name: status
     Type: string
+    Can be null: False
     """
     self.status = status
   
@@ -263,7 +270,7 @@ class Drug2Clinic(evidence_core.Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['evidence_codes','max_phase_for_disease','urls','status','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = super(Drug2Clinic, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Drug2Clinic - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'evidence_codes' in dict_obj:
@@ -365,6 +372,7 @@ class Diseasephase(object):
     Name: numeric_index
     Type: number
     Description: An integer indicating the position of this study phase. Higher the number = more advanced phase.
+    Can be null: False
     Required: {True}
     """
     self.numeric_index = numeric_index
@@ -372,6 +380,7 @@ class Diseasephase(object):
     """
     Name: label
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.label = label
@@ -389,7 +398,7 @@ class Diseasephase(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['numeric_index','label']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Diseasephase - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'numeric_index' in dict_obj:

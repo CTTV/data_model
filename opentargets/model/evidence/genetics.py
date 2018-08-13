@@ -30,10 +30,10 @@ import opentargets.model.evidence.core
 import opentargets.model.evidence.linkout as evidence_linkout
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2017, Open Targets"
+__copyright__ = "Copyright 2014-2018, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.7"
+__version__ = "1.2.8"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -67,6 +67,7 @@ class Gene2Variant(evidence_core.Base):
     Name: evidence_codes
     Type: array
     Description: An array of evidence codes
+    Can be null: False
     Required: {True}
     """
     self.evidence_codes = evidence_codes
@@ -74,6 +75,7 @@ class Gene2Variant(evidence_core.Base):
     """
     Name: functional_consequence
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.functional_consequence = functional_consequence
@@ -81,6 +83,7 @@ class Gene2Variant(evidence_core.Base):
     """
     Name: urls
     Type: array
+    Can be null: False
     """
     self.urls = urls
   
@@ -100,7 +103,7 @@ class Gene2Variant(evidence_core.Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['evidence_codes','functional_consequence','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = super(Gene2Variant, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Gene2Variant - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'evidence_codes' in dict_obj:
@@ -206,6 +209,7 @@ class Variant2Disease(evidence_core.Base):
     """
     Name: clinical_significance
     Type: string
+    Can be null: False
     """
     self.clinical_significance = clinical_significance
     
@@ -213,6 +217,7 @@ class Variant2Disease(evidence_core.Base):
     Name: gwas_panel_resolution
     Type: number
     Description: Panel resolution of GWAS study
+    Can be null: False
     """
     self.gwas_panel_resolution = gwas_panel_resolution
     
@@ -220,6 +225,7 @@ class Variant2Disease(evidence_core.Base):
     Name: gwas_sample_size
     Type: number
     Description: Sample size of GWAS study
+    Can be null: False
     """
     self.gwas_sample_size = gwas_sample_size
     
@@ -227,6 +233,7 @@ class Variant2Disease(evidence_core.Base):
     Name: evidence_codes
     Type: array
     Description: An array of evidence codes
+    Can be null: False
     Required: {True}
     """
     self.evidence_codes = evidence_codes
@@ -234,6 +241,7 @@ class Variant2Disease(evidence_core.Base):
     """
     Name: urls
     Type: array
+    Can be null: False
     """
     self.urls = urls
   
@@ -257,7 +265,7 @@ class Variant2Disease(evidence_core.Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['clinical_significance','gwas_panel_resolution','gwas_sample_size','evidence_codes','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = super(Variant2Disease, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Variant2Disease - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'clinical_significance' in dict_obj:
@@ -318,10 +326,10 @@ class Variant2Disease(evidence_core.Base):
         logger.error("Variant2Disease - {0}.evidence_codes is required".format(path))
         error = error + 1
     if self.evidence_codes is not None:
-        validValues = ['http://identifiers.org/eco/GWAS','http://purl.obolibrary.org/obo/ECO_0000205']
+        validValues = ['http://identifiers.org/eco/GWAS','http://identifiers.org/eco/PheWAS','http://purl.obolibrary.org/obo/ECO_0000205']
         for item in self.evidence_codes:
             if item not in validValues:
-                logger.error("Variant2Disease - {0}.evidence_codes value is restricted to the fixed set of values 'http://identifiers.org/eco/GWAS','http://purl.obolibrary.org/obo/ECO_0000205' ('{1}' given)".format(path, item))
+                logger.error("Variant2Disease - {0}.evidence_codes value is restricted to the fixed set of values 'http://identifiers.org/eco/GWAS','http://identifiers.org/eco/PheWAS','http://purl.obolibrary.org/obo/ECO_0000205' ('{1}' given)".format(path, item))
                 error = error + 1
     if self.evidence_codes is not None and len(self.evidence_codes) > 0 and not all(isinstance(n, six.string_types) for n in self.evidence_codes):
         logger.error("Variant2Disease - {0}.evidence_codes array should have elements of type 'six.string_types'".format(path))

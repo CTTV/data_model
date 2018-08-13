@@ -28,10 +28,10 @@ import six
 import collections
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2017, Open Targets"
+__copyright__ = "Copyright 2014-2018, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.7"
+__version__ = "1.2.8"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -52,7 +52,7 @@ class Base(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Base - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     return obj
@@ -91,6 +91,7 @@ class Method(object):
     """
     Name: description
     Type: string
+    Can be null: False
     """
     self.description = description
     
@@ -98,12 +99,14 @@ class Method(object):
     Name: reference
     Type: string
     Description: Note for pubmed identifiers, use the URI http://europepmc.org/abstract/MED/[0-9]+
+    Can be null: False
     """
     self.reference = reference
     
     """
     Name: url
     Type: string
+    Can be null: False
     String format: uri
     """
     self.url = url
@@ -123,7 +126,7 @@ class Method(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['description','reference','url']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Method - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'description' in dict_obj:
@@ -184,6 +187,7 @@ class Probability(Base):
     """
     Name: type
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.type = type
@@ -191,6 +195,7 @@ class Probability(Base):
     """
     Name: value
     Type: number
+    Can be null: False
     Required: {True}
     """
     self.value = value
@@ -215,7 +220,7 @@ class Probability(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['type','value','method']
     obj = super(Probability, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Probability - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
@@ -293,6 +298,7 @@ class Pvalue(Base):
     """
     Name: type
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.type = type
@@ -300,6 +306,7 @@ class Pvalue(Base):
     """
     Name: value
     Type: number
+    Can be null: False
     Required: {True}
     """
     self.value = value
@@ -324,7 +331,7 @@ class Pvalue(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['type','value','method']
     obj = super(Pvalue, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Pvalue - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
@@ -403,6 +410,7 @@ class Rank(object):
     """
     Name: type
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.type = type
@@ -410,6 +418,7 @@ class Rank(object):
     """
     Name: position
     Type: number
+    Can be null: False
     Required: {True}
     """
     self.position = position
@@ -417,6 +426,7 @@ class Rank(object):
     """
     Name: sample_size
     Type: number
+    Can be null: False
     Required: {True}
     """
     self.sample_size = sample_size
@@ -442,7 +452,7 @@ class Rank(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['type','position','sample_size','method']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Rank - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
@@ -524,6 +534,7 @@ class Summed_Total(Base):
     """
     Name: type
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.type = type
@@ -531,6 +542,7 @@ class Summed_Total(Base):
     """
     Name: value
     Type: number
+    Can be null: False
     Required: {True}
     """
     self.value = value
@@ -555,7 +567,7 @@ class Summed_Total(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['type','value','method']
     obj = super(Summed_Total, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Summed_Total - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:

@@ -28,10 +28,10 @@ import six
 import collections
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2017, Open Targets"
+__copyright__ = "Copyright 2014-2018, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.7"
+__version__ = "1.2.8"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -60,6 +60,7 @@ class Mutation(object):
     Name: role_in_cancer
     Type: string
     Description: The role in cancer can be TSG, oncogene or gene_fusion
+    Can be null: False
     """
     self.role_in_cancer = role_in_cancer
     
@@ -67,6 +68,7 @@ class Mutation(object):
     Name: preferred_name
     Type: string
     Description: The preferred name for this mutation, e.g. NM_005228.3(EGFR):c.2500G>T (p.Val834Leu)
+    Can be null: False
     Required: {True}
     """
     self.preferred_name = preferred_name
@@ -75,6 +77,7 @@ class Mutation(object):
     Name: alternative_names
     Type: array
     Description: A list of alternative names for this mutation, if known e.g. NC_000007.14:g.55191749G>T
+    Can be null: False
     """
     self.alternative_names = alternative_names
     
@@ -82,6 +85,7 @@ class Mutation(object):
     Name: functional_consequence
     Type: string
     Description: For COSMIC: sequence alteration, deletion, missense_variant, stop_gained, terminator_codon_variant, translational product variant, amino acid insertion, conservative decrease in CDS length, mutation causing uncharacterised change of translational product
+    Can be null: False
     Required: {True}
     """
     self.functional_consequence = functional_consequence
@@ -90,6 +94,7 @@ class Mutation(object):
     Name: number_samples_tested
     Type: number
     Description: The number of samples tested
+    Can be null: False
     """
     self.number_samples_tested = number_samples_tested
     
@@ -97,6 +102,7 @@ class Mutation(object):
     Name: number_samples_with_mutation_type
     Type: number
     Description: The number of samples for this mutation type if known
+    Can be null: False
     """
     self.number_samples_with_mutation_type = number_samples_with_mutation_type
     
@@ -104,6 +110,7 @@ class Mutation(object):
     Name: number_mutated_samples
     Type: number
     Description: The total number of samples with any type of mutation if known
+    Can be null: False
     """
     self.number_mutated_samples = number_mutated_samples
     
@@ -111,6 +118,7 @@ class Mutation(object):
     Name: inheritance_pattern
     Type: string
     Description: dominant (a single copy of the abnormal allele is sufficient to give rise to the disease), semi-dominant, or recessive (requiring both copies of the gene to have an abnormal allele)
+    Can be null: False
     """
     self.inheritance_pattern = inheritance_pattern
   
@@ -139,7 +147,7 @@ class Mutation(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['role_in_cancer','preferred_name','alternative_names','functional_consequence','number_samples_tested','number_samples_with_mutation_type','number_mutated_samples','inheritance_pattern']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Mutation - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'role_in_cancer' in dict_obj:
@@ -186,8 +194,8 @@ class Mutation(object):
     if self.functional_consequence is None :
         logger.error("Mutation - {0}.functional_consequence is required".format(path))
         error = error + 1
-    if not self.functional_consequence is None and not self.functional_consequence in ['http://purl.obolibrary.org/obo/SO_0001893','http://purl.obolibrary.org/obo/SO_0001632','http://purl.obolibrary.org/obo/SO_0001631','http://purl.obolibrary.org/obo/SO_0000159','http://purl.obolibrary.org/obo/SO_0001583','http://purl.obolibrary.org/obo/SO_0001587','http://purl.obolibrary.org/obo/SO_0001590','http://purl.obolibrary.org/obo/SO_1000065','http://purl.obolibrary.org/obo/SO_0001539','http://purl.obolibrary.org/obo/SO_0001605','http://purl.obolibrary.org/obo/SO_0001825','http://purl.obolibrary.org/obo/SO_0001553','http://purl.obolibrary.org/obo/SO_0001059','http://purl.obolibrary.org/obo/SO_0001821','http://purl.obolibrary.org/obo/SO_0001578','http://purl.obolibrary.org/obo/SO_0001630','http://purl.obolibrary.org/obo/SO_0001575','http://purl.obolibrary.org/obo/SO_0001589','http://targetvalidation.org/sequence/nearest_gene_five_prime_end','http://purl.obolibrary.org/obo/SO_0001574','http://purl.obolibrary.org/obo/SO_0001819','http://purl.obolibrary.org/obo/SO_0001822','http://purl.obolibrary.org/obo/SO_0001818','http://purl.obolibrary.org/obo/SO_0001564','http://purl.obolibrary.org/obo/SO_0001565','http://purl.obolibrary.org/obo/SO_0002012','http://purl.obolibrary.org/obo/SO_0001627','http://purl.obolibrary.org/obo/SO_0001060','http://purl.obolibrary.org/obo/SO_0001624']:
-        logger.error("Mutation - {0}.functional_consequence value is restricted to the fixed set of values 'http://purl.obolibrary.org/obo/SO_0001893','http://purl.obolibrary.org/obo/SO_0001632','http://purl.obolibrary.org/obo/SO_0001631','http://purl.obolibrary.org/obo/SO_0000159','http://purl.obolibrary.org/obo/SO_0001583','http://purl.obolibrary.org/obo/SO_0001587','http://purl.obolibrary.org/obo/SO_0001590','http://purl.obolibrary.org/obo/SO_1000065','http://purl.obolibrary.org/obo/SO_0001539','http://purl.obolibrary.org/obo/SO_0001605','http://purl.obolibrary.org/obo/SO_0001825','http://purl.obolibrary.org/obo/SO_0001553','http://purl.obolibrary.org/obo/SO_0001059','http://purl.obolibrary.org/obo/SO_0001821','http://purl.obolibrary.org/obo/SO_0001578','http://purl.obolibrary.org/obo/SO_0001630','http://purl.obolibrary.org/obo/SO_0001575','http://purl.obolibrary.org/obo/SO_0001589','http://targetvalidation.org/sequence/nearest_gene_five_prime_end','http://purl.obolibrary.org/obo/SO_0001574','http://purl.obolibrary.org/obo/SO_0001819','http://purl.obolibrary.org/obo/SO_0001822','http://purl.obolibrary.org/obo/SO_0001818','http://purl.obolibrary.org/obo/SO_0001564','http://purl.obolibrary.org/obo/SO_0001565','http://purl.obolibrary.org/obo/SO_0002012','http://purl.obolibrary.org/obo/SO_0001627','http://purl.obolibrary.org/obo/SO_0001060','http://purl.obolibrary.org/obo/SO_0001624' ('{1}' given)".format(path, self.functional_consequence))
+    if not self.functional_consequence is None and not self.functional_consequence in ['http://purl.obolibrary.org/obo/SO_0001893','http://purl.obolibrary.org/obo/SO_0001632','http://purl.obolibrary.org/obo/SO_0001631','http://purl.obolibrary.org/obo/SO_0000159','http://purl.obolibrary.org/obo/SO_0001583','http://purl.obolibrary.org/obo/SO_0001587','http://purl.obolibrary.org/obo/SO_0001590','http://purl.obolibrary.org/obo/SO_1000065','http://purl.obolibrary.org/obo/SO_0001539','http://purl.obolibrary.org/obo/SO_0001605','http://purl.obolibrary.org/obo/SO_0001825','http://purl.obolibrary.org/obo/SO_0001553','http://purl.obolibrary.org/obo/SO_0001059','http://purl.obolibrary.org/obo/SO_0001821','http://purl.obolibrary.org/obo/SO_0001578','http://purl.obolibrary.org/obo/SO_0001630','http://purl.obolibrary.org/obo/SO_0001575','http://purl.obolibrary.org/obo/SO_0001589','http://targetvalidation.org/sequence/nearest_gene_five_prime_end','http://purl.obolibrary.org/obo/SO_0001574','http://purl.obolibrary.org/obo/SO_0001819','http://purl.obolibrary.org/obo/SO_0001822','http://purl.obolibrary.org/obo/SO_0001818','http://purl.obolibrary.org/obo/SO_0001564','http://purl.obolibrary.org/obo/SO_0001565','http://purl.obolibrary.org/obo/SO_0002012','http://purl.obolibrary.org/obo/SO_0001627','http://purl.obolibrary.org/obo/SO_0001060','http://purl.obolibrary.org/obo/SO_0001624','http://purl.obolibrary.org/obo/SO_0001623']:
+        logger.error("Mutation - {0}.functional_consequence value is restricted to the fixed set of values 'http://purl.obolibrary.org/obo/SO_0001893','http://purl.obolibrary.org/obo/SO_0001632','http://purl.obolibrary.org/obo/SO_0001631','http://purl.obolibrary.org/obo/SO_0000159','http://purl.obolibrary.org/obo/SO_0001583','http://purl.obolibrary.org/obo/SO_0001587','http://purl.obolibrary.org/obo/SO_0001590','http://purl.obolibrary.org/obo/SO_1000065','http://purl.obolibrary.org/obo/SO_0001539','http://purl.obolibrary.org/obo/SO_0001605','http://purl.obolibrary.org/obo/SO_0001825','http://purl.obolibrary.org/obo/SO_0001553','http://purl.obolibrary.org/obo/SO_0001059','http://purl.obolibrary.org/obo/SO_0001821','http://purl.obolibrary.org/obo/SO_0001578','http://purl.obolibrary.org/obo/SO_0001630','http://purl.obolibrary.org/obo/SO_0001575','http://purl.obolibrary.org/obo/SO_0001589','http://targetvalidation.org/sequence/nearest_gene_five_prime_end','http://purl.obolibrary.org/obo/SO_0001574','http://purl.obolibrary.org/obo/SO_0001819','http://purl.obolibrary.org/obo/SO_0001822','http://purl.obolibrary.org/obo/SO_0001818','http://purl.obolibrary.org/obo/SO_0001564','http://purl.obolibrary.org/obo/SO_0001565','http://purl.obolibrary.org/obo/SO_0002012','http://purl.obolibrary.org/obo/SO_0001627','http://purl.obolibrary.org/obo/SO_0001060','http://purl.obolibrary.org/obo/SO_0001624','http://purl.obolibrary.org/obo/SO_0001623' ('{1}' given)".format(path, self.functional_consequence))
         error = error + 1
     if self.functional_consequence is not None and not isinstance(self.functional_consequence, six.string_types):
         logger.error("Mutation - {0}.functional_consequence type should be a string".format(path))

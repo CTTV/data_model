@@ -29,10 +29,10 @@ import collections
 import opentargets.model.evidence.drug as evidence_drug
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2017, Open Targets"
+__copyright__ = "Copyright 2014-2018, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.7"
+__version__ = "1.2.8"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -53,6 +53,7 @@ class Base(object):
     """
     Name: id
     Type: string
+    Can be null: False
     """
     self.id = id
   
@@ -67,7 +68,7 @@ class Base(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['id']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Base - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'id' in dict_obj:
@@ -119,6 +120,7 @@ class Disease(Base):
     Name: id
     Type: string
     Description: A valid EFO IRI
+    Can be null: False
     Required: {True}
     """
     self.id = id
@@ -127,6 +129,7 @@ class Disease(Base):
     Name: name
     Type: string
     Description: Optional - EFO disease name corresponding to the EFO ID
+    Can be null: False
     """
     self.name = name
     
@@ -134,6 +137,7 @@ class Disease(Base):
     Name: source_name
     Type: string
     Description: Optional - EFO disease name corresponding to the EFO ID
+    Can be null: False
     """
     self.source_name = source_name
     """
@@ -159,7 +163,7 @@ class Disease(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['id','name','source_name','biosample','id']
     obj = super(Disease, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Disease - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'id' in dict_obj:
@@ -243,6 +247,7 @@ class DiseaseBiosample(object):
     Name: name
     Type: string
     Description: free text of the tissue / cell name
+    Can be null: False
     Required: {True}
     """
     self.name = name
@@ -251,6 +256,7 @@ class DiseaseBiosample(object):
     Name: id
     Type: string
     Description: EFO ID of the tissue - optional
+    Can be null: False
     String format: uri
     """
     self.id = id
@@ -268,7 +274,7 @@ class DiseaseBiosample(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['name','id']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("DiseaseBiosample - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'name' in dict_obj:
@@ -335,6 +341,7 @@ class Target(Base):
     Name: id
     Type: string
     Description: An Ensembl or UniProt identifier
+    Can be null: False
     Required: {True}
     """
     self.id = id
@@ -343,6 +350,7 @@ class Target(Base):
     Name: tier
     Type: string
     Description: Cancer Gene Census genes has been split into two tiers
+    Can be null: False
     """
     self.tier = tier
     
@@ -350,12 +358,14 @@ class Target(Base):
     Name: complex_id
     Type: string
     Description: A ChEMBL protein complex identifier
+    Can be null: False
     """
     self.complex_id = complex_id
     
     """
     Name: complex_members
     Type: array
+    Can be null: False
     """
     self.complex_members = complex_members
     
@@ -363,6 +373,7 @@ class Target(Base):
     Name: complex_type
     Type: string
     Description: Type of target
+    Can be null: False
     """
     self.complex_type = complex_type
     
@@ -370,6 +381,7 @@ class Target(Base):
     Name: target_type
     Type: string
     Description: Type of target; if you do not have detailed information, select from gene_evidence, protein_evidence or transcript_evidence
+    Can be null: False
     Required: {True}
     """
     self.target_type = target_type
@@ -378,6 +390,7 @@ class Target(Base):
     Name: activity
     Type: string
     Description: Activity of target in disease context
+    Can be null: False
     Required: {True}
     """
     self.activity = activity
@@ -386,12 +399,14 @@ class Target(Base):
     Name: target_name
     Type: string
     Description: used by ChEMBL initially if they have a more canonical target name, optional
+    Can be null: False
     """
     self.target_name = target_name
     
     """
     Name: target_class
     Type: array
+    Can be null: False
     """
     self.target_class = target_class
   
@@ -423,7 +438,7 @@ class Target(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['id','tier','complex_id','complex_members','complex_type','target_type','activity','target_name','target_class','id']
     obj = super(Target, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Target - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'id' in dict_obj:
@@ -573,6 +588,7 @@ class Phenotype(Base):
     Name: term_id
     Type: string
     Description: Phenotype term Identifier from HPO/MP
+    Can be null: False
     Required: {True}
     """
     self.term_id = term_id
@@ -581,6 +597,7 @@ class Phenotype(Base):
     Name: label
     Type: string
     Description: Phenotype term label
+    Can be null: False
     Required: {True}
     """
     self.label = label
@@ -588,6 +605,7 @@ class Phenotype(Base):
     """
     Name: species
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.species = species
@@ -608,7 +626,7 @@ class Phenotype(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['term_id','label','species','id']
     obj = super(Phenotype, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Phenotype - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'term_id' in dict_obj:
@@ -687,9 +705,12 @@ class Drug(Base):
   :param molecule_name = None
   :param molecule_type = None
   :param     max_phase_for_all_diseases = None
+  :param withdrawn_country = None
+  :param withdrawn_reason = None
+  :param withdrawn_year = None
   :param id = None
   """
-  def __init__(self, molecule_name = None, molecule_type = None,     max_phase_for_all_diseases = None, id = None):
+  def __init__(self, molecule_name = None, molecule_type = None,     max_phase_for_all_diseases = None, withdrawn_country = None, withdrawn_reason = None, withdrawn_year = None, id = None):
     """
     Call super constructor
     BaseClassName.__init__(self, args)
@@ -700,6 +721,7 @@ class Drug(Base):
     Name: id
     Type: string
     Description: A ChEMBL or internal drug identifier
+    Can be null: False
     Required: {True}
     """
     self.id = id
@@ -707,6 +729,7 @@ class Drug(Base):
     """
     Name: molecule_name
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.molecule_name = molecule_name
@@ -714,6 +737,7 @@ class Drug(Base):
     """
     Name: molecule_type
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.molecule_type = molecule_type
@@ -721,6 +745,27 @@ class Drug(Base):
     Name: max_phase_for_all_diseases
     """
     self.max_phase_for_all_diseases = max_phase_for_all_diseases
+    
+    """
+    Name: withdrawn_country
+    Type: string
+    Can be null: True
+    """
+    self.withdrawn_country = withdrawn_country
+    
+    """
+    Name: withdrawn_reason
+    Type: string
+    Can be null: True
+    """
+    self.withdrawn_reason = withdrawn_reason
+    
+    """
+    Name: withdrawn_year
+    Type: string
+    Can be null: True
+    """
+    self.withdrawn_year = withdrawn_year
   
   @classmethod
   def cloneObject(cls, clone):
@@ -734,13 +779,19 @@ class Drug(Base):
         obj.molecule_type = clone.molecule_type
     if clone.max_phase_for_all_diseases:
         obj.max_phase_for_all_diseases = evidence_drug.Diseasephase.cloneObject(clone.max_phase_for_all_diseases)
+    if clone.withdrawn_country:
+        obj.withdrawn_country = clone.withdrawn_country
+    if clone.withdrawn_reason:
+        obj.withdrawn_reason = clone.withdrawn_reason
+    if clone.withdrawn_year:
+        obj.withdrawn_year = clone.withdrawn_year
     return obj
   
   @classmethod
   def fromDict(cls, dict_obj):
-    cls_keys = ['id','molecule_name','molecule_type','max_phase_for_all_diseases','id']
+    cls_keys = ['id','molecule_name','molecule_type','max_phase_for_all_diseases','withdrawn_country','withdrawn_reason','withdrawn_year','id']
     obj = super(Drug, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Drug - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'id' in dict_obj:
@@ -751,6 +802,12 @@ class Drug(Base):
         obj.molecule_type = dict_obj['molecule_type']
     if  'max_phase_for_all_diseases' in dict_obj:
         obj.max_phase_for_all_diseases = evidence_drug.Diseasephase.fromDict(dict_obj['max_phase_for_all_diseases'])
+    if  'withdrawn_country' in dict_obj:
+        obj.withdrawn_country = dict_obj['withdrawn_country']
+    if  'withdrawn_reason' in dict_obj:
+        obj.withdrawn_reason = dict_obj['withdrawn_reason']
+    if  'withdrawn_year' in dict_obj:
+        obj.withdrawn_year = dict_obj['withdrawn_year']
     for key in dict_obj:
       if not key in cls_keys:
         logger.warn("Drug - invalid field - {0} found".format(key))
@@ -800,6 +857,15 @@ class Drug(Base):
         else:
             max_phase_for_all_diseases_error = self.max_phase_for_all_diseases.validate(logger, path = '.'.join([path, 'max_phase_for_all_diseases']))
             error = error + max_phase_for_all_diseases_error
+    if self.withdrawn_country is not None and not isinstance(self.withdrawn_country, six.string_types):
+        logger.error("Drug - {0}.withdrawn_country type should be a string".format(path))
+        error = error + 1
+    if self.withdrawn_reason is not None and not isinstance(self.withdrawn_reason, six.string_types):
+        logger.error("Drug - {0}.withdrawn_reason type should be a string".format(path))
+        error = error + 1
+    if self.withdrawn_year is not None and not isinstance(self.withdrawn_year, six.string_types):
+        logger.error("Drug - {0}.withdrawn_year type should be a string".format(path))
+        error = error + 1
     return error
   
   def serialize(self):
@@ -808,6 +874,9 @@ class Drug(Base):
     if not self.molecule_name is None: classDict['molecule_name'] = self.molecule_name
     if not self.molecule_type is None: classDict['molecule_type'] = self.molecule_type
     if not self.max_phase_for_all_diseases is None: classDict['max_phase_for_all_diseases'] = self.max_phase_for_all_diseases.serialize()
+    if not self.withdrawn_country is None: classDict['withdrawn_country'] = self.withdrawn_country
+    if not self.withdrawn_reason is None: classDict['withdrawn_reason'] = self.withdrawn_reason
+    if not self.withdrawn_year is None: classDict['withdrawn_year'] = self.withdrawn_year
     return classDict
   
   def to_JSON(self, indentation=4):
@@ -837,6 +906,7 @@ class Variant(Base):
     Name: id
     Type: string
     Description: An array of variant identifiers
+    Can be null: False
     Required: {True}
     """
     self.id = id
@@ -844,6 +914,7 @@ class Variant(Base):
     """
     Name: type
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.type = type
@@ -862,7 +933,7 @@ class Variant(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['id','type','id']
     obj = super(Variant, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Variant - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'id' in dict_obj:

@@ -33,7 +33,7 @@ import opentargets.model.evidence.drug as evidence_drug
 import opentargets.model.evidence.genetics as evidence_genetics
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2017, Open Targets"
+__copyright__ = "Copyright 2014-2018, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
 __version__ = "1.2.8"
@@ -68,6 +68,7 @@ class Base(object):
     Name: sourceID
     Type: string
     Description: A source ID (database or study ID) to help identify who this data is from.
+    Can be null: False
     """
     self.sourceID = sourceID
     
@@ -75,6 +76,7 @@ class Base(object):
     Name: access_level
     Type: string
     Description: Choose public as default; private is for internal datasets
+    Can be null: False
     """
     self.access_level = access_level
     
@@ -82,6 +84,7 @@ class Base(object):
     Name: validated_against_schema_version
     Type: string
     Description: The OpenTargets-JSON schema version number against which your data was validated
+    Can be null: False
     """
     self.validated_against_schema_version = validated_against_schema_version
     """
@@ -124,7 +127,7 @@ class Base(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Base - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'sourceID' in dict_obj:
@@ -225,6 +228,7 @@ class BaseLiterature(object):
     """
     Name: references
     Type: array
+    Can be null: False
     """
     self.references = references
   
@@ -239,7 +243,7 @@ class BaseLiterature(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['references']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("BaseLiterature - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if 'references' in dict_obj and isinstance(dict_obj['references'], list):
@@ -303,6 +307,7 @@ class Animal_Models(Base):
     """
     Name: type
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.type = type
@@ -324,7 +329,7 @@ class Animal_Models(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['type','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = super(Animal_Models, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Animal_Models - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
@@ -433,7 +438,7 @@ class Animal_ModelsEvidence(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['orthologs','biological_model','disease_model_association']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Animal_ModelsEvidence - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'orthologs' in dict_obj:
@@ -520,6 +525,7 @@ class Drug(Base):
     """
     Name: type
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.type = type
@@ -546,7 +552,7 @@ class Drug(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['type','drug','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = super(Drug, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Drug - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
@@ -661,7 +667,7 @@ class DrugEvidence(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['target2drug','drug2clinic']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("DrugEvidence - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'target2drug' in dict_obj:
@@ -735,6 +741,7 @@ class Expression(Base):
     """
     Name: type
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.type = type
@@ -756,7 +763,7 @@ class Expression(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['type','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = super(Expression, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Expression - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
@@ -856,6 +863,7 @@ class Genetics(Base):
     """
     Name: type
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.type = type
@@ -882,7 +890,7 @@ class Genetics(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['type','variant','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = super(Genetics, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Genetics - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
@@ -997,7 +1005,7 @@ class GeneticsEvidence(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['gene2variant','variant2disease']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("GeneticsEvidence - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'gene2variant' in dict_obj:
@@ -1071,6 +1079,7 @@ class Literature_Curated(Base):
     """
     Name: type
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.type = type
@@ -1092,7 +1101,7 @@ class Literature_Curated(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['type','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = super(Literature_Curated, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Literature_Curated - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:
@@ -1191,6 +1200,7 @@ class Literature_Mining(Base):
     """
     Name: type
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.type = type
@@ -1212,7 +1222,7 @@ class Literature_Mining(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['type','evidence','sourceID','access_level','validated_against_schema_version','unique_association_fields','target','disease','literature']
     obj = super(Literature_Mining, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Literature_Mining - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'type' in dict_obj:

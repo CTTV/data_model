@@ -40,7 +40,7 @@ __author__ = "Gautier Koscielny"
 __copyright__ = "Copyright 2014-2017, The Centre for Therapeutic Target Validation (CTTV)"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan", "Michael Maguire"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.7"
+__version__ = "1.2.8"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -98,7 +98,7 @@ def test_base_create_and_clone():
     obj = opentargets.Base()
     obj.access_level = "public"
     obj.sourceID = "opentargets"
-    obj.validated_against_schema_version = "1.2.7"
+    obj.validated_against_schema_version = "1.2.8"
     # create a target
     obj.target = bioentity.Target(
         id="http://identifiers.org/ensembl/ENSG00000213724",
@@ -119,7 +119,7 @@ def test_genomics_englad_create_and_clone():
     obj = opentargets.Literature_Curated(type='genetic_literature')
     obj.access_level = "public"
     obj.sourceID = "genomics_england"
-    obj.validated_against_schema_version = "1.2.7"
+    obj.validated_against_schema_version = "1.2.8"
     obj.unique_association_fields = dict(
         target="http://identifiers.org/ensembl/ENSG00000213724",
         object="http://www.ebi.ac.uk/efo/EFO_0003767",
@@ -149,18 +149,6 @@ def test_genomics_englad_create_and_clone():
             print("no publication found for %s %s %s" % (panel_name, panel_id, publications))
             lit_url = "http://europepmc.org/abstract/MED/00000000"
             single_lit_ref_list.append(evidence_core.Single_Lit_Reference(lit_id=lit_url))
-
-    if True == False:
-        print("sdasdasd")
-        sys.exit(1)
-    bl = evidence_core.BaseLiterature(
-        references=list())
-    er = bl.validate(logger)
-    assert bl.references is not None
-    assert not len(bl.references) < 1
-    print(json.dumps(bl.serialize()))
-    print(er)
-    assert er == 0
 
     provenance_type = evidence_core.BaseProvenance_Type(
         database=evidence_core.BaseDatabase(
@@ -218,7 +206,7 @@ def test_genetics_create_and_clone():
     obj = opentargets.Genetics(type="genetic_association")
     obj.access_level = "public"
     obj.sourceID = "opentargets"
-    obj.validated_against_schema_version = "1.2.7"
+    obj.validated_against_schema_version = "1.2.8"
     obj.unique_association_fields = {
         "target": "http://identifiers.org/ensembl/ENSG00000213724",
         "object": "http://www.ebi.ac.uk/efo/EFO_0003767",
@@ -263,7 +251,7 @@ def test_animal_models_create_and_clone():
 
     now = datetime.datetime.now()
     obj = opentargets.Animal_Models()
-    obj.validated_against_schema_version = '1.2.7'
+    obj.validated_against_schema_version = '1.2.8'
     obj.access_level = 'public'
     obj.type = 'animal_model'
     obj.sourceID = 'phenodigm'
@@ -368,7 +356,7 @@ def test_expression_create_and_clone():
     obj = opentargets.Expression()
     obj.access_level = "public"
     obj.sourceID = "opentargets"
-    obj.validated_against_schema_version = "1.2.7"
+    obj.validated_against_schema_version = "1.2.8"
     # create a target
     obj.target = bioentity.Target(
         id=["http://identifiers.org/ensembl/ENSG00000213724"], 
@@ -398,7 +386,7 @@ def test_literature_mining_create_and_clone():
     obj = opentargets.Literature_Mining(type='literature')
     obj.access_level = "public"
     obj.sourceID = "disgenet"
-    obj.validated_against_schema_version = "1.2.7"
+    obj.validated_against_schema_version = "1.2.8"
     obj.unique_association_fields = {"target": target,
             "publicationIDs": lit_id_,
             "disease_uri": disease}

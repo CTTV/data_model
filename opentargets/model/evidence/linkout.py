@@ -28,10 +28,10 @@ import six
 import collections
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2017, Open Targets"
+__copyright__ = "Copyright 2014-2018, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.7"
+__version__ = "1.2.8"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -53,6 +53,7 @@ class Linkout(object):
     """
     Name: nice_name
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.nice_name = nice_name
@@ -60,6 +61,7 @@ class Linkout(object):
     """
     Name: url
     Type: string
+    Can be null: False
     Required: {True}
     String format: uri
     """
@@ -78,7 +80,7 @@ class Linkout(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['nice_name','url']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Linkout - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'nice_name' in dict_obj:

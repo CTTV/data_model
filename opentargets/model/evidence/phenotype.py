@@ -31,10 +31,10 @@ import opentargets.model.evidence.linkout as evidence_linkout
 import opentargets.model.bioentity as bioentity
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2017, Open Targets"
+__copyright__ = "Copyright 2014-2018, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.7"
+__version__ = "1.2.8"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -70,6 +70,7 @@ class Orthologs(evidence_core.Base):
     Name: evidence_codes
     Type: array
     Description: An array of evidence codes
+    Can be null: False
     Required: {True}
     """
     self.evidence_codes = evidence_codes
@@ -78,6 +79,7 @@ class Orthologs(evidence_core.Base):
     Name: human_gene_id
     Type: string
     Description: Human Ensembl gene identifier
+    Can be null: False
     Required: {True}
     """
     self.human_gene_id = human_gene_id
@@ -86,6 +88,7 @@ class Orthologs(evidence_core.Base):
     Name: model_gene_id
     Type: string
     Description: Biological model Ensembl gene identifier (ortholog)
+    Can be null: False
     Required: {True}
     """
     self.model_gene_id = model_gene_id
@@ -93,6 +96,7 @@ class Orthologs(evidence_core.Base):
     """
     Name: species
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.species = species
@@ -100,6 +104,7 @@ class Orthologs(evidence_core.Base):
     """
     Name: urls
     Type: array
+    Can be null: False
     """
     self.urls = urls
   
@@ -123,7 +128,7 @@ class Orthologs(evidence_core.Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['evidence_codes','human_gene_id','model_gene_id','species','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = super(Orthologs, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Orthologs - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'evidence_codes' in dict_obj:
@@ -266,6 +271,7 @@ class Biological_Model(evidence_core.Base):
     Name: evidence_codes
     Type: array
     Description: An array of evidence codes
+    Can be null: False
     Required: {True}
     """
     self.evidence_codes = evidence_codes
@@ -274,6 +280,7 @@ class Biological_Model(evidence_core.Base):
     Name: model_gene_id
     Type: string
     Description: Biological model Ensembl gene identifier (ortholog)
+    Can be null: False
     Required: {True}
     """
     self.model_gene_id = model_gene_id
@@ -282,6 +289,7 @@ class Biological_Model(evidence_core.Base):
     Name: model_id
     Type: string
     Description: Internal identifier for the biological model
+    Can be null: False
     Required: {True}
     """
     self.model_id = model_id
@@ -290,6 +298,7 @@ class Biological_Model(evidence_core.Base):
     Name: allelic_composition
     Type: string
     Description: Animal model allelic composition
+    Can be null: False
     Required: {True}
     """
     self.allelic_composition = allelic_composition
@@ -298,6 +307,7 @@ class Biological_Model(evidence_core.Base):
     Name: genetic_background
     Type: string
     Description: Genetic background of the biological model that influences phenotypes
+    Can be null: False
     Required: {True}
     """
     self.genetic_background = genetic_background
@@ -306,6 +316,7 @@ class Biological_Model(evidence_core.Base):
     Name: allele_ids
     Type: string
     Description: List of allele identifiers for this model separated by |
+    Can be null: False
     Required: {True}
     """
     self.allele_ids = allele_ids
@@ -313,6 +324,7 @@ class Biological_Model(evidence_core.Base):
     """
     Name: zygosity
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.zygosity = zygosity
@@ -320,6 +332,7 @@ class Biological_Model(evidence_core.Base):
     """
     Name: species
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.species = species
@@ -328,6 +341,7 @@ class Biological_Model(evidence_core.Base):
     Name: phenotypes
     Type: array
     Description: List of phenotypes for this model
+    Can be null: False
     Required: {True}
     """
     self.phenotypes = phenotypes
@@ -335,6 +349,7 @@ class Biological_Model(evidence_core.Base):
     """
     Name: urls
     Type: array
+    Can be null: False
     """
     self.urls = urls
   
@@ -368,7 +383,7 @@ class Biological_Model(evidence_core.Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['evidence_codes','model_gene_id','model_id','allelic_composition','genetic_background','allele_ids','zygosity','species','phenotypes','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = super(Biological_Model, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Biological_Model - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'evidence_codes' in dict_obj:
@@ -561,6 +576,7 @@ class Disease_Model_Association(evidence_core.Base):
     Name: evidence_codes
     Type: array
     Description: An array of evidence codes
+    Can be null: False
     Required: {True}
     """
     self.evidence_codes = evidence_codes
@@ -569,6 +585,7 @@ class Disease_Model_Association(evidence_core.Base):
     Name: model_id
     Type: string
     Description: Internal identifier for the biological model
+    Can be null: False
     Required: {True}
     """
     self.model_id = model_id
@@ -577,6 +594,7 @@ class Disease_Model_Association(evidence_core.Base):
     Name: disease_id
     Type: string
     Description: Disease identifier
+    Can be null: False
     Required: {True}
     """
     self.disease_id = disease_id
@@ -585,6 +603,7 @@ class Disease_Model_Association(evidence_core.Base):
     Name: human_phenotypes
     Type: array
     Description: List of human phenotypes for this model
+    Can be null: False
     Required: {True}
     """
     self.human_phenotypes = human_phenotypes
@@ -593,6 +612,7 @@ class Disease_Model_Association(evidence_core.Base):
     Name: model_phenotypes
     Type: array
     Description: List of biomodel phenotypes for this model
+    Can be null: False
     Required: {True}
     """
     self.model_phenotypes = model_phenotypes
@@ -600,6 +620,7 @@ class Disease_Model_Association(evidence_core.Base):
     """
     Name: urls
     Type: array
+    Can be null: False
     """
     self.urls = urls
   
@@ -625,7 +646,7 @@ class Disease_Model_Association(evidence_core.Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['evidence_codes','model_id','disease_id','human_phenotypes','model_phenotypes','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = super(Disease_Model_Association, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Disease_Model_Association - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'evidence_codes' in dict_obj:

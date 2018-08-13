@@ -31,10 +31,10 @@ import opentargets.model.evidence.linkout as evidence_linkout
 import opentargets.model.evidence.mutation as evidence_mutation
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2017, Open Targets"
+__copyright__ = "Copyright 2014-2018, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.7"
+__version__ = "1.2.8"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -60,12 +60,14 @@ class Base(object):
     Name: unique_experiment_reference
     Type: string
     Description: A unique experiment identifier or literature reference that uniquely identifies the study in your database
+    Can be null: False
     """
     self.unique_experiment_reference = unique_experiment_reference
     
     """
     Name: is_associated
     Type: boolean
+    Can be null: False
     """
     self.is_associated = is_associated
     
@@ -73,6 +75,7 @@ class Base(object):
     Name: date_asserted
     Type: string
     Description: date the evidence was made public
+    Can be null: False
     String format: date-time
     """
     self.date_asserted = date_asserted
@@ -104,7 +107,7 @@ class Base(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Base - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'unique_experiment_reference' in dict_obj:
@@ -202,6 +205,7 @@ class Single_Lit_Reference(object):
     Name: lit_id
     Type: string
     Description: Note for pubmed identifiers, use the URI http://europepmc.org/abstract/MED/[0-9]+
+    Can be null: False
     Required: {True}
     """
     self.lit_id = lit_id
@@ -213,6 +217,7 @@ class Single_Lit_Reference(object):
     """
     Name: mined_sentences
     Type: array
+    Can be null: False
     """
     self.mined_sentences = mined_sentences
   
@@ -231,7 +236,7 @@ class Single_Lit_Reference(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['lit_id','rank','mined_sentences']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Single_Lit_Reference - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'lit_id' in dict_obj:
@@ -254,9 +259,9 @@ class Single_Lit_Reference(object):
     if self.lit_id is None :
         logger.error("Single_Lit_Reference - {0}.lit_id is required".format(path))
         error = error + 1
-    """ Check regex: http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}|[doi|DOI|https://dx.doi.org/]*[\s\.\:]{0,2}(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'])\S)+)$ for validation"""
-    if self.lit_id is not None and not re.match('http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}|[doi|DOI|https://dx.doi.org/]*[\s\.\:]{0,2}(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'])\S)+)$', self.lit_id):
-        logger.error("Single_Lit_Reference - {0}.lit_id '{1}'".format(path,self.lit_id) + " does not match pattern 'http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}|[doi|DOI|https://dx.doi.org/]*[\s\.\:]{0,2}(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'])\S)+)$'")
+    """ Check regex: NA|http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}|[doi|DOI|https://dx.doi.org/]*[\s\.\:]{0,2}(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'])\S)+)$ for validation"""
+    if self.lit_id is not None and not re.match('NA|http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}|[doi|DOI|https://dx.doi.org/]*[\s\.\:]{0,2}(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'])\S)+)$', self.lit_id):
+        logger.error("Single_Lit_Reference - {0}.lit_id '{1}'".format(path,self.lit_id) + " does not match pattern 'NA|http://europepmc.org/abstract/MED/[0-9]+|http://europepmc.org/articles/PMC[0-9]{4,}|[doi|DOI|https://dx.doi.org/]*[\s\.\:]{0,2}(10[.][0-9]{4,}(?:[.][0-9]+)*/(?:(?![\"&\'])\S)+)$'")
         logger.warn(json.dumps(self.lit_id, sort_keys=True, indent=2))
     if self.lit_id is not None and not isinstance(self.lit_id, six.string_types):
         logger.error("Single_Lit_Reference - {0}.lit_id type should be a string".format(path))
@@ -308,6 +313,7 @@ class Base_Mined_Sentences_Item(object):
     """
     Name: text
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.text = text
@@ -316,6 +322,7 @@ class Base_Mined_Sentences_Item(object):
     Name: section
     Type: string
     Description: Section of the article in which this sentence appears
+    Can be null: False
     Required: {True}
     """
     self.section = section
@@ -324,6 +331,7 @@ class Base_Mined_Sentences_Item(object):
     Name: t_start
     Type: number
     Description: Start co-ordinate of target (protein/gene) in text
+    Can be null: False
     """
     self.t_start = t_start
     
@@ -331,6 +339,7 @@ class Base_Mined_Sentences_Item(object):
     Name: t_end
     Type: number
     Description: End co-ordinate of target (protein/gene) in text
+    Can be null: False
     """
     self.t_end = t_end
     
@@ -338,6 +347,7 @@ class Base_Mined_Sentences_Item(object):
     Name: d_start
     Type: number
     Description: Start co-ordinate of disease name in text
+    Can be null: False
     """
     self.d_start = d_start
     
@@ -345,6 +355,7 @@ class Base_Mined_Sentences_Item(object):
     Name: d_end
     Type: number
     Description: End co-ordinate of disease name in text
+    Can be null: False
     """
     self.d_end = d_end
   
@@ -369,7 +380,7 @@ class Base_Mined_Sentences_Item(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['text','section','t_start','t_end','d_start','d_end']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Base_Mined_Sentences_Item - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'text' in dict_obj:
@@ -479,7 +490,7 @@ class BaseProvenance_Type(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['expert','literature','database']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("BaseProvenance_Type - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'expert' in dict_obj:
@@ -548,6 +559,7 @@ class BaseExpert(object):
     """
     Name: statement
     Type: string
+    Can be null: False
     """
     self.statement = statement
     """
@@ -558,6 +570,7 @@ class BaseExpert(object):
     """
     Name: status
     Type: boolean
+    Can be null: False
     Required: {True}
     """
     self.status = status
@@ -577,7 +590,7 @@ class BaseExpert(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['statement','author','status']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("BaseExpert - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'statement' in dict_obj:
@@ -642,12 +655,14 @@ class BaseAuthor(object):
     """
     Name: organization
     Type: string
+    Can be null: False
     """
     self.organization = organization
     
     """
     Name: email
     Type: string
+    Can be null: False
     String format: email
     """
     self.email = email
@@ -655,6 +670,7 @@ class BaseAuthor(object):
     """
     Name: name
     Type: string
+    Can be null: False
     """
     self.name = name
   
@@ -673,7 +689,7 @@ class BaseAuthor(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['organization','email','name']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("BaseAuthor - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'organization' in dict_obj:
@@ -732,6 +748,7 @@ class BaseLiterature(object):
     """
     Name: references
     Type: array
+    Can be null: False
     Required: {True}
     """
     self.references = references
@@ -747,7 +764,7 @@ class BaseLiterature(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['references']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("BaseLiterature - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if 'references' in dict_obj and isinstance(dict_obj['references'], list):
@@ -808,6 +825,7 @@ class BaseDatabase(object):
     """
     Name: id
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.id = id
@@ -815,6 +833,7 @@ class BaseDatabase(object):
     """
     Name: version
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.version = version
@@ -834,7 +853,7 @@ class BaseDatabase(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['dbxref','id','version']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("BaseDatabase - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'dbxref' in dict_obj:
@@ -904,6 +923,7 @@ class BaseDbxref(object):
     Name: id
     Type: string
     Description: Please provide the original DB name
+    Can be null: False
     Required: {True}
     """
     self.id = id
@@ -912,6 +932,7 @@ class BaseDbxref(object):
     Name: url
     Type: string
     Description: Please provide a pointer to the original resource: e.g. http://identifiers.org/orphanet/93298
+    Can be null: False
     String format: uri
     """
     self.url = url
@@ -919,6 +940,7 @@ class BaseDbxref(object):
     """
     Name: version
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.version = version
@@ -938,7 +960,7 @@ class BaseDbxref(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['id','url','version']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("BaseDbxref - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'id' in dict_obj:
@@ -1021,12 +1043,14 @@ class Expression(Base):
     """
     Name: organism_part
     Type: string
+    Can be null: False
     """
     self.organism_part = organism_part
     
     """
     Name: comparison_name
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.comparison_name = comparison_name
@@ -1039,6 +1063,7 @@ class Expression(Base):
     Name: test_sample
     Type: string
     Description: Free text - test sample
+    Can be null: False
     Required: {True}
     """
     self.test_sample = test_sample
@@ -1047,6 +1072,7 @@ class Expression(Base):
     Name: reference_sample
     Type: string
     Description: Free text - reference sample
+    Can be null: False
     Required: {True}
     """
     self.reference_sample = reference_sample
@@ -1055,6 +1081,7 @@ class Expression(Base):
     Name: test_replicates_n
     Type: number
     Description: Count of test replicates
+    Can be null: False
     Required: {True}
     """
     self.test_replicates_n = test_replicates_n
@@ -1063,6 +1090,7 @@ class Expression(Base):
     Name: reference_replicates_n
     Type: number
     Description: Count of reference replicates
+    Can be null: False
     Required: {True}
     """
     self.reference_replicates_n = reference_replicates_n
@@ -1071,6 +1099,7 @@ class Expression(Base):
     Name: confidence_level
     Type: string
     Description: high = if the disease state is the only variable (i.e. case vs control); medium = if the disease is a variable but there is one or more other variables; low = where all samples have the disease but the variable is something else e.g. a treatment
+    Can be null: False
     Required: {True}
     """
     self.confidence_level = confidence_level
@@ -1078,6 +1107,7 @@ class Expression(Base):
     """
     Name: experiment_overview
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.experiment_overview = experiment_overview
@@ -1086,6 +1116,7 @@ class Expression(Base):
     Name: evidence_codes
     Type: array
     Description: An array of evidence codes
+    Can be null: False
     Required: {True}
     """
     self.evidence_codes = evidence_codes
@@ -1093,6 +1124,7 @@ class Expression(Base):
     """
     Name: urls
     Type: array
+    Can be null: False
     """
     self.urls = urls
   
@@ -1127,7 +1159,7 @@ class Expression(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['organism_part','comparison_name','log2_fold_change','test_sample','reference_sample','test_replicates_n','reference_replicates_n','confidence_level','experiment_overview','evidence_codes','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = super(Expression, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Expression - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'organism_part' in dict_obj:
@@ -1304,6 +1336,7 @@ class ExpressionLog2_Fold_Change(object):
     """
     Name: value
     Type: number
+    Can be null: False
     Required: {True}
     """
     self.value = value
@@ -1311,6 +1344,7 @@ class ExpressionLog2_Fold_Change(object):
     """
     Name: percentile_rank
     Type: number
+    Can be null: False
     Required: {True}
     """
     self.percentile_rank = percentile_rank
@@ -1328,7 +1362,7 @@ class ExpressionLog2_Fold_Change(object):
   def fromDict(cls, dict_obj):
     cls_keys = ['value','percentile_rank']
     obj = cls()
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("ExpressionLog2_Fold_Change - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'value' in dict_obj:
@@ -1392,6 +1426,7 @@ class Literature_Curated(Base):
     """
     Name: clinical_significance
     Type: string
+    Can be null: False
     """
     self.clinical_significance = clinical_significance
     
@@ -1399,6 +1434,7 @@ class Literature_Curated(Base):
     Name: evidence_codes
     Type: array
     Description: An array of evidence codes
+    Can be null: False
     Required: {True}
     """
     self.evidence_codes = evidence_codes
@@ -1407,12 +1443,14 @@ class Literature_Curated(Base):
     Name: known_mutations
     Type: array
     Description: An array of mutations
+    Can be null: False
     """
     self.known_mutations = known_mutations
     
     """
     Name: urls
     Type: array
+    Can be null: False
     """
     self.urls = urls
   
@@ -1434,7 +1472,7 @@ class Literature_Curated(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['clinical_significance','evidence_codes','known_mutations','urls','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = super(Literature_Curated, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Literature_Curated - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'clinical_significance' in dict_obj:
@@ -1548,6 +1586,7 @@ class Literature_Mining(Base):
     Name: evidence_codes
     Type: array
     Description: An array of evidence codes
+    Can be null: False
     Required: {True}
     """
     self.evidence_codes = evidence_codes
@@ -1569,7 +1608,7 @@ class Literature_Mining(Base):
   def fromDict(cls, dict_obj):
     cls_keys = ['evidence_codes','literature_ref','unique_experiment_reference','is_associated','date_asserted','resource_score','provenance_type']
     obj = super(Literature_Mining, cls).fromDict(dict_obj)
-    if not isinstance(dict_obj, types.DictType):
+    if not isinstance(dict_obj, dict):
       logger.warn("Literature_Mining - DictType expected - {0} found\n".format(type(dict_obj)))
       return
     if  'evidence_codes' in dict_obj:
