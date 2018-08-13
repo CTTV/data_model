@@ -24,12 +24,14 @@ import iso8601
 import types
 import json
 import logging
+import six
+import collections
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2017, Open Targets"
+__copyright__ = "Copyright 2014-2018, Open Targets"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
-__version__ = "1.2.7"
+__version__ = "1.2.8"
 __maintainer__ = "Gautier Koscielny"
 __email__ = "gautierk@targetvalidation.org"
 __status__ = "Production"
@@ -43,46 +45,48 @@ class Linkout(object):
   """
   Constructor using all fields with default values
   Arguments:
-  :param url = None
   :param nice_name = None
+  :param url = None
   """
-  def __init__(self, url = None, nice_name = None):
-    
-    """
-    Name: url
-    Type: string
-    Required: {True}
-    String format: uri
-    """
-    self.url = url
+  def __init__(self, nice_name = None, url = None):
     
     """
     Name: nice_name
     Type: string
+    Can be null: False
     Required: {True}
     """
     self.nice_name = nice_name
+    
+    """
+    Name: url
+    Type: string
+    Can be null: False
+    Required: {True}
+    String format: uri
+    """
+    self.url = url
   
   @classmethod
   def cloneObject(cls, clone):
     obj = cls()
-    if clone.url:
-        obj.url = clone.url
     if clone.nice_name:
         obj.nice_name = clone.nice_name
+    if clone.url:
+        obj.url = clone.url
     return obj
   
   @classmethod
-  def fromMap(cls, map):
-    cls_keys = ['url','nice_name']
+  def fromDict(cls, dict_obj):
+    cls_keys = ['nice_name','url']
     obj = cls()
-    if not isinstance(map, types.DictType):
-      logger.warn("Linkout - DictType expected - {0} found\n".format(type(map)))
+    if not isinstance(dict_obj, dict):
+      logger.warn("Linkout - DictType expected - {0} found\n".format(type(dict_obj)))
       return
-    if  'url' in map:
-        obj.url = map['url']
-    if  'nice_name' in map:
-        obj.nice_name = map['nice_name']
+    if  'nice_name' in dict_obj:
+        obj.nice_name = dict_obj['nice_name']
+    if  'url' in dict_obj:
+        obj.url = dict_obj['url']
     return obj
   
   def validate(self, logger, path = "root"):
@@ -91,27 +95,30 @@ class Linkout(object):
     :returns: number of errors found during validation
     """
     error = 0
-    # url is mandatory
-    if self.url is None :
-        logger.error("Linkout - {0}.url is required".format(path))
-        error = error + 1
-    if self.url and not isinstance(self.url, basestring):
-        logger.error("Linkout - {0}.url type should be a string".format(path))
-        error = error + 1
     # nice_name is mandatory
     if self.nice_name is None :
         logger.error("Linkout - {0}.nice_name is required".format(path))
         error = error + 1
-    if self.nice_name and not isinstance(self.nice_name, basestring):
+    if self.nice_name is not None and not isinstance(self.nice_name, six.string_types):
         logger.error("Linkout - {0}.nice_name type should be a string".format(path))
+        error = error + 1
+    # url is mandatory
+    if self.url is None :
+        logger.error("Linkout - {0}.url is required".format(path))
+        error = error + 1
+    if self.url is not None and not isinstance(self.url, six.string_types):
+        logger.error("Linkout - {0}.url type should be a string".format(path))
         error = error + 1
     return error
   
   def serialize(self):
-    classDict = {}
-    if not self.url is None: classDict['url'] = self.url
+    classDict = collections.OrderedDict()
     if not self.nice_name is None: classDict['nice_name'] = self.nice_name
+    if not self.url is None: classDict['url'] = self.url
     return classDict
   
   def to_JSON(self, indentation=4):
-    return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    if sys.version_info[0] == 3:
+      return json.dumps(self.serialize(), sort_keys=True, check_circular=False, indent=indentation)
+    elif sys.version_info[0] == 2:
+      return json.dumps(self, default=lambda o: o.serialize(), sort_keys=True, check_circular=False, indent=indentation)
