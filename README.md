@@ -1,4 +1,13 @@
-'''
+
+Simple module to validate, compare and generate Open Targets evidence strings
+
+# Installation
+Using python's pip installer:
+- (As root) pip install git+https://github.com/opentargets/data_model.git
+- (Install to a custom folder called 'data_model') pip install -t data_model git+https://github.com/opentargets/data_model.git
+- (Install a specific version of the code in a specific folder, here 1.2.8) pip install -t data_model-1.2.8 git+https://github.com/opentargets/data_model.git@1.2.8
+
+# Copyright
 Copyright 2014-2018 Biogen, Celgene Corporation, EMBL - European Bioinformatics Institute, GlaxoSmithKline, Takeda Pharmaceutical Company and Wellcome Sanger Institute
 
 This software was developed as part of the Open Targets project. For more information please see: http://www.opentargets.org
@@ -14,24 +23,3 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-'''
-import re
-import sys
-import iso8601
-import types
-import json
-import logging
-import six
-import collections
-
-__author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2017 EMBL - European Bioinformatics Institute, Wellcome Trust Sanger Institute, GlaxoSmithKline and Biogen"
-__copyright__ = "Copyright 2018 Biogen, Celgene Corporation, EMBL - European Bioinformatics Institute, GlaxoSmithKline, Takeda Pharmaceutical Company and Wellcome Sanger Institute"
-__credits__ = ["Gautier Koscielny", "Samiul Hasan"]
-__license__ = "Apache 2.0"
-__version__ = "1.2.8"
-__maintainer__ = "Gautier Koscielny"
-__email__ = "gautierk@targetvalidation.org"
-__status__ = "Production"
-
-logger = logging.getLogger(__name__)
