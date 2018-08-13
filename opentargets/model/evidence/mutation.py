@@ -218,9 +218,6 @@ class Mutation(object):
     if self.inheritance_pattern is not None and not isinstance(self.inheritance_pattern, six.string_types):
         logger.error("Mutation - {0}.inheritance_pattern type should be a string".format(path))
         error = error + 1
-    if self.role_in_cancer and not isinstance(self.role_in_cancer, basestring):
-        logger.error("Mutation - {0}.role_in_cancer type should be a string".format(path))
-        error = error + 1
     return error
   
   def serialize(self):

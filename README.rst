@@ -6,4 +6,3 @@ Installation using python's pip installer:
 - (Install to a custom folder called 'data_model') pip install -t data_model git+https://github.com/opentargets/data_model.git
 - (Install a specific version of the code in a specific folder, here 1.2.8) pip install -t data_model-1.2.8 git+https://github.com/opentargets/data_model.git@1.2.8
 
-
