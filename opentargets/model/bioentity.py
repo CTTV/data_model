@@ -400,6 +400,7 @@ class Target(Base):
     Type: string
     Description: used by ChEMBL initially if they have a more canonical target name, optional
     Can be null: False
+
     """
     self.target_name = target_name
     
