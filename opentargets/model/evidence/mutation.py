@@ -1,6 +1,8 @@
 '''
 Copyright 2014-2017 EMBL - European Bioinformatics Institute, Wellcome
 Trust Sanger Institute, GlaxoSmithKline and Biogen
+Copyright 2018 Biogen, Celgene Corporation, EMBL - European Bioinformatics Institute, GlaxoSmithKline,
+Takeda Pharmaceutical Company and Wellcome Sanger Institute
 
 This software was developed as part of Open Targets. For more information please see:
 
@@ -28,7 +30,8 @@ import six
 import collections
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2018, Open Targets"
+__copyright__ = "Copyright 2014-2017 EMBL - European Bioinformatics Institute, Wellcome Trust Sanger Institute, GlaxoSmithKline and Biogen"
+__copyright__ = "Copyright 2018 Biogen, Celgene Corporation, EMBL - European Bioinformatics Institute, GlaxoSmithKline, Takeda Pharmaceutical Company and Wellcome Sanger Institute"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
 __version__ = "1.2.8"
@@ -214,9 +217,6 @@ class Mutation(object):
         error = error + 1
     if self.inheritance_pattern is not None and not isinstance(self.inheritance_pattern, six.string_types):
         logger.error("Mutation - {0}.inheritance_pattern type should be a string".format(path))
-        error = error + 1
-    if self.role_in_cancer and not isinstance(self.role_in_cancer, basestring):
-        logger.error("Mutation - {0}.role_in_cancer type should be a string".format(path))
         error = error + 1
     return error
   

@@ -1,6 +1,8 @@
 '''
 Copyright 2014-2017 EMBL - European Bioinformatics Institute, Wellcome
 Trust Sanger Institute, GlaxoSmithKline and Biogen
+Copyright 2018 Biogen, Celgene Corporation, EMBL - European Bioinformatics Institute, GlaxoSmithKline,
+Takeda Pharmaceutical Company and Wellcome Sanger Institute
 
 This software was developed as part of Open Targets. For more information please see:
 
@@ -28,7 +30,8 @@ import six
 import collections
 
 __author__ = "Gautier Koscielny"
-__copyright__ = "Copyright 2014-2018, Open Targets"
+__copyright__ = "Copyright 2014-2017 EMBL - European Bioinformatics Institute, Wellcome Trust Sanger Institute, GlaxoSmithKline and Biogen"
+__copyright__ = "Copyright 2018 Biogen, Celgene Corporation, EMBL - European Bioinformatics Institute, GlaxoSmithKline, Takeda Pharmaceutical Company and Wellcome Sanger Institute"
 __credits__ = ["Gautier Koscielny", "Samiul Hasan"]
 __license__ = "Apache 2.0"
 __version__ = "1.2.8"
