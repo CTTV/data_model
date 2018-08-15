@@ -1,5 +1,5 @@
 import os
-
+# install_requires 'opentargets'
 try:
     from setuptools import setup
 except ImportError:
@@ -29,7 +29,6 @@ setup(
         "Programming Language :: Python :: 3",
     ],
     install_requires=[
-          'opentargets',
           'iso8601>=0.1.12',
     ],
     extras_require={
