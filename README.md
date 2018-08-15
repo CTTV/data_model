@@ -1,13 +1,37 @@
 
-Simple module to validate, compare and generate Open Targets evidence strings
+# Data Model
 
-# Installation
+Target-Disease evidence are represented in JSON format in Open Targets. While it's possible to 'validate' json data 
+using modules such as [jsonschema](https://pypi.org/project/jsonschema/) and generate evidence strings with dictionaries 
+and lists, we decided at the beginning of the project to have a python module to generate and validate evidence based on an object-oriented 
+representation of the evidence. 
+
+Hence opentargets.datamodel is a simple module to generate, validate, and compare Open Targets evidence. 
+The python code is auto-generated from the json schema itself meaning that any change can be reflected immediately in the data model.
+
+# Getting Started
+
+The following instructions will get you a version of the module
+## Installing
 Using python's pip installer:
-- (As root) pip install git+https://github.com/opentargets/data_model.git
-- (Install to a custom folder called 'data_model') pip install -t data_model git+https://github.com/opentargets/data_model.git
-- (Install a specific version of the code in a specific folder, here 1.2.8) pip install -t data_model-1.2.8 git+https://github.com/opentargets/data_model.git@1.2.8
+```shell
+pip install git+https://github.com/opentargets/data_model.git
+```
+To install a specific version of the code in a specific folder, here 1.2.8:
+```shell
+pip install -t data_model-1.2.8 git+https://github.com/opentargets/data_model.git@1.2.8
+```
 
-# Copyright
+## Examples
+
+There is currently a file called test_data_model.py with examples on how to build evidence strings.
+This will be updated to the latest schema to reflect the recent changes.
+
+# Author
+
+Gautier Koscielny
+
+# License
 Copyright 2014-2018 Biogen, Celgene Corporation, EMBL - European Bioinformatics Institute, GlaxoSmithKline, Takeda Pharmaceutical Company and Wellcome Sanger Institute
 
 This software was developed as part of the Open Targets project. For more information please see: http://www.opentargets.org
