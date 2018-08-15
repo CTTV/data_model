@@ -30,6 +30,7 @@ setup(
     ],
     install_requires=[
           'iso8601>=0.1.12',
+          'six'
     ],
     extras_require={
           'tests': [
