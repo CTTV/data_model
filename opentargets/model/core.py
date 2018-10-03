@@ -168,8 +168,8 @@ class Base(object):
     if self.validated_against_schema_version is not None and not isinstance(self.validated_against_schema_version, six.string_types):
         logger.error("Base - {0}.validated_against_schema_version type should be a string".format(path))
         error = error + 1
-    if self.unique_association_fields is not None and not isinstance(self.unique_association_fields, dict):
-        logger.error("Basedictionary expected for attribute - {0}.unique_association_fields".format(path))
+    if self.unique_association_fields is not None and not all(map(lambda x: isinstance(x, six.string_types), list(self.unique_association_fields.values()))):
+        logger.error("Base - {0}.unique_association_fields properties should be all of type string".format(path))
         error = error + 1
     if self.target:
         if not isinstance(self.target, bioentity.Target):
